@@ -7,6 +7,10 @@ const FooterComponent = React.lazy(() =>
 );
 const LoginSection = React.lazy(() => import("./LoginSection"));
 
+/**
+ * 
+ * @returns Login page
+ */
 export default function LoginPage() {
   return (
     <>

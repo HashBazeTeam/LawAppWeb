@@ -11,6 +11,10 @@ import { CustomCFormInputGroup } from "../../../components/common/CustomCInputGr
 import { LoadingIndicator } from "src/components";
 import store from "src/store";
 
+/**
+ * 
+ * @returns Login Section for Login page
+ */
 export default function LoginSection(props) {
   const history = useHistory();
   const dispatch = useDispatch();
