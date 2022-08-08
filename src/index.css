@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+* Home page carousel customization
+*/
+
+.swiper-container{
+    /* height: 500px !important; */
+    /* max-height: 400px !important; */
+}
+
+.home-swiper-carousel{
+    /* justify-content: center;
+    align-items: center; */
+    /* background-repeat: no-repeat; */
+    /* background-position: 0%; */
+    /* background-image: url("assets/images/404.svg"); */
+}
+
+.home-carousel-image{
+    width: 100%;
+    height: 100% !important;
+    object-fit: cover;
+}
+
+.swiper-pagination-bullet{
+    /* background-color: #fff !important; */
+}
+
+.swiper-pagination-bullet-active {
+    /* background-color: #000 !important; */
+}
+
+.swiper-button-disabled{
+    /* color: #398AB9 !important; */
+}
+
+.swiper-button-next{
+    /* color: blueviolet !important; */
+}
+
+.swiper-button-next{
+    /* color: blueviolet !important; */
+}
+
+
+
+/**
+* Home page coverflow carousel customization
+*/
+.coreflow-swiper{
+    width: 100%;
+  padding-top: 50px;
+  padding-bottom: 30px;
+  
+
+}
+
+.coreflow-swiper-slide{
+    background-position: center;
+  background-size: cover;
+  width: 300px !important;
+  height: 300px !important;
+
+}
+
+.coreflow-swiper-slide-img{
+    display: block;
+  width: 100%;
+}
+
+.event-carousel{
+    margin-top: 100px;
+    padding-top: 30px;
+    padding-bottom: 50px;
+}
+
+#home-event-headline{
+    padding-bottom: 30px;
+    padding-left: 50px;
+}
+
+/**
+* Open Street Map Customization
+*/
+
+.leaflet-container {
+    /* width: 100%; */
+    /* height: 10vh;
+     */
+    /* z-index: 1; */
+    height: 300px;
+    max-height: 350px;
+  }

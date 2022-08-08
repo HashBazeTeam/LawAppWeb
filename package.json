@@ -1,10 +1,10 @@
 {
-  "name": "Union-front-end",
+  "name": "Law-web-app",
   "version": "1.0.0",
-  "description": "Union project front-end",
+  "description": "Law web application",
   "homepage": ".",
   "license": "MIT",
-  "author": "Pasindu Yeshan",
+  "author": "HashBazeTeam",
   "scripts": {
     "build": "react-scripts build",
     "build:n17": "react-scripts --openssl-legacy-provider build",
