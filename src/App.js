@@ -56,7 +56,7 @@ function App() {
             render={(props) => <Page404Error {...props} />}
           />
           <ProtectedRoute
-            isLoggedIn={true}
+            isLoggedIn={false}
             path="/law-admin"
             name="Admin Dashboard"
             render={(props) => <DefaultLayout {...props} />}

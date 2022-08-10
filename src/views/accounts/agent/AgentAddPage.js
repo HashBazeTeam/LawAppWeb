@@ -22,6 +22,7 @@ const AgentAddPage = () => {
 
   const [formData, setFormData] = useState(initialValue);
   const [formErrors, setFormErrors] = useState({});
+  const [countryOptions, setCountryOptions] = useState([]);
 
   // Fetch countries
   useEffect(() => {
@@ -34,14 +35,13 @@ const AgentAddPage = () => {
 
   // Joi schema
   const schema = Joi.object({
-    username: Joi.string().required().label("Username"),
-    name: Joi.string().required().label("Name"),
+    fullName: Joi.string().required().label("Full name"),
+    country: Joi.string().required().label("Country"),
     email: Joi.string()
       .email({ tlds: { allow: false } })
       .required()
       .label("Email"),
-    contactNo: Joi.string().required().label("Contact Number"),
-    NIC: Joi.string().required().label("NIC"),
+    phoneNumber: Joi.string().required().label("Phone Number"),
   });
 
   /*
@@ -59,7 +59,7 @@ const AgentAddPage = () => {
     }
   };
 
-  // Handle add branch secretary user account
+  // Handle add agent form submit
   const handleSubmit = async (e) => {
     const { error, value } = schema.validate(formData, { abortEarly: false });
     if (!error) {
@@ -83,14 +83,13 @@ const AgentAddPage = () => {
   return (
     <>
       <div className="shadow sm:rounded-lg bg-white p-4 mb-5 row g-3">
-        {/* <h1 className="text-xl font-semibold mb-3">Branch Ser</h1> */}
         <div className="row g-3">
           <CustomCFormInputGroup
-            label="Name"
-            name="name"
-            value={formData.name}
+            label="Full Name"
+            name="fullName"
+            value={formData.fullName}
             onChange={handleChange}
-            error={formErrors.name}
+            error={formErrors.fullName}
             uppercase={true}
           />
           <CustomCFormInputGroup
@@ -102,30 +101,22 @@ const AgentAddPage = () => {
             uppercase={true}
             mdSize={6}
           />
-          <CustomCFormInputGroup
-            label="NIC"
-            name="NIC"
-            value={formData.NIC}
+          <CustomCFormSelectGroup
+            label="Country"
+            name="country"
+            value={formData.country}
             onChange={handleChange}
-            error={formErrors.NIC}
+            error={formErrors.country}
             uppercase={true}
             mdSize={6}
+            options={countryOptions}
           />
           <CustomCFormInputGroup
-            label="Contact Number"
-            name="contactNo"
-            value={formData.contactNo}
+            label="Phone Number"
+            name="phoneNumber"
+            value={formData.phoneNumber}
             onChange={handleChange}
-            error={formErrors.contactNo}
-            uppercase={true}
-            mdSize={6}
-          />
-          <CustomCFormInputGroup
-            label="Username"
-            name="username"
-            value={formData.username}
-            onChange={handleChange}
-            error={formErrors.username}
+            error={formErrors.phoneNumber}
             uppercase={true}
             mdSize={6}
           />
@@ -157,3 +148,5 @@ const initialValue = {
   accountType: "",
   branchName: "",
 };
+
+const countries = []

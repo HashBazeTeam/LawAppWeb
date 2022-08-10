@@ -7,6 +7,9 @@ const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
 const AgentAddPage = React.lazy(() =>
   import("./views/accounts/agent/AgentAddPage")
 );
+const ChatPool = React.lazy(() =>
+import("./views/accounts/agent/AgentAddPage")
+);
 
 const routes = [
   { path: "/law-admin", exact: true, name: "Admin Panel", component: Dashboard },
@@ -15,14 +18,21 @@ const routes = [
     path: "/law-admin/agent",
     name: "Agent",
     exact: true,
-    isLoggedIn: true,
+    isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/agent/add",
-    name: "Admins",
+    name: "Add Agent",
     component: AgentAddPage,
-    isLoggedIn: true,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/chat/pool",
+    name: "Chat Pool",
+    component: ChatPool,
+    isLoggedIn: false,
     accountType: ["admin"],
   },
 ];

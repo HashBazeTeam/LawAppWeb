@@ -28,14 +28,12 @@ const _nav = [
   {
     component: CNavTitle,
     name: "Agents",
-    accountType: ["admin"],
   },
   {
     component: CNavItem,
     name: "Add Agent",
     to: "/law-admin/agent/add",
     icon: <CIcon icon={cilUserPlus} customClassName="nav-icon" />,
-    accountType: ["admin"],
   },
   // {
   //   component: CNavItem,
