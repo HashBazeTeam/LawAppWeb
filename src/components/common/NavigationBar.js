@@ -5,13 +5,9 @@ import { Link } from "react-router-dom";
 import { Popover, Transition } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 
-const HomeCarouselSlider = React.lazy(() =>
-  import("../../components/common/HomeCarouselSlider")
-);
-
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "Contact Us", href: "/contact-us" },
+  // { name: "Home", href: "/" },
+  // { name: "Contact Us", href: "/contact-us" },
 ];
 
 const NavigationBar = (props) => {
@@ -87,7 +83,8 @@ const NavigationBar = (props) => {
                         />
                       </div>
                       <div className="-mr-2">
-                        <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                      <Popover.Button className="bg-white rounded-md p-2 inline-flex items-center justify-center 
+                        hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                           <span className="sr-only">Close main menu</span>
                           <XIcon className="h-6 w-6" aria-hidden="true" />
                         </Popover.Button>

@@ -5,6 +5,7 @@ import Joi from "joi";
 import jwtDecode from "jwt-decode";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
+import { useTranslation } from 'react-i18next';
 
 import { thunks } from "src/store";
 import { CustomCFormInputGroup } from "../../../components/common/CustomCInputGroup";
@@ -18,6 +19,9 @@ import store from "src/store";
 export default function LoginSection(props) {
   const history = useHistory();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
+
+  // States
   const [formData, setFormData] = useState({
     username: "",
     password: "",
@@ -26,8 +30,7 @@ export default function LoginSection(props) {
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
-  // Check if the user is already Logged in
-  // If logged in redirect to user home page
+  // Check if the user is already Logged in and if logged in redirect to user home page
   useEffect(() => {
    
   }, []);
@@ -164,12 +167,12 @@ export default function LoginSection(props) {
                         aria-hidden="true"
                       />
                     </span>
-                    Sign in
+                    {t('sign_in')}
                   </button>
                 </div>
               </form>
             </div>
-          </div>{" "}
+          </div>
         </div>
       </div>
     </>

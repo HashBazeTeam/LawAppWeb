@@ -64,7 +64,6 @@ const AgentAddPage = () => {
     const { error, value } = schema.validate(formData, { abortEarly: false });
     if (!error) {
     //   e.preventDefault();
-    //   const res = await api.user.register(formData);
     //   if (res.status === 200) {
     //     toast.success("Successfully Added");
     //     setFormData(initialValue);
@@ -140,13 +139,8 @@ const AgentAddPage = () => {
 export default AgentAddPage;
 
 const initialValue = {
-  username: "",
-  name: "",
+  fullName: "",
   email: "",
-  NIC: "",
-  contactNo: "",
-  accountType: "",
-  branchName: "",
+  phoneNumber: "",
+  country: "",
 };
-
-const countries = []

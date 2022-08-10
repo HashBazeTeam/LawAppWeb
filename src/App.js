@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
+import './i18n';
 import "./scss/style.scss";
 import { thunks } from "./store";
 
