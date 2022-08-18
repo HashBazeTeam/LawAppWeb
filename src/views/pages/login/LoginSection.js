@@ -5,15 +5,17 @@ import Joi from "joi";
 import jwtDecode from "jwt-decode";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+import OtpInput from "react-otp-input";
 
-import { thunks } from "src/store";
 import { CustomCFormInputGroup } from "../../../components/common/CustomCInputGroup";
 import { LoadingIndicator } from "src/components";
-import store from "src/store";
+import store, { thunks } from "src/store";
+import api from "src/api";
+import { auth, signInWithPhoneNumber, appVerifier } from "src/api/firebase";
 
 /**
- * 
+ *
  * @returns Login Section for Login page
  */
 export default function LoginSection(props) {
@@ -23,22 +25,25 @@ export default function LoginSection(props) {
 
   // States
   const [formData, setFormData] = useState({
-    username: "",
-    password: "",
+    phoneNumber: "",
+    otp: "",
   });
   const [rememberMe, setRememberMe] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [expandForm, setExpandForm] = useState(false);
+  const [confirmationResult, setConfirmationResult] = useState({});
+  // Firebase
 
   // Check if the user is already Logged in and if logged in redirect to user home page
-  useEffect(() => {
-   
-  }, []);
+  useEffect(() => {}, []);
 
   // Joi validation schema
-  const schema = Joi.object({
-    username: Joi.string().required().label("Email"),
-    password: Joi.string().required().label("Password"),
+  const phoneSchema = Joi.object({
+    phoneNumber: Joi.string().label("Phone Number"),
+  });
+  const otpSchema = Joi.object({
+    otp: Joi.number().label("OTP code"),
   });
 
   /**
@@ -50,20 +55,36 @@ export default function LoginSection(props) {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleOTPChange = (value) => {
+    setFormData({ ...formData, otp: value });
+  };
+
   const handleRememberMe = (e) => {
     setRememberMe(!rememberMe);
   };
 
-  const forgotPassword = () => {};
-
-  const handleLogin = async (e) => {
+  const handleRequestOTP = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const { error, value } = schema.validate(formData, { abortEarly: false });
+    const { error, value } = phoneSchema.validate(
+      { phoneNumber: formData.phoneNumber },
+      { abortEarly: false }
+    );
     if (!error) {
-      //Login loogic
-      
-
+      try {
+        const confirmationResult = await signInWithPhoneNumber(
+          auth,
+          formData.phoneNumber,
+          appVerifier()
+        );
+        console.log(confirmationResult);
+        setConfirmationResult(confirmationResult);
+        setExpandForm(true);
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
     } else {
       setLoading(false);
       const errors = {};
@@ -75,6 +96,38 @@ export default function LoginSection(props) {
     }
     // setLoading(false);
   };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    const { error, value } = otpSchema.validate(
+      { otp: formData.otp },
+      { abortEarly: false }
+    );
+    if (!error) {
+      try {
+        const credential = await confirmationResult.confirm(formData.otp);
+        console.log(credential);
+        setLoading(false);
+        history.push({
+          pathname: "/law-admin"
+        })
+      } catch (error) {
+        setLoading(false);
+        console.log(error);
+      }
+    } else {
+      setLoading(false);
+      const errors = {};
+      for (let item of error.details) {
+        errors[item.path[0]] = item.message;
+      }
+      setLoading(false);
+      setFormErrors(errors);
+    }
+    // setLoading(false);
+  };
+
   return (
     <>
       <div className="container h-500 mb-16 sm:mb-16 md:mb-16">
@@ -99,66 +152,45 @@ export default function LoginSection(props) {
               </div>
               <form
                 className="mt-8 space-y-6"
-                onSubmit={handleLogin}
+                onSubmit={handleRequestOTP}
                 method="POST"
               >
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="rounded-md ">
                   <div className="py-2">
                     <CustomCFormInputGroup
-                      label="Username"
-                      name="username"
-                      value={formData.username}
+                      label="Phone Number"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
                       onChange={handleChange}
-                      error={formErrors.username}
+                      error={formErrors.phoneNumber}
+                      readOnly={expandForm}
                     />
                   </div>
-                  <div className="py-2">
-                    <CustomCFormInputGroup
-                      label="Password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleChange}
-                      error={formErrors.password}
-                      type="password"
+                  <div id="recaptcha-container"></div>
+                  {expandForm && (
+                    <OtpInput
+                      value={formData.otp}
+                      onChange={handleOTPChange}
+                      numInputs={6}
+                      separator={<span>-</span>}
+                      containerStyle="text-black flex-row justify-center items-center"
+                      // placeholder="000000"
+                      inputStyle="text-2xl mx-1 text-black border-2 border-gray-600"
+                      focusStyle="border-2 border-blue-500"
                     />
-                  </div>
+                  )}
                 </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <input
-                      id="remember-me"
-                      name="remember-me"
-                      type="checkbox"
-                      className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                      onChange={handleRememberMe}
-                      value={rememberMe}
-                    />
-                    <label
-                      htmlFor="remember-me"
-                      className="ml-2 block text-sm text-gray-900"
-                    >
-                      Remember me
-                    </label>
-                  </div>
-
-                  <div className="text-sm">
-                    <button
-                      className="font-medium text-indigo-600 hover:text-indigo-500"
-                      onClick={forgotPassword}
-                    >
-                      Forgot your password?
-                    </button>
-                  </div>
-                </div>
-
                 <div>
                   <button
+                    id="recaptcha-container"
                     disabled={loading}
-                    onClick={handleLogin}
+                    onClick={expandForm ? handleLogin : handleRequestOTP}
                     type="submit"
-                    className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    className="group relative w-full flex justify-center py-2 px-4 border 
+                    border-transparent text-sm font-medium rounded-md text-white 
+                    bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 
+                    focus:ring-offset-2 focus:ring-indigo-500"
                   >
                     {loading ? LoadingIndicator("sm") : null}
                     <span className="absolute left-0 inset-y-0 flex items-center pl-3">
@@ -167,7 +199,7 @@ export default function LoginSection(props) {
                         aria-hidden="true"
                       />
                     </span>
-                    {t('sign_in')}
+                    {expandForm ? t("sign_in") : t("request_otp")}
                   </button>
                 </div>
               </form>

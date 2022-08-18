@@ -1,21 +1,28 @@
 import jwtDecode from "jwt-decode";
 import api from "../../api";
 import { setUserData } from "./index";
+import { auth } from "src/api/firebase";
 
 const userThunk = {
-  userLogin(credentials) {
+  userLogin(user) {
     return async (dispatch) => {
-      const res = await api.user.login(credentials);
-      if (res.status === 200) {
-        dispatch(setUserData(res.data.data));
-      }
-      return res;
+      dispatch(setUserData({
+        phoneNumber: user.phoneNumber,
+        email: user.email,
+        uid: user.uid,
+      }));
     };
   },
 
   userLogout() {
     return async (dispatch) => {
-      dispatch(setUserData({}));
+      try {
+        await auth.signOut();
+        dispatch(setUserData({}));
+      } catch (error) {
+        console.log(error);
+        return false;
+      }
     };
   },
 };

@@ -26,7 +26,7 @@ const Page404Error = () => {
             <button
               onClick={() =>
                 history.push({
-                  pathname: userId != "" ? "/office/dashboard" : "/",
+                  pathname: userId != "" ? "/law-admin" : "/",
                 })
               }
               className="bg-transparent hover:bg-blue-500 text-purple-400 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"

@@ -1,6 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
+  credentials: {
+    phoneNumber: "",
+  },
   userData: {
     userId: "",
     name: "",
@@ -8,6 +11,10 @@ const initialState = {
     telephone: "",
     accountType: "",
   },
+  token: {
+    accessToken: "",
+    refreshToken: "",
+  }
 };
 
 /**
@@ -17,12 +24,18 @@ const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
+    setUserCredentials: (state, action) => {
+      state.credentials = action.payload;
+    },
     setUserData: (state, action) => {
       state.userData = action.payload;
+    },
+    setUserToken: (state, action) => {
+      state.token = action.payload;
     },
   },
 });
 
-export const { setUserData } = userSlice.actions;
+export const { setUserData, setUserCredentials, setUserToken } = userSlice.actions;
 export default userSlice.reducer;
 

@@ -2,8 +2,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-console.log(process.env.REACT_APP_FIREBASE_API_KEY);
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -15,19 +13,24 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+const firebaseApp = initializeApp(firebaseConfig);
 
-const auth = getAuth();
-auth.languageCode = 'it';
+const auth = getAuth(firebaseApp);
+auth.languageCode = 'en';
+// auth.settings.appVerificationDisabledForTesting = true;
 
-const appVerifier = window.recaptchaVerifier = new RecaptchaVerifier('sign-in-button', {
+const appVerifier = () => {
+  return new RecaptchaVerifier('recaptcha-container', {
     'size': 'invisible',
     'callback': (response) => {
       // reCAPTCHA solved, allow signInWithPhoneNumber.
       onSignInSubmit();
     }
-}, auth);
-  
-export { auth, appVerifier, signInWithPhoneNumber };
-export default app;
+  }, auth);
+}
+// const appVerifier = window.recaptchaVerifier;
+// const verify = new auth.RecaptchaVerifier('recaptcha-container');
+
+export { auth ,signInWithPhoneNumber, appVerifier, RecaptchaVerifier};
+export default firebaseApp;
 
