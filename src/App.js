@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
-import './i18n';
+import "./i18n";
 import "./scss/style.scss";
+import { auth } from "./api/firebase";
+import {thunks} from "./store"
 
 // Toaster
 import { ToastContainer, toast } from "react-toastify";
@@ -27,6 +30,15 @@ const Page404Error = React.lazy(() =>
 const LoginPage = React.lazy(() => import("./views/pages/login/LoginPage"));
 
 function App() {
+  const dispatch = useDispatch();
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(thunks.user.userLogin(user));
+      }
+    });
+  }, []);
+
   return (
     <BrowserRouter>
       <ToastContainer

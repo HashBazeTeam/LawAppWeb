@@ -36,14 +36,16 @@ export default function LoginSection(props) {
   // Firebase
 
   // Check if the user is already Logged in and if logged in redirect to user home page
-  useEffect(() => {}, []);
+  useEffect(() => {
+    console.log(auth.currentUser);
+  }, []);
 
   // Joi validation schema
   const phoneSchema = Joi.object({
     phoneNumber: Joi.string().label("Phone Number"),
   });
   const otpSchema = Joi.object({
-    otp: Joi.number().label("OTP code"),
+    otp: Joi.string().length(10).pattern(/^[0-9]+$/).required(),
   });
 
   /**
@@ -59,10 +61,7 @@ export default function LoginSection(props) {
     setFormData({ ...formData, otp: value });
   };
 
-  const handleRememberMe = (e) => {
-    setRememberMe(!rememberMe);
-  };
-
+  // Send OTP to user phone number
   const handleRequestOTP = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -97,6 +96,7 @@ export default function LoginSection(props) {
     // setLoading(false);
   };
 
+  // Verify OTP code and authenticate the user
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -107,14 +107,12 @@ export default function LoginSection(props) {
     if (!error) {
       try {
         const credential = await confirmationResult.confirm(formData.otp);
-        console.log(credential);
-        setLoading(false);
-        history.push({
-          pathname: "/law-admin"
-        })
+        dispatch(thunks.user.userLogin(credential.user));
+        history.push("/law-admin");
       } catch (error) {
         setLoading(false);
         console.log(error);
+        toast.error(t("login_invalid_otp"));
       }
     } else {
       setLoading(false);

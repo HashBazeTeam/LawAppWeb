@@ -1,7 +1,6 @@
 import React from "react";
 import {
   CAvatar,
-  CBadge,
   CDropdown,
   CDropdownDivider,
   CDropdownHeader,
@@ -9,21 +8,12 @@ import {
   CDropdownMenu,
   CDropdownToggle,
 } from "@coreui/react";
-import {
-  cilBell,
-  cilCreditCard,
-  cilCommentSquare,
-  cilEnvelopeOpen,
-  cilFile,
-  cilLockLocked,
-  cilSettings,
-  cilTask,
-  cilUser,
-} from "@coreui/icons";
+import { cilLockLocked, cilUser } from "@coreui/icons";
 import CIcon from "@coreui/icons-react";
+import { useTranslation } from "react-i18next";
 
 import { useDispatch } from "react-redux";
-import store, { thunks } from "src/store";
+import { thunks } from "src/store";
 
 import avatar8 from "./../../assets/images/avatars/avatar.png";
 import { useHistory } from "react-router-dom";
@@ -31,10 +21,11 @@ import { useHistory } from "react-router-dom";
 const AppHeaderDropdown = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const { t } = useTranslation();
 
-  const submitLogOut = () => {
-    dispatch(thunks.user.userLogout());
-    history.replace("/");
+  const submitLogOut = async () => {
+    await dispatch(thunks.user.userLogout());
+    history.replace("/login");
   };
 
   return (
@@ -52,9 +43,9 @@ const AppHeaderDropdown = () => {
           Profile
         </CDropdownItem>
         <CDropdownDivider />
-        <CDropdownItem onClick={submitLogOut}>
+        <CDropdownItem onClick={async () => submitLogOut()}>
           <CIcon icon={cilLockLocked} className="me-2" />
-          Log Out
+          {t("log_out")}
         </CDropdownItem>
       </CDropdownMenu>
     </CDropdown>
