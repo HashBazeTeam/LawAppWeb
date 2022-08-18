@@ -2,9 +2,13 @@ module.exports = {
   content: ["./src/**/*.{html,js,jsx}"],
   theme: {
     extend: {},
+    colors: {
+      primary_clr: "#4f46e5",
+      primary_hover_clr: "#2563eb",
+      primary_focus_clr: "#1d4ed8",
+    },
   },
-  plugins: [  
-],
+  plugins: [],
   darkMode: "class",
   i18n: {
     locales: ["en-US"],
@@ -20,7 +24,7 @@ module.exports = {
       //   check: "url('/icons/check.svg')",
       //   landscape: "url('/images/landscape/2.jpg')",
       // }),
-    }
+    },
   },
   variants: {
     extend: {
@@ -33,4 +37,4 @@ module.exports = {
   future: {
     purgeLayersByDefault: true,
   },
-}
+};
