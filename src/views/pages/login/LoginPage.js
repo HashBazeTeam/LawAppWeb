@@ -4,6 +4,8 @@ import { useDispatch } from 'react-redux';
 import {useHistory} from 'react-router-dom'
 import { auth } from "src/api/firebase";
 
+import { thunks } from "src/store";
+
 // Components
 const NavigationBar = React.lazy(() =>
   import("../../../components/common/NavigationBar")

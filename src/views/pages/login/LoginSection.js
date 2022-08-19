@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Joi from "joi";
-import jwtDecode from "jwt-decode";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import OtpInput from "react-otp-input-rc-17";
+import "react-phone-number-input/style.css";
+import PhoneInputWithCountry from "react-phone-number-input";
+import { isPossiblePhoneNumber } from "react-phone-number-input";
+import { CFormLabel } from "@coreui/react";
+import flags from "react-phone-number-input/flags";
 
-import { CustomCFormInputGroup } from "../../../components/common/CustomCInputGroup";
 import { LoadingIndicator } from "src/components";
 import { thunks } from "src/store";
 import { auth, signInWithPhoneNumber, appVerifier } from "src/api/firebase";
@@ -22,31 +25,19 @@ export default function LoginSection(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const { t } = useTranslation();
-  const primary_clr = "#4f46e5";
-const primary_hover_clr = "#818cf8";
-const primary_focus_clr = "#1d4ed8";
+  // const { control } = useForm();
 
   // States
   const [formData, setFormData] = useState({
     phoneNumber: "",
     otp: "",
   });
-  const [rememberMe, setRememberMe] = useState(false);
   const [formErrors, setFormErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [expandForm, setExpandForm] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState({});
-  // Firebase
-
-  // Check if the user is already Logged in and if logged in redirect to user home page
-  useEffect(() => {
-    console.log(auth.currentUser);
-  }, []);
 
   // Joi validation schema
-  const phoneSchema = Joi.object({
-    phoneNumber: Joi.string().label("Phone Number"),
-  });
   const otpSchema = Joi.object({
     otp: Joi.string()
       .length(6)
@@ -57,10 +48,9 @@ const primary_focus_clr = "#1d4ed8";
   /**
    * Handlers
    */
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    delete formErrors[name];
-    setFormData({ ...formData, [name]: value });
+  const handleChange = (value) => {
+    delete formErrors["phoneNumber"];
+    setFormData({ ...formData, phoneNumber: value });
   };
 
   const handleOTPChange = (value) => {
@@ -71,11 +61,12 @@ const primary_focus_clr = "#1d4ed8";
   const handleRequestOTP = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const { error, value } = phoneSchema.validate(
-      { phoneNumber: formData.phoneNumber },
-      { abortEarly: false }
-    );
-    if (!error) {
+    // Validate phone number
+    if (!isPossiblePhoneNumber(formData.phoneNumber)) {
+      setLoading(false);
+      setFormErrors({ ...formErrors, phoneNumber: "Invalid phone number" });
+      return toast.error(t("login_invalid_phone_number"));
+    } else {
       try {
         const confirmationResult = await signInWithPhoneNumber(
           auth,
@@ -89,16 +80,7 @@ const primary_focus_clr = "#1d4ed8";
         setLoading(false);
         console.log(error);
       }
-    } else {
-      setLoading(false);
-      const errors = {};
-      for (let item of error.details) {
-        errors[item.path[0]] = item.message;
-      }
-      setLoading(false);
-      setFormErrors(errors);
     }
-    // setLoading(false);
   };
 
   // Verify OTP code and authenticate the user
@@ -177,7 +159,7 @@ const primary_focus_clr = "#1d4ed8";
                   alt="Workflow"
                 /> */}
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                  Sign in to your account
+                  {t("sign_in_to_your_account")}
                 </h2>
               </div>
               <form
@@ -188,13 +170,25 @@ const primary_focus_clr = "#1d4ed8";
                 <input type="hidden" name="remember" defaultValue="true" />
                 <div className="rounded-md ">
                   <div className="py-2">
-                    <CustomCFormInputGroup
-                      label="Phone Number"
+                    <CFormLabel htmlFor="phoneNumber" className="">
+                      {t("phone_number")}
+                    </CFormLabel>
+                    <PhoneInputWithCountry
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleChange}
-                      error={formErrors.phoneNumber}
-                      readOnly={expandForm}
+                      defaultCountry="LK"
+                      style={{
+                        width: "100%",
+                        borderColor: "red",
+                        padding: "15px",
+                        marginBottom: "4px",
+                        height: 40,
+                        borderWidth: "1px",
+                        borderStyle: "solid",
+                        borderColor: formErrors.phoneNumber ? "red" : "#ced4da",
+                        backgroundColor: "#fff",
+                      }}
                     />
                   </div>
                   <div id="recaptcha-container"></div>
@@ -216,7 +210,7 @@ const primary_focus_clr = "#1d4ed8";
                 <div className="flex justify-between items-center">
                   <div className="text-sm">
                     <button
-                      className={`font-medium text-[${colors.primary_clr}] hover:text-[${colors.primary_hover_clr}]`}
+                      className={`font-medium text-primary_clr-600 hover:text-primary_clr-500`}
                       onClick={handleChangePhoneNumber}
                     >
                       {t("change_phone_number")}
@@ -224,7 +218,7 @@ const primary_focus_clr = "#1d4ed8";
                   </div>
                   <div className="text-sm">
                     <button
-                      className={`font-medium text-[${colors.primary_clr}] hover:text-[${colors.primary_hover_clr}]`}
+                      className={`font-medium text-primary_clr-600 hover:text-primary_clr-500`}
                       onClick={handleResendOtp}
                     >
                       {t("resend_otp")}
@@ -240,15 +234,12 @@ const primary_focus_clr = "#1d4ed8";
                     type="submit"
                     className={`group relative w-full flex justify-center py-2 px-4 border 
                     border-transparent text-sm font-medium rounded-md text-white 
-                    bg-[${colors.primary_clr}] hover:bg-[${colors.primary_hover_clr}] focus:outline-none focus:ring-2 
-                    focus:ring-offset-2 focus:ring-[${colors.primary_hover_clr}]`}
+                    bg-primary_clr-600 hover:bg-primary_clr-500 focus:outline-none focus:ring-2 
+                    focus:ring-offset-2 focus:ring-primary_clr-700`}
                   >
                     {loading ? LoadingIndicator("sm") : null}
                     <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                      <LockClosedIcon
-                        className="h-5 w-5 text-indigo-500 group-hover:text-indigo-400"
-                        aria-hidden="true"
-                      />
+                      <LockClosedIcon className="h-5 w-5" aria-hidden="true" />
                     </span>
                     {expandForm ? t("sign_in") : t("request_otp")}
                   </button>
