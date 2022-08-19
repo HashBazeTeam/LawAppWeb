@@ -1,7 +1,6 @@
 import jwtDecode from "jwt-decode";
-import api from "../../services";
 import { setUserCredentials, setUserData, setUserToken } from "./index";
-import { auth, signOut } from "src/services/firebase";
+import services from "../../services";
 
 const userThunk = {
   userLogin(user) {
@@ -25,8 +24,7 @@ const userThunk = {
   userLogout() {
     return async (dispatch) => {
       try {
-        await auth.signOut();
-        console.log("logout");
+        await services.userServices.signOut();
         dispatch(setUserCredentials({}));
         dispatch(setUserData({}));
         dispatch(setUserToken({}));

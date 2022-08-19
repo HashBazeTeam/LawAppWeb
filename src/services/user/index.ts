@@ -1,4 +1,0 @@
-/**
- * User collection related services
- */
-
