@@ -1,12 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  RecaptchaVerifier,
-  signInWithPhoneNumber,
-} from "firebase/auth";
 
-// Your web app's Firebase configuration
+// Web app's Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -18,6 +13,16 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+export default firebaseApp;
+
+/**
+ * Authentication
+ */
+import {
+  getAuth,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+} from "firebase/auth";
 
 const auth = getAuth(firebaseApp);
 auth.languageCode = "en";
@@ -37,6 +42,20 @@ const appVerifier = () => {
   );
 };
 
-export { auth, signInWithPhoneNumber, appVerifier};
-export default firebaseApp;
+export { auth, signInWithPhoneNumber, appVerifier };
 
+/**
+ * Firestore
+ */
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  doc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+
+const firestore = getFirestore(firebaseApp);
+
+export { firestore, collection, addDoc, doc, setDoc, updateDoc};

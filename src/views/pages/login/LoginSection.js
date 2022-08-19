@@ -14,7 +14,7 @@ import flags from "react-phone-number-input/flags";
 
 import { LoadingIndicator } from "src/components";
 import { thunks } from "src/store";
-import { auth, signInWithPhoneNumber, appVerifier } from "src/api/firebase";
+import { auth, signInWithPhoneNumber, appVerifier } from "src/services/firebase";
 import { colors } from "src/configs/theme";
 
 /**

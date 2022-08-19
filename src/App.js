@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch, Redirect } from "react-router-dom";
 import "./i18n";
 import "./scss/style.scss";
-import { auth } from "./api/firebase";
+import { auth } from "./services/firebase";
 import {thunks} from "./store"
 
 // Toaster

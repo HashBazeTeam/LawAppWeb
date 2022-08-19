@@ -1,7 +1,7 @@
 import jwtDecode from "jwt-decode";
-import api from "../../api";
+import api from "../../services";
 import { setUserCredentials, setUserData, setUserToken } from "./index";
-import { auth, signOut } from "src/api/firebase";
+import { auth, signOut } from "src/services/firebase";
 
 const userThunk = {
   userLogin(user) {
