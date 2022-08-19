@@ -30,7 +30,8 @@ const AppSidebar = () => {
 
   const unfoldable = useSelector(selectors.ui.selectUnfoldable);
   const sidebarShow = useSelector(selectors.ui.selectSidebarShow);
-  const accountType = useSelector(selectors.user.selectAccountType);
+  const accountType = useSelector(selectors.user.selectRole);
+
   const [navItems, setNavItems] = useState([]);
   
 
@@ -47,7 +48,6 @@ const AppSidebar = () => {
     });
     setNavItems(temps);
   }, [accountType]);
-  
   return (
     <CSidebar
       position="fixed"

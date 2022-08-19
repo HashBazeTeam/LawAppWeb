@@ -3,13 +3,17 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   credentials: {
     phoneNumber: "",
+    uid: "",
   },
   userData: {
-    userId: "",
-    name: "",
+    userID: "",
+    fullName: "",
+    phoneNumber: "",
+    country: "",
+    dob: "",
+    role: "",
     email: "",
     telephone: "",
-    accountType: "",
   },
   token: {
     accessToken: "",

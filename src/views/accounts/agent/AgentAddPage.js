@@ -3,7 +3,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import Joi from "joi";
-import store, { thunks, selectors } from "../../../store";
+import { thunks, selectors } from "../../../store";
 
 import {
   CustomCFormInputGroup,

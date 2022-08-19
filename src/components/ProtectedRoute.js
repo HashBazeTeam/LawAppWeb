@@ -10,7 +10,7 @@ const ProtectedRoute = ({ isLoggedIn, accountType, location, ...rest }) => {
   
     if (useSelector(selectors.user.selectUserId) !== "") {
       if (accountType) {
-        if (accountType.indexOf(useSelector(selectors.user.selectAccountType)) !== -1) {
+        if (accountType.indexOf(useSelector(selectors.user.selectRole)) !== -1) {
           return <Route {...rest} />;
         } else {
           return (
