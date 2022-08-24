@@ -77,12 +77,6 @@ const _nav = [
     to: "/law-admin/question/pool",
     icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
   },
-  {
-    component: CNavItem,
-    name: "Question",
-    to: "/law-admin/question/chat",
-    icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
-  },
 ];
 
 export default _nav;
