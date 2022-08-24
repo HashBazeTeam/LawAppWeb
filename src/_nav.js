@@ -19,29 +19,70 @@ import {
   cilLibraryAdd,
   cilUserFollow,
   cilPlus,
-  cilSearch
+  cilSearch,
+  cilUserX,
+  cilUser,
 } from "@coreui/icons";
 import { CNavGroup, CNavItem, CNavTitle } from "@coreui/react";
 
 const _nav = [
-  // Admins
   {
     component: CNavTitle,
-    name: "Agents",
+    name: "User Accounts",
+  },
+  {
+    component: CNavGroup,
+    name: "Admin Accounts",
+    to: "/law-admin/admin",
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: "Add Admin",
+        to: "/law-admin/admin/add",
+      },
+      {
+        component: CNavItem,
+        name: "Admin List",
+        to: "/law-admin/admin/all",
+      },
+    ],
+  },
+  {
+    component: CNavGroup,
+    name: "Agent Accounts",
+    to: "/law-admin/agent",
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: "Add Agent",
+        to: "/law-admin/agent/add",
+      },
+      {
+        component: CNavItem,
+        name: "Agent List",
+        to: "/law-admin/agent/all",
+      },
+    ],
+  },
+  // Chat
+  {
+    component: CNavTitle,
+    name: "Question",
   },
   {
     component: CNavItem,
-    name: "Add Agent",
-    to: "/law-admin/agent/add",
-    icon: <CIcon icon={cilUserPlus} customClassName="nav-icon" />,
+    name: "Question Pool",
+    to: "/law-admin/question/pool",
+    icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
   },
-  // {
-  //   component: CNavItem,
-  //   name: "Admins",
-  //   to: "/admin/agent/view-all",
-  //   icon: <CIcon icon={cilAddressBook} customClassName="nav-icon" />,
-  //   accountType: ["admin"],
-  // },
+  {
+    component: CNavItem,
+    name: "Question",
+    to: "/law-admin/question/chat",
+    icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
+  },
 ];
 
 export default _nav;
