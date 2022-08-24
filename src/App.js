@@ -75,7 +75,7 @@ function App() {
           />
           <Redirect
             to={{
-              pathname: "/404",
+              pathname: "/login",
             }}
           />
         </Switch>

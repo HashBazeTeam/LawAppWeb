@@ -14,7 +14,11 @@ import flags from "react-phone-number-input/flags";
 
 import { LoadingIndicator } from "src/components";
 import { thunks } from "src/store";
-import { auth, signInWithPhoneNumber, appVerifier } from "src/services/firebase";
+import {
+  auth,
+  signInWithPhoneNumber,
+  appVerifier,
+} from "src/services/firebase";
 import { colors } from "src/configs/theme";
 
 /**
@@ -36,6 +40,7 @@ export default function LoginSection(props) {
   const [loading, setLoading] = useState(false);
   const [expandForm, setExpandForm] = useState(false);
   const [confirmationResult, setConfirmationResult] = useState({});
+  const [_appVerifier, setAppVerifier] = useState({});
 
   // Joi validation schema
   const otpSchema = Joi.object({
@@ -68,10 +73,12 @@ export default function LoginSection(props) {
       return toast.error(t("login_invalid_phone_number"));
     } else {
       try {
+        const _appVerifier = appVerifier();
+        setAppVerifier(_appVerifier);
         const confirmationResult = await signInWithPhoneNumber(
           auth,
           formData.phoneNumber,
-          appVerifier()
+          _appVerifier
         );
         setConfirmationResult(confirmationResult);
         setExpandForm(true);
@@ -111,7 +118,6 @@ export default function LoginSection(props) {
       setFormErrors(errors);
       toast.error(t("login_invalid_otp"));
     }
-    // setLoading(false);
   };
 
   // Handle change phone number
@@ -129,7 +135,7 @@ export default function LoginSection(props) {
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         formData.phoneNumber,
-        appVerifier()
+        _appVerifier
       );
       setConfirmationResult(confirmationResult);
       setExpandForm(true);

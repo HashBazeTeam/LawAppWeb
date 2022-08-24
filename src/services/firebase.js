@@ -35,7 +35,7 @@ const appVerifier = () => {
       size: "invisible",
       callback: (response) => {
         // reCAPTCHA solved, allow signInWithPhoneNumber.
-        onSignInSubmit();
+        // onSignInSubmit();
       },
     },
     auth
