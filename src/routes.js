@@ -18,7 +18,7 @@ const routes = [
     name: "Admin Panel",
     component: Dashboard,
   },
-  // Admin related pages
+  // Agent related pages
   {
     path: "/law-admin/agent",
     name: "Agent",
