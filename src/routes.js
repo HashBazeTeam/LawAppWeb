@@ -6,7 +6,10 @@ const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
 const AgentAddPage = React.lazy(() =>
   import("./views/accounts/agent/AgentAddPage")
 );
-
+//Profile Page
+const ProfilePage = React.lazy(() =>
+  import("./views/accounts/agent/profile")
+);
 // Chat related pages
 const ChatPool = React.lazy(() => import("./views/chat/ChatPool"));
 const Chat = React.lazy(() => import("./views/chat/Chat"));
@@ -23,6 +26,14 @@ const routes = [
     path: "/law-admin/agent",
     name: "Agent",
     exact: true,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/profile",
+    name: "profile",
+    exact: true,
+    component: ProfilePage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
