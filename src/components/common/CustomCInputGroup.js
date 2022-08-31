@@ -1,5 +1,4 @@
 import React from "react";
-
 import {
   CFormFeedback,
   CFormInput,
@@ -16,9 +15,9 @@ import {
   CTableRow,
   CCol,
 } from "@coreui/react";
-
 import CIcon from "@coreui/icons-react";
 import { cilPlus } from "@coreui/icons";
+import PhoneInputWithCountry from "react-phone-number-input";
 
 // Custom form input group component
 export function CustomCFormInputGroup({
@@ -59,6 +58,52 @@ export function CustomCFormInputGroup({
           multiple={multiple}
         />
         <CFormFeedback invalid>{error}</CFormFeedback>
+      </CCol>
+    </>
+  );
+}
+
+// Custom phone number input group component
+export function CustomCFormPhoneNumberInputGroup({
+  label,
+  name,
+  placeholder,
+  value,
+  onChange,
+  error,
+  readOnly = false,
+  mdSize = 12,
+  required = true,
+  multiple = true,
+  uppercase = false,
+  inputClassName = "",
+}) {
+  return (
+    <>
+      <CCol className="mb-3" xs={12} md={mdSize}>
+        <CFormLabel
+          htmlFor={name}
+          className={uppercase ? "uppercase" : ""}
+        >{`${label}${required ? "*" : ""}`}</CFormLabel>
+        <PhoneInputWithCountry
+          name={name}
+          value={value}
+          onChange={onChange}
+          defaultCountry="LK"
+          readOnly={readOnly}
+          style={{
+            width: "100%",
+            borderColor: "red",
+            padding: "15px",
+            marginBottom: "4px",
+            height: 40,
+            borderWidth: "1px",
+            borderStyle: "solid",
+            borderColor: error ? "red" : "#ced4da",
+            backgroundColor: "#fff",
+          }}
+        />
+        <CFormFeedback invalid={error ? true : false}>{error}</CFormFeedback>
       </CCol>
     </>
   );

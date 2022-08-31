@@ -72,7 +72,7 @@ export default function Chat(props) {
 
 const sampleData = [
   {
-    position: "right",
+    position: "left",
     type: "text",
     title: "User",
     text: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
@@ -87,7 +87,7 @@ const sampleData = [
     className: "py-2 ml-12",
   },
   {
-    position: "right",
+    position: "left",
     type: "text",
     title: "User",
     text: `Lorem Ipsum is simply dummy text of the printing and typesetting industry. 
@@ -96,22 +96,22 @@ const sampleData = [
     date: new Date("2022-08-24"),
     className: "py-2 ml-12",
   },
-  {
-    position: "left",
-    type: "text",
-    title: "Lawyer",
-    text: "Can I know more details about the case?",
-    date: new Date(),
-    className: "py-2 mr-12",
-  },
-  {
-    position: "right",
-    type: "photo",
-    title: "User",
-    date: new Date(),
-    className: "py-2 mr-12",
-    data: {
-      uri: "https://picsum.photos/200/200",
-    },
-  },
+  // {
+  //   position: "left",
+  //   type: "text",
+  //   title: "Lawyer",
+  //   text: "Can I know more details about the case?",
+  //   date: new Date(),
+  //   className: "py-2 mr-12",
+  // },
+  // {
+  //   position: "left",
+  //   type: "photo",
+  //   title: "User",
+  //   date: new Date(),
+  //   className: "py-2 mr-12",
+  //   data: {
+  //     uri: "https://picsum.photos/200/200",
+  //   },
+  // },
 ];

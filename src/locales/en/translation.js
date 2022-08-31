@@ -9,5 +9,9 @@ export default {
     "otp": "OTP",
     "change_phone_number": "Change phone number",
     "resend_otp": "Resend OTP",
+    "full_name": "Full name",
+    "email_address": "Email address",
+    "country": "Country",
+    "phone_number": "Phone number",
 }
 

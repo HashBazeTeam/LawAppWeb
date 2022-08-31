@@ -36,16 +36,16 @@ const _nav = [
     to: "/law-admin/admin",
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
     items: [
-      {
-        component: CNavItem,
-        name: "Add Admin",
-        to: "/law-admin/admin/add",
-      },
-      {
-        component: CNavItem,
-        name: "Admin List",
-        to: "/law-admin/admin/all",
-      },
+      // {
+      //   component: CNavItem,
+      //   name: "Add Admin",
+      //   to: "/law-admin/admin/add",
+      // },
+      // {
+      //   component: CNavItem,
+      //   name: "Admin List",
+      //   to: "/law-admin/admin/all",
+      // },
     ],
   },
   {
@@ -59,11 +59,11 @@ const _nav = [
         name: "Add Agent",
         to: "/law-admin/agent/add",
       },
-      {
-        component: CNavItem,
-        name: "Agent List",
-        to: "/law-admin/agent/all",
-      },
+      // {
+      //   component: CNavItem,
+      //   name: "Agent List",
+      //   to: "/law-admin/agent/all",
+      // },
     ],
   },
   // Chat

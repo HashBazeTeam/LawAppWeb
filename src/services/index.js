@@ -1,5 +1,5 @@
 import * as userServices from "./user";
 
-export default {
-  userServices,
-};
+export { userServices };
+
+export default null;

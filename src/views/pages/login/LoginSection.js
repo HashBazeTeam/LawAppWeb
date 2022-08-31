@@ -6,11 +6,9 @@ import { LockClosedIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import OtpInput from "react-otp-input-rc-17";
-import "react-phone-number-input/style.css";
 import PhoneInputWithCountry from "react-phone-number-input";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
 import { CFormLabel } from "@coreui/react";
-import flags from "react-phone-number-input/flags";
 
 import { LoadingIndicator } from "src/components";
 import { thunks } from "src/store";
@@ -121,7 +119,7 @@ export default function LoginSection(props) {
   };
 
   // Handle change phone number
-  const handleChangePhoneNumber = (e) => {
+  const handleChangePhoneNumberBtn = (e) => {
     e.preventDefault();
     setExpandForm(false);
     setFormData({ phoneNumber: "", otp: "" });
@@ -217,7 +215,7 @@ export default function LoginSection(props) {
                   <div className="text-sm">
                     <button
                       className={`font-medium text-primary_clr-600 hover:text-primary_clr-500`}
-                      onClick={handleChangePhoneNumber}
+                      onClick={handleChangePhoneNumberBtn}
                     >
                       {t("change_phone_number")}
                     </button>

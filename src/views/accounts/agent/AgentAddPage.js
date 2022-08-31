@@ -1,14 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Joi from "joi";
-import { thunks, selectors } from "../../../store";
+import { useTranslation } from "react-i18next";
+import { isPossiblePhoneNumber } from "react-phone-number-input";
 
+import { countryArray } from "src/utils";
 import {
   CustomCFormInputGroup,
   CustomCFormSelectGroup,
+  CustomCFormPhoneNumberInputGroup,
 } from "src/components/common/CustomCInputGroup";
+import { userServices } from "src/services";
 
 import { CButton } from "@coreui/react";
 
@@ -17,20 +21,15 @@ import { CButton } from "@coreui/react";
  * TODO: Change according to law app requirements
  */
 const AgentAddPage = () => {
-  const dispatch = useDispatch();
-  const history = useHistory();
+  const { t } = useTranslation();
 
   const [formData, setFormData] = useState(initialValue);
   const [formErrors, setFormErrors] = useState({});
   const [countryOptions, setCountryOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // Fetch countries
   useEffect(() => {
-    const fetchData = async () => {
-      // TODO: Fetch countries logic implement
-    };
-
-    fetchData().catch((err) => console.log(err));
+    setCountryOptions(countryArray);
   }, []);
 
   // Joi schema
@@ -59,24 +58,36 @@ const AgentAddPage = () => {
     }
   };
 
+  const handlePhoneChange = (value) => {
+    delete formErrors["phoneNumber"];
+    setFormData({ ...formData, phoneNumber: value });
+  };
+
   // Handle add agent form submit
   const handleSubmit = async (e) => {
+    setLoading(true);
     const { error, value } = schema.validate(formData, { abortEarly: false });
-    if (!error) {
-    //   e.preventDefault();
-    //   if (res.status === 200) {
-    //     toast.success("Successfully Added");
-    //     setFormData(initialValue);
-    //   } else {
-    //     toast.error(res.message ? res.message : "Error occurred. Please try again later.");
-    //   }
-    //   return;
+    let phoneError = false;
+    if (!isPossiblePhoneNumber(formData.phoneNumber)) {
+      setLoading(false);
+      setFormErrors({ ...formErrors, phoneNumber: "Invalid phone number" });
+      phoneError = true;
+    }
+    if (!error && !phoneError) {
+      try {
+        await userServices.addAgent(value);
+      } catch (error) {
+        toast.error("Something went wrong. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     } else {
       const errors = {};
       for (let item of error.details) {
         errors[item.path[0]] = item.message;
       }
-      setFormErrors(errors);
+      setFormErrors({ ...formErrors, ...errors });
+      setLoading(false);
     }
   };
   return (
@@ -84,7 +95,7 @@ const AgentAddPage = () => {
       <div className="shadow sm:rounded-lg bg-white p-4 mb-5 row g-3">
         <div className="row g-3">
           <CustomCFormInputGroup
-            label="Full Name"
+            label={t("full_name")}
             name="fullName"
             value={formData.fullName}
             onChange={handleChange}
@@ -92,7 +103,7 @@ const AgentAddPage = () => {
             uppercase={true}
           />
           <CustomCFormInputGroup
-            label="Email Address"
+            label={t("email_address")}
             name="email"
             value={formData.email}
             onChange={handleChange}
@@ -101,7 +112,7 @@ const AgentAddPage = () => {
             mdSize={6}
           />
           <CustomCFormSelectGroup
-            label="Country"
+            label={t("country")}
             name="country"
             value={formData.country}
             onChange={handleChange}
@@ -110,11 +121,11 @@ const AgentAddPage = () => {
             mdSize={6}
             options={countryOptions}
           />
-          <CustomCFormInputGroup
-            label="Phone Number"
+          <CustomCFormPhoneNumberInputGroup
+            label={t("phone_number")}
             name="phoneNumber"
             value={formData.phoneNumber}
-            onChange={handleChange}
+            onChange={handlePhoneChange}
             error={formErrors.phoneNumber}
             uppercase={true}
             mdSize={6}
@@ -126,6 +137,7 @@ const AgentAddPage = () => {
             variant="outline"
             className="mr-2"
             onClick={handleSubmit}
+            disabled={loading}
           >
             {" "}
             Submit{" "}
