@@ -36,16 +36,16 @@ const _nav = [
     to: "/law-admin/admin",
     icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
     items: [
-      // {
-      //   component: CNavItem,
-      //   name: "Add Admin",
-      //   to: "/law-admin/admin/add",
-      // },
-      // {
-      //   component: CNavItem,
-      //   name: "Admin List",
-      //   to: "/law-admin/admin/all",
-      // },
+      {
+        component: CNavItem,
+        name: "Add Admin",
+        to: "/law-admin/admin/add",
+      },
+      {
+        component: CNavItem,
+        name: "Admin List",
+        to: "/law-admin/admin/all",
+      },
     ],
   },
   {

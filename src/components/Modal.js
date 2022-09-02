@@ -12,16 +12,19 @@ import {
   CModalBody,
   CModalFooter,
 } from "@coreui/react";
+import {useTranslation} from "react-i18next";
 
 const Modal = ({
   modalVisible,
   setModalVisible,
   title,
   body,
-  closeLabel = "Close",
+  closeLabel,
   successLabel = "Save",
   successCallback,
 }) => {
+  const { t } = useTranslation();
+  
   return (
     <div>
       <CModal visible={modalVisible} onClose={() => setModalVisible(false)}>
@@ -31,7 +34,7 @@ const Modal = ({
         <CModalBody>{body}</CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setModalVisible(false)}>
-            {closeLabel}
+            {closeLabel? closeLabel: t("close")}
           </CButton>
           <CButton color="danger" onClick={successCallback}>
             {successLabel}

@@ -1,12 +1,16 @@
 /**
  * User model
  */
-import {
+ import {
   firestore,
-  addDoc,
   collection,
   doc,
   setDoc,
+  query,
+  where,
+  getDocs,
+  getDoc,
+  updateDoc
 } from "src/services/firebase";
 
 const collectionName = "User";
@@ -19,6 +23,7 @@ export const addUser = async (user) => {
     userID: userRef.id,
     createdAt: new Date(),
     isDeleted: false,
+    role: "Admin"
   });
 };
 

@@ -58,6 +58,8 @@ import {
   where,
   getDoc,
   getDocs,
+  Timestamp,
+  serverTimestamp,
 } from "firebase/firestore";
 
 const firestore = getFirestore(firebaseApp);
@@ -73,4 +75,10 @@ export {
   where,
   getDoc,
   getDocs,
+  Timestamp,
 };
+
+// Convert firestore Timestamp to date
+export function convertFirestoreTimeStampToDate(date) {
+  return new Date(Timestamp.fromMillis(date.seconds * 1000).toDate());
+}

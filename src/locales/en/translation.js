@@ -17,5 +17,11 @@ export default {
     "common_success": "Success",
     "update": "Update",
     "remove": "Remove",
+    "date_of_birth": "Date of birth",
+    "cancel": "Cancel",
+    "are_you_sure_you_want_to_remove": "Are you sure you want to remove?",
+    "remove_admin": "Remove admin",
+    "remove_agent": "Remove agent",
+    "close": "Close"
 }
 

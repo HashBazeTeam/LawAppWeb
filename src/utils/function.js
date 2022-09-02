@@ -1,4 +1,5 @@
 import { saveAs } from "file-saver";
+import { Timestamp , convertFirestoreTimeStampToDate} from "src/services/firebase";
 
 // Get image from bucket given the image identifier
 export function getImageFromBucket(imageName) {
@@ -77,9 +78,16 @@ export function deleteEmptyKeys(obj) {
  * @param {*} date
  * @returns
  */
-export function convertTZ(date) {
-  if (!date) return "";
+export function convertTZ(paramDate) {
+  if (!paramDate) return "";
+
+  let date = paramDate;
+  if (paramDate instanceof Timestamp) {
+    date = convertFirestoreTimeStampToDate(paramDate);
+  }
+
   let dateObj = new Date(date);
+
   // MM-DD-YYYY format
   let dateStr = dateObj.toLocaleDateString("ko-KR", {
     timeZone: "Asia/Colombo",

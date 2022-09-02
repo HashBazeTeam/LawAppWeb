@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import Joi from "joi";
-import { CButton, CFormSwitch,} from "@coreui/react";
+import { CButton, CFormSwitch } from "@coreui/react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
 
+import { convertFirestoreDateToDate } from "src/services/firebase";
 import { userServices } from "src/services";
 import { countryArray } from "src/utils";
+import { convertTZ } from "src/utils";
 
 import { Modal } from "src/components";
 import {
@@ -34,16 +36,16 @@ const AgentAccountPage = () => {
   // Modal related states
   const [modalVisibility, setModalVisibility] = useState(false);
 
-  // Fetch agent data
+  // Fetch admin data
   useEffect(() => {
     let isSubscribed = true;
     const fetchAgent = async () => {
       try {
         setLoading(true);
-        const agent = await userServices.getAgentByID(userID);
-        if (agent && isSubscribed) {
-          setFormData(agent);
-          setInitialAccount(agent);
+        const admin = await userServices.getAdminByID(userID);
+        if (admin && isSubscribed) {
+          setFormData(admin);
+          setInitialAccount(admin);
         } else {
           toast.error(t("common_error"));
         }
@@ -64,11 +66,13 @@ const AgentAccountPage = () => {
   const schema = Joi.object({
     fullName: Joi.string().optional().label("Full name"),
     country: Joi.string().optional().label("Country"),
+    dob: Joi.date().optional().allow("").label("Date of birth").max("now"),
     email: Joi.string()
       .email({ tlds: { allow: false } })
       .optional()
+      .allow("")
       .label("Email"),
-    phoneNumber: Joi.string().optional().allow("").label("Phone number"),
+    phoneNumber: Joi.string().optional().label("Phone number"),
   });
 
   /*
@@ -96,6 +100,7 @@ const AgentAccountPage = () => {
       "country",
       "email",
       "phoneNumber",
+      "dob",
     ]);
     setLoading(true);
     const { error, value } = schema.validate(updatedData, {
@@ -113,7 +118,7 @@ const AgentAccountPage = () => {
     }
     if (!error && !phoneError) {
       try {
-        await userServices.updateAgent(userID, updatedData);
+        await userServices.updateAdmin(userID, updatedData);
         setInitialAccount(updatedData);
         setFormData(updatedData);
         toast.success(t("common_success"));
@@ -138,9 +143,9 @@ const AgentAccountPage = () => {
     if (!updateMode) return;
     e.preventDefault();
     try {
-      await userServices.deleteAgent(userID);
+      await userServices.deleteAdmin(userID);
       toast.success(t("common_success"));
-      history.replace("/law-admin/agent/all");
+      history.replace("/law-admin/admin/all");
     } catch (error) {
       console.log(error);
       toast.error(`${t("common_error")}`);
@@ -168,7 +173,7 @@ const AgentAccountPage = () => {
           setModalVisible={setModalVisible}
           successCallback={handleDelete}
           successLabel={t("remove")}
-          title={t("remove_agent")}
+          title={t("remove_admin")}
           body={t("are_you_sure_you_want_to_remove")}
         />
         <div className="row g-3">
@@ -192,6 +197,18 @@ const AgentAccountPage = () => {
             uppercase: true,
             required: false,
             readOnly: !updateMode,
+          })}
+          {CustomCFormInputGroup({
+            label: t("date_of_birth"),
+            name: "dob",
+            value: convertTZ(formData.dob),
+            onChange: handleChange,
+            error: formErrors.dob,
+            uppercase: true,
+            required: false,
+            readOnly: !updateMode,
+            mdSize: 6,
+            type: "date",
           })}
           {updateMode ? (
             <CustomCFormPhoneNumberInputGroup
@@ -248,7 +265,7 @@ const AgentAccountPage = () => {
               className="mr-2"
               onClick={handleSubmit}
             >
-              {t('update')}
+              {t("update")}
             </CButton>
           </div>
           <div className="justify-end">
@@ -258,7 +275,7 @@ const AgentAccountPage = () => {
               className="mr-2"
               onClick={() => setModalVisible(true)}
             >
-              {t('remove')}
+              {t("remove")}
             </CButton>
           </div>
         </div>
