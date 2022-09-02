@@ -4,13 +4,13 @@ const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
 
 // Accounts related pages
 const AgentAddPage = React.lazy(() =>
-  import("./views/accounts/agent/AgentAddPage")
+  import("./views/accounts/agent/AccountAddPage")
 );
 const AgentListPage = React.lazy(() =>
-  import("./views/accounts/agent/AgentListPage")
+  import("./views/accounts/agent/AccountListPage")
 );
 const AgentAccountPage = React.lazy(() =>
-  import("./views/accounts/agent/AgentListPage")
+  import("./views/accounts/agent/AccountPage")
 );
 
 // Chat related pages
@@ -31,6 +31,7 @@ const routes = [
     exact: true,
     isLoggedIn: false,
     accountType: ["admin"],
+    component: AgentListPage,
   },
   {
     path: "/law-admin/agent/add",
@@ -41,14 +42,14 @@ const routes = [
   },
   {
     path: "/law-admin/agent/all",
-    name: "Add Agent",
+    name: "Agent List",
     component: AgentListPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/agent/account",
-    name: "Add Agent",
+    name: "Agent Account",
     component: AgentAccountPage,
     isLoggedIn: false,
     accountType: ["admin"],

@@ -64,7 +64,6 @@ const AgentListPage = () => {
     "",
   ];
 
-  console.log(agentAccounts);
   return (
     <>
       {loading ? (
@@ -85,7 +84,7 @@ const AgentListPage = () => {
         >
           <AccountTableBody
             accounts={filteredData}
-            accountsType={accountsType}
+            accountType={accountsType}
           />
         </AccountTable>
       )}

@@ -39,7 +39,7 @@ const UserAccountTableBody = ({ accounts, accountType }) => {
                 onClick={() =>
                   history.push({
                     pathname: `/law-admin/${accountType}/account`,
-                    state: { userId: account.userId },
+                    state: { userID: account.userID },
                   })
                 }
               >
