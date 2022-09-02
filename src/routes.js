@@ -25,7 +25,7 @@ const AdminAccountPage = React.lazy(() =>
 );
 
 // Chat related pages
-const ChatPool = React.lazy(() => import("./views/chat/ChatPool"));
+const ChatPool = React.lazy(() => import("./views/chat/QuestionPool"));
 const Chat = React.lazy(() => import("./views/chat/Chat"));
 
 const routes = [

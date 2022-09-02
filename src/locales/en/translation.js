@@ -22,6 +22,12 @@ export default {
     "are_you_sure_you_want_to_remove": "Are you sure you want to remove?",
     "remove_admin": "Remove admin",
     "remove_agent": "Remove agent",
-    "close": "Close"
+    "close": "Close",
+    "filter": 'Filter',
+    "close_filter": 'Close Filter',
+    "show_filters": 'Show Filters',
+    "clear_filters": 'Clear Filters',
+    'view': "View",
+    
 }
 

@@ -43,7 +43,7 @@ const UserAccountTableBody = ({ accounts, accountType }) => {
                   })
                 }
               >
-                <span className="text-sm"> View</span>
+                <span className="text-sm"> {t('view')}</span>
               </CButton>
             </CTableDataCell>
           </CTableRow>
