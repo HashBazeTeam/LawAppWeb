@@ -12,8 +12,7 @@ import { thunks } from "src/store";
 import { auth } from "src/services/firebase";
 
 /**
- *
- * @returns Chat
+ * Chat
  */
 export default function Chat(props) {
   const history = useHistory();

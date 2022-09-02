@@ -13,7 +13,7 @@ import {
  * User account table body component
  * This component is common for all user accounts
  */
-const UserAccountTableBody = ({ accounts }) => {
+const UserAccountTableBody = ({ accounts, accountType }) => {
   const history = useHistory();
 
   return (
@@ -38,7 +38,7 @@ const UserAccountTableBody = ({ accounts }) => {
                 variant="outline"
                 onClick={() =>
                   history.push({
-                    pathname: `/law-admin/${account.accountType[1]}/account`,
+                    pathname: `/law-admin/${accountType}/account`,
                     state: { userId: account.userId },
                   })
                 }

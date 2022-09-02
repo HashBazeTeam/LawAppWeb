@@ -5,10 +5,12 @@ import { toast } from "react-toastify";
 import { deleteEmptyKeys } from "src/utils/function";
 import { useDispatch } from "react-redux";
 
+import { userServices } from "src/services";
+
 // Components
 import { LoadingIndicator } from "src/components";
 const AccountTable = React.lazy(() => import("../AccountTable"));
-const BSTableBody = React.lazy(() => import("../UserAccountTableBody"));
+const AccountTableBody = React.lazy(() => import("../UserAccountTableBody"));
 
 /**
  * Agent List page
@@ -16,58 +18,39 @@ const BSTableBody = React.lazy(() => import("../UserAccountTableBody"));
 const AgentListPage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const currentLocation = useLocation().pathname;
 
   const [loading, setLoading] = useState(false);
-  const [bsAccounts, setBsAccounts] = useState([]);
-  const [filteredData, setFilteredBSAccounts] = useState([]);
-  const [filters, setFilters] = useState({
-    branchName: "",
-    status: "",
-    accountType: "",
-  });
+  const [agentAccounts, setAgentAccounts] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [filters, setFilters] = useState({});
   const [filterErrors, setFilterErrors] = useState({});
-  const [accountsType, setAccountsType] = useState("");
-  /*
-   * Account Type
-   */
-  // Get account types
+  const accountsType = "agent";
 
   /*
-   * Fetch User Accounts
+   * Fetch Agent accounts
    */
   useEffect(() => {
     let isSubscribed = true;
+    setLoading(true);
 
+    userServices
+      .getAllAgents()
+      .then((response) => {
+        if (isSubscribed) {
+          setLoading(false);
+          setAgentAccounts(response);
+          setFilteredData(response);
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        console.log(error.message);
+        toast.error("Something went wrong. Please try again.");
+      });
+    setLoading(false);
     // Cancel any pending request
     return () => (isSubscribed = false);
   }, []);
-
-  /**
-   * Handle Filter Change
-   * No need in this table
-   */
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters({ ...filters, [name]: value });
-  };
-
-  const handleFilterSubmit = (e) => {
-    e.preventDefault();
-    const filterItems = deleteEmptyKeys(filters);
-    const filteredAccounts = bsAccounts.filter((account) => {
-      for (let key in filterItems) {
-        if (filterItems[key] != account[key]) return false;
-      }
-      return true;
-    });
-    setFilteredBSAccounts(filteredAccounts);
-  };
-
-  const handleClearFilter = () => {
-    setFilters({ branchName: "", status: "", accountType: "" });
-    setFilteredBSAccounts(bsAccounts);
-  };
 
   // Handle pagination
   const maxPages = 1;
@@ -81,6 +64,7 @@ const AgentListPage = () => {
     "",
   ];
 
+  console.log(agentAccounts);
   return (
     <>
       {loading ? (
@@ -94,12 +78,15 @@ const AgentListPage = () => {
           tableHeaderCells={tableHeaderCells}
           filters={filters}
           filterErrors={filterErrors}
-          handleFilterChange={handleFilterChange}
-          handleFilterSubmit={handleFilterSubmit}
-          handleClearFilter={handleClearFilter}
+          handleFilterChange={() => {}}
+          handleFilterSubmit={() => {}}
+          handleClearFilter={() => {}}
           accountsType={accountsType}
         >
-          <BSTableBody accounts={filteredData} />
+          <AccountTableBody
+            accounts={filteredData}
+            accountsType={accountsType}
+          />
         </AccountTable>
       )}
     </>

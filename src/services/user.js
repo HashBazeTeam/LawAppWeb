@@ -25,3 +25,7 @@ export const signOut = async () => {
 export const addAgent = async (agent) => {
   return await AgentModel.addAgent(agent);
 };
+
+export const getAllAgents = async () => {
+  return await AgentModel.getAllAgents();
+}
