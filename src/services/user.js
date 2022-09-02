@@ -19,6 +19,18 @@ export const signOut = async () => {
   return await auth.signOut();
 };
 
+export const getAllAdmins = async () => {
+  return await UserModel.getAllUsers();
+}
+
+export const getAdminByID = async (userID) => {
+  return await UserModel.getUserByID(userID);
+}
+
+export const deleteAdmin = async (userID) => {
+  return await UserModel.deleteUser(userID);
+}
+
 /**
  * Agent collection related services
  */
