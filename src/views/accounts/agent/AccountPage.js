@@ -20,6 +20,7 @@ import {
 const AgentAccountPage = () => {
   const dispatch = useDispatch();
   const history = useHistory();
+  const userID = useLocation().state.userID;
   const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
@@ -34,9 +35,24 @@ const AgentAccountPage = () => {
   // Fetch agent data
   useEffect(() => {
     let isSubscribed = true;
-
-    setLoading(true);
-
+    console.log(userID);
+    const fetchAgent = async () => {
+      try {
+        setLoading(true);
+        const agent = await userServices.getAgentByID(userID);
+        if (agent && isSubscribed) {
+          setFormData(agent);
+          setInitialAccount(agent);
+        } else {
+          toast.error(t("common_error"));
+        }
+      } catch (error) {
+        console.log(error);
+        setLoading(false);
+        toast.error(t("common_error"));
+      }
+    };
+    fetchAgent();
     setLoading(false);
 
     // Cancel any pending request
@@ -153,32 +169,30 @@ const AgentAccountPage = () => {
             />
           )}
 
-          {updateMode ? (
-            CustomCFormSelectGroup({
-              label: t("country"),
-              name: "country",
-              value: formData.country,
-              onChange: handleChange,
-              error: formErrors.country,
-              uppercase: true,
-              required: false,
-              readOnly: !updateMode,
-              options: countryArray,
-              mdSize: 6,
-            })
-          ) : (
-            CustomCFormInputGroup({
-              label: t("country"),
-              name: "country",
-              value: formData.country,
-              onChange: handleChange,
-              error: formErrors.country,
-              uppercase: true,
-              required: false,
-              readOnly: !updateMode,
-              mdSize: 6,
-            })
-          )}
+          {updateMode
+            ? CustomCFormSelectGroup({
+                label: t("country"),
+                name: "country",
+                value: formData.country,
+                onChange: handleChange,
+                error: formErrors.country,
+                uppercase: true,
+                required: false,
+                readOnly: !updateMode,
+                options: countryArray,
+                mdSize: 6,
+              })
+            : CustomCFormInputGroup({
+                label: t("country"),
+                name: "country",
+                value: formData.country,
+                onChange: handleChange,
+                error: formErrors.country,
+                uppercase: true,
+                required: false,
+                readOnly: !updateMode,
+                mdSize: 6,
+              })}
         </div>
         <div className="grid justify-end" hidden={!updateMode}>
           <CButton

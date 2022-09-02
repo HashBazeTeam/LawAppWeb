@@ -13,5 +13,6 @@ export default {
     "email_address": "Email address",
     "country": "Country",
     "phone_number": "Phone number",
+    "common_error": "Something went wrong. Please try again later.",
 }
 

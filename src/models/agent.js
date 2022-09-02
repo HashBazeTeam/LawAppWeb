@@ -9,6 +9,7 @@ import {
   query,
   where,
   getDocs,
+  getDoc
 } from "src/services/firebase";
 
 const collectionName = "Agent";
@@ -43,3 +44,14 @@ export const getAllAgents = async () => {
   });
   return agents;
 };
+
+// Get single agent account by userID
+export const getAgentByID = async (userID) => {
+  const userRef = doc(firestore, collectionName, userID);
+  const docSnap = await getDoc(userRef);
+  if (docSnap.exists()) {
+    return docSnap.data();
+  } else {
+    return null;
+  }
+}

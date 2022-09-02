@@ -29,3 +29,7 @@ export const addAgent = async (agent) => {
 export const getAllAgents = async () => {
   return await AgentModel.getAllAgents();
 }
+
+export const getAgentByID = async (userID) => {
+  return await AgentModel.getAgentByID(userID);
+}
