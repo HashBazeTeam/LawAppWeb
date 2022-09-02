@@ -59,11 +59,11 @@ const _nav = [
         name: "Add Agent",
         to: "/law-admin/agent/add",
       },
-      // {
-      //   component: CNavItem,
-      //   name: "Agent List",
-      //   to: "/law-admin/agent/all",
-      // },
+      {
+        component: CNavItem,
+        name: "Agent List",
+        to: "/law-admin/agent/all",
+      },
     ],
   },
   // Chat

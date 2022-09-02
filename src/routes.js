@@ -6,6 +6,12 @@ const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
 const AgentAddPage = React.lazy(() =>
   import("./views/accounts/agent/AgentAddPage")
 );
+const AgentListPage = React.lazy(() =>
+  import("./views/accounts/agent/AgentListPage")
+);
+const AgentAccountPage = React.lazy(() =>
+  import("./views/accounts/agent/AgentListPage")
+);
 
 // Chat related pages
 const ChatPool = React.lazy(() => import("./views/chat/ChatPool"));
@@ -30,6 +36,20 @@ const routes = [
     path: "/law-admin/agent/add",
     name: "Add Agent",
     component: AgentAddPage,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/agent/all",
+    name: "Add Agent",
+    component: AgentListPage,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/agent/account",
+    name: "Add Agent",
+    component: AgentAccountPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
