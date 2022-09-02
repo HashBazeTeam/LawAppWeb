@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import Joi from "joi";
-import { CButton, CFormSwitch } from "@coreui/react";
+import { CButton, CFormSwitch,} from "@coreui/react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
+import { isPossiblePhoneNumber } from "react-phone-number-input";
 
 import { userServices } from "src/services";
 import { countryArray } from "src/utils";
 
-import { CustomModal } from "src/components";
+import { Modal } from "src/components";
 import {
   CustomCFormInputGroup,
   CustomCFormSelectGroup,
@@ -28,6 +29,7 @@ const AgentAccountPage = () => {
   const [initialAccount, setInitialAccount] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [updateMode, setUpdateMode] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
 
   // Modal related states
   const [modalVisibility, setModalVisibility] = useState(false);
@@ -35,7 +37,6 @@ const AgentAccountPage = () => {
   // Fetch agent data
   useEffect(() => {
     let isSubscribed = true;
-    console.log(userID);
     const fetchAgent = async () => {
       try {
         setLoading(true);
@@ -67,7 +68,7 @@ const AgentAccountPage = () => {
       .email({ tlds: { allow: false } })
       .optional()
       .label("Email"),
-    phoneNumber: Joi.string().optional().label("Phone number"),
+    phoneNumber: Joi.string().optional().allow("").label("Phone number"),
   });
 
   /*
@@ -85,29 +86,66 @@ const AgentAccountPage = () => {
     setFormData({ ...formData, phoneNumber: value });
   };
 
+  // Handle update account button click
   const handleSubmit = async (e) => {
     if (!updateMode) {
       return;
     }
     const updatedData = _.pick(formData, [
       "fullName",
+      "country",
       "email",
       "phoneNumber",
-      "country",
     ]);
+    setLoading(true);
     const { error, value } = schema.validate(updatedData, {
       abortEarly: false,
     });
-    if (!error) {
-      e.preventDefault();
-
-      return;
+    let phoneError = false;
+    console.log(formData.phoneNumber != "");
+    if (
+      formData.phoneNumber != "" &&
+      !isPossiblePhoneNumber(formData.phoneNumber)
+    ) {
+      setLoading(false);
+      setFormErrors({ ...formErrors, phoneNumber: "Invalid phone number" });
+      phoneError = true;
+    }
+    if (!error && !phoneError) {
+      try {
+        await userServices.updateAgent(userID, updatedData);
+        setInitialAccount(updatedData);
+        setFormData(updatedData);
+        toast.success(t("common_success"));
+      } catch (error) {
+        console.log(error);
+        toast.error(`${t("common_error")}`);
+      } finally {
+        setLoading(false);
+      }
     } else {
       const errors = {};
       for (let item of error.details) {
         errors[item.path[0]] = item.message;
       }
-      setFormErrors(errors);
+      setFormErrors({ ...formErrors, ...errors });
+      setLoading(false);
+    }
+  };
+
+  // Handle delete
+  const handleDelete = async (e) => {
+    if (!updateMode) return;
+    e.preventDefault();
+    try {
+      await userServices.deleteAgent(userID);
+      toast.success(t("common_success"));
+      history.replace("/law-admin/agent/all");
+    } catch (error) {
+      console.log(error);
+      toast.error(`${t("common_error")}`);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -125,6 +163,14 @@ const AgentAccountPage = () => {
             }}
           />
         </div>
+        <Modal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          successCallback={handleDelete}
+          successLabel="Remove"
+          title="Remove Agent"
+          body="Are you sure you want to remove?"
+        />
         <div className="row g-3">
           {CustomCFormInputGroup({
             label: t("full_name"),
@@ -194,15 +240,27 @@ const AgentAccountPage = () => {
                 mdSize: 6,
               })}
         </div>
-        <div className="grid justify-end" hidden={!updateMode}>
-          <CButton
-            color="primary"
-            variant="outline"
-            className="mr-2"
-            onClick={handleSubmit}
-          >
-            Update Account
-          </CButton>
+        <div className="flex justify-end" hidden={!updateMode}>
+          <div className="justify-end">
+            <CButton
+              color="primary"
+              variant="outline"
+              className="mr-2"
+              onClick={handleSubmit}
+            >
+              {t('update')}
+            </CButton>
+          </div>
+          <div className="justify-end">
+            <CButton
+              color="danger"
+              variant="outline"
+              className="mr-2"
+              onClick={() => setModalVisible(true)}
+            >
+              {t('remove')}
+            </CButton>
+          </div>
         </div>
       </div>
     </>

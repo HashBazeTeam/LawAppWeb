@@ -76,6 +76,8 @@ const AgentAddPage = () => {
     if (!error && !phoneError) {
       try {
         await userServices.addAgent(value);
+        toast.success(t("common_success"));
+        setFormData(initialValue);
       } catch (error) {
         toast.error("Something went wrong. Please try again later.");
       } finally {

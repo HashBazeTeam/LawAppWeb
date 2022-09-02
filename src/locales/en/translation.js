@@ -14,5 +14,8 @@ export default {
     "country": "Country",
     "phone_number": "Phone number",
     "common_error": "Something went wrong. Please try again later.",
+    "common_success": "Success",
+    "update": "Update",
+    "remove": "Remove",
 }
 

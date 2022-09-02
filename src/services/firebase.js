@@ -57,7 +57,7 @@ import {
   query,
   where,
   getDoc,
-  getDocs
+  getDocs,
 } from "firebase/firestore";
 
 const firestore = getFirestore(firebaseApp);
@@ -72,5 +72,5 @@ export {
   query,
   where,
   getDoc,
-  getDocs
+  getDocs,
 };

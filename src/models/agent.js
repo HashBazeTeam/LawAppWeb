@@ -9,7 +9,8 @@ import {
   query,
   where,
   getDocs,
-  getDoc
+  getDoc,
+  updateDoc
 } from "src/services/firebase";
 
 const collectionName = "Agent";
@@ -26,9 +27,9 @@ export const addAgent = async (user) => {
 };
 
 // Update agent from the Agent collection
-export const updateUser = async (userID, user) => {
+export const updateAgent = async (userID, user) => {
   const userRef = doc(firestore, collectionName, userID);
-  return await setDoc(userRef, user);
+  return await updateDoc(userRef, user);
 };
 
 // Get all the agent from agent collection where the agent is not deleted
@@ -54,4 +55,12 @@ export const getAgentByID = async (userID) => {
   } else {
     return null;
   }
+}
+
+// Delete agent account by userID
+export const deleteAgent = async (userID) => {
+  const userRef = doc(firestore, collectionName, userID);
+  return await updateDoc(userRef, {
+    isDeleted: true,
+  });
 }

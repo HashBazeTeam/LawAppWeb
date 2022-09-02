@@ -33,3 +33,11 @@ export const getAllAgents = async () => {
 export const getAgentByID = async (userID) => {
   return await AgentModel.getAgentByID(userID);
 }
+
+export const updateAgent = async (userID, agent) => {
+  return await AgentModel.updateAgent(userID, agent);
+}
+
+export const deleteAgent = async (userID) => {
+  return await AgentModel.deleteAgent(userID);
+}
