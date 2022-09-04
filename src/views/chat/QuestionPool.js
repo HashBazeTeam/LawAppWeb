@@ -47,17 +47,22 @@ export default function QuestionPool(props) {
   // Firestore doesn't provide a way to get the previous page, so we have to use the lastVisibleDoc
   const fetchData = async (move) => {
     setLoading(true);
-    const { questions, totalCount, lastVisible } =
-      await questionServices.getAllQuestions(
-        filters.status,
-        recordsPerPage,
-        lastVisibleDoc,
-        move
-      );
-    setQuestionList(questions);
-    setFilteredData(questions);
-    setLastVisibleDoc(lastVisible);
-    setMaxPages(Math.ceil(totalCount / recordsPerPage));
+    try {
+      const { questions, totalCount, lastVisible } =
+        await questionServices.getAllQuestions(
+          filters.status,
+          recordsPerPage,
+          lastVisibleDoc,
+          move
+        );
+      setQuestionList(questions);
+      setFilteredData(questions);
+      setLastVisibleDoc(lastVisible);
+      setMaxPages(Math.ceil(totalCount / recordsPerPage));
+      setLoading(false);
+    } catch (error) {
+      toast.error(t("common_error"));
+    }
     setLoading(false);
   };
 

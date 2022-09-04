@@ -32,21 +32,23 @@ const AgentListPage = () => {
   useEffect(() => {
     let isSubscribed = true;
     setLoading(true);
-
-    userServices
-      .getAllAdmins()
-      .then((response) => {
-        if (isSubscribed) {
+    const fetchData = async () => {
+      userServices
+        .getAllAdmins()
+        .then((response) => {
+          if (isSubscribed) {
+            setLoading(false);
+            setAgentAccounts(response);
+            setFilteredData(response);
+          }
+        })
+        .catch((error) => {
           setLoading(false);
-          setAgentAccounts(response);
-          setFilteredData(response);
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        console.log(error.message);
-        toast.error("Something went wrong. Please try again.");
-      });
+          console.log(error.message);
+          toast.error("Something went wrong. Please try again.");
+        });
+    };
+    fetchData();
     setLoading(false);
     // Cancel any pending request
     return () => (isSubscribed = false);

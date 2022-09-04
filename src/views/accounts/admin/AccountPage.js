@@ -49,6 +49,7 @@ const AgentAccountPage = () => {
         } else {
           toast.error(t("common_error"));
         }
+        setLoading(false);
       } catch (error) {
         console.log(error);
         setLoading(false);
@@ -56,8 +57,6 @@ const AgentAccountPage = () => {
       }
     };
     fetchAgent();
-    setLoading(false);
-
     // Cancel any pending request
     return () => (isSubscribed = false);
   }, []);

@@ -1,6 +1,5 @@
-import jwtDecode from "jwt-decode";
 import { setUserCredentials, setUserData, setUserToken } from "./index";
-import services from "../../services";
+import {userServices} from "../../services";
 
 const userThunk = {
   userLogin(user) {
@@ -24,7 +23,7 @@ const userThunk = {
   userLogout() {
     return async (dispatch) => {
       try {
-        await services.userServices.signOut();
+        await userServices.signOut();
         dispatch(setUserCredentials({}));
         dispatch(setUserData({}));
         dispatch(setUserToken({}));
