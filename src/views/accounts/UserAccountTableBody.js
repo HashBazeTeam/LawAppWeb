@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import {useTranslation} from 'react-i18next';
 
 import {
   CButton,
@@ -15,6 +16,7 @@ import {
  */
 const UserAccountTableBody = ({ accounts, accountType }) => {
   const history = useHistory();
+  const { t } = useTranslation();
 
   return (
     <>

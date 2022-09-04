@@ -25,15 +25,11 @@ const AccountTable = ({
   handleFilterChange,
   handleFilterSubmit,
   handleClearFilter,
+  handlePageChangeNext,
+  handlePageChangePrevious
 }) => {
-  // Methods
-  const handlePageChangePrevious = () => {
-    pageNumber == 1 ? 1 : setPageNumber(pageNumber - 1);
-  };
-  const handlePageChangeNext = () => {
-    pageNumber == maxPages ? maxPages : setPageNumber(pageNumber + 1);
-  };
 
+  // Return pagination items
   const PaginationPages = () => {
     const items = [];
     for (let i = 1; i <= maxPages; i++) {
@@ -41,7 +37,10 @@ const AccountTable = ({
         <CPaginationItem
           key={i}
           active={i === pageNumber}
-          onClick={() => setPageNumber(i)}
+          // onClick={() => {
+          //   setPageNumber(i);
+            
+          // }}
         >
           {i}
         </CPaginationItem>

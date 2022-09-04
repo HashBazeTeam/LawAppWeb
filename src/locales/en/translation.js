@@ -28,6 +28,9 @@ export default {
     "show_filters": 'Show Filters',
     "clear_filters": 'Clear Filters',
     'view': "View",
-    
+    "topic": "Topic",
+    "date": "Date",
+    "country": "Country",
+    "status": "Status",    
 }
 

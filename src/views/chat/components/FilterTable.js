@@ -17,7 +17,6 @@ const FilterTable = ({
   questions,
   handleClearFilter,
 }) => {
-  const dispatch = useDispatch();
   const [showFilterData, setShowFilterData] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +30,7 @@ const FilterTable = ({
             onClick={() => setShowFilterData(!showFilterData)}
           >
             <CIcon icon={cilFilter} />{" "}
-            <span className="text-sm">{t('show_filters')}</span>
+            <span className="text-sm">{t("show_filters")}</span>
           </CButton>
         </div>
 
@@ -64,7 +63,8 @@ const FilterTable = ({
               variant="outline"
               onClick={handleFilterSubmit}
             >
-              <CIcon icon={cilFilter} /> <span className="text-sm">{t('filter')}</span>
+              <CIcon icon={cilFilter} />{" "}
+              <span className="text-sm">{t("filter")}</span>
             </CButton>
           </div>
           <div className="felx-row justify-end" hidden={!showFilterData}>
@@ -74,7 +74,7 @@ const FilterTable = ({
               onClick={handleClearFilter}
             >
               <CIcon icon={cilFilter} />{" "}
-              <span className="text-sm">{t('clear_filter')}</span>
+              <span className="text-sm">{t("clear_filter")}</span>
             </CButton>
           </div>
         </div>

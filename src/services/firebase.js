@@ -59,7 +59,9 @@ import {
   getDoc,
   getDocs,
   Timestamp,
-  serverTimestamp,
+  limit,
+  orderBy,
+  startAfter
 } from "firebase/firestore";
 
 const firestore = getFirestore(firebaseApp);
@@ -76,6 +78,9 @@ export {
   getDoc,
   getDocs,
   Timestamp,
+  limit,
+  orderBy,
+  startAfter
 };
 
 // Convert firestore Timestamp to date
