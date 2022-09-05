@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Joi from "joi";
 import { LinkIcon } from "@heroicons/react/solid";
@@ -16,6 +16,8 @@ import {
   onSnapshot,
   firestore,
 } from "src/services/firebase";
+import { selectors } from "src/store";
+import { questionServices } from "src/services";
 
 /**
  * Chat
@@ -27,22 +29,24 @@ export default function Chat(props) {
   const screenHeight = window.innerHeight - 128; // Due to purge issue tailwind css doesn't detect variable change
   const question = props.location.state.question; // Get the question from the previous page
 
+  // Selector
+  const userID = useSelector(selectors.user.selectUserID);
+  
   // States
   const [messages, setMessages] = useState([]);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState("");
 
   useEffect(() => {
     const q = query(
       collection(firestore, "Question", question.questionID, "chat")
     );
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      console.log(question);
       const chats = [];
       querySnapshot.forEach((doc) => {
         const chat = doc.data();
         const chatPosition =
           chat.author.id == question.clientID ? "left" : "right";
-        
+
         // Get the chat type
         let chatType = "text";
         switch (chat.type) {
@@ -110,6 +114,28 @@ export default function Chat(props) {
     setFormData(e.target.value);
   };
 
+  // Handle send btn pressed
+  const handleSend = async (e) => {
+    e.preventDefault();
+    if(formData == "" || !formData) return;
+    const msgTime = new Date().valueOf();
+    const chat = {
+      author: { id: userID },
+      createdAt: msgTime,
+      id: msgTime,
+      type: "text",
+      text: formData,
+    };
+    try {
+      await questionServices.addChatToQuestion(question.questionID, chat);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // Handle submit answer button
+  const handleSubmitAnswerBtnPressed = () => {};
+
   return (
     <>
       <div
@@ -146,31 +172,48 @@ export default function Chat(props) {
             />
           ))}
         </div>
-        <div className="mb-0 mx-1 sticky bottom-0">
-          <Input
-            className="m-1 p-1"
-            onChange={handleChange}
-            placeholder="Type here..."
-            multiline={true}
-            rightButtons={
-              <Button color="white" backgroundColor="black" text="Send" />
-            }
-            leftButtons={
-              <button
-                id="recaptcha-container"
-                disabled={false}
-                onClick={() => {}}
-                type="submit"
-                className={`group relative w-full flex justify-center py-1 px-4
+
+        <div className="mb-0 mx-1 sticky bottom-0 grid grid-cols-8 align-middle justify-center">
+          <div className="col-span-7">
+            <Input
+              className="m-1 p-1"
+              value={formData}
+              onChange={handleChange}
+              placeholder="Type here..."
+              multiline={true}
+              rightButtons={
+                <Button
+                  color="white"
+                  backgroundColor="black"
+                  text="Send"
+                  onClick={handleSend}
+                />
+              }
+              leftButtons={
+                <button
+                  id="recaptcha-container"
+                  disabled={false}
+                  onClick={() => {}}
+                  type="submit"
+                  className={`group relative w-full flex justify-center py-1 px-4
                     border-transparent text-sm font-medium text-black 
                     `}
-              >
-                <span className="absolute left-0 inset-y-0 flex items-center pl-3">
-                  <LinkIcon className="h-5 w-5" aria-hidden="true" />
-                </span>
-              </button>
-            }
-          />
+                >
+                  <span className="absolute left-0 inset-y-0 flex items-center pl-3">
+                    <LinkIcon className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </button>
+              }
+            />
+          </div>
+          <div className="col-span-1 bg-red py-2 flex justify-center align-middle">
+            <Button
+              color="white"
+              backgroundColor="green"
+              text="Submit Answer"
+              onClick={handleSubmitAnswerBtnPressed}
+            />
+          </div>
         </div>
       </div>
     </>

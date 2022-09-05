@@ -14,19 +14,25 @@ import {
   startAfter,
   limit,
   orderBy,
-  endBefore
+  endBefore,
+  addDoc,
 } from "src/services/firebase";
 
 const collectionName = "Question";
 
 // Update question from the Question collection
 export const updateQuestion = async (questionID, data) => {
-  const userRef = doc(firestore, collectionName, questionID);
-  return await updateDoc(userRef, data);
+  const docRef = doc(firestore, collectionName, questionID);
+  return await updateDoc(docRef, data);
 };
 
 // Get all the question from question collection where the question is not deleted
-export const getAllQuestions = async (status, limitCount, lastVisible, move) => {
+export const getAllQuestions = async (
+  status,
+  limitCount,
+  lastVisible,
+  move
+) => {
   let q;
   if (status && status != "") {
     if (lastVisible) {
@@ -53,7 +59,6 @@ export const getAllQuestions = async (status, limitCount, lastVisible, move) => 
           limit(limitCount)
         );
       }
-      
     } else {
       q = query(
         collection(firestore, collectionName),
@@ -86,7 +91,6 @@ export const getAllQuestions = async (status, limitCount, lastVisible, move) => 
           limit(limitCount)
         );
       }
-      
     } else {
       q = query(
         collection(firestore, collectionName),
@@ -108,8 +112,8 @@ export const getAllQuestions = async (status, limitCount, lastVisible, move) => 
 
   // Get question totalCount
   let totalCount = 0;
-  const userRef = doc(firestore, "Stat", "Question");
-  const docSnap = await getDoc(userRef);
+  const docRef = doc(firestore, "Stat", "Question");
+  const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
     totalCount = docSnap.data().totalCount;
   } else {
@@ -121,11 +125,28 @@ export const getAllQuestions = async (status, limitCount, lastVisible, move) => 
 
 // Get single question account by userID
 export const getQuestionByID = async (userID) => {
-  const userRef = doc(firestore, collectionName, userID);
-  const docSnap = await getDoc(userRef);
+  const docRef = doc(firestore, collectionName, userID);
+  const docSnap = await getDoc(docRef);
   if (docSnap.exists()) {
     return docSnap.data();
   } else {
     return null;
   }
+};
+
+/**
+ * Chat related methods
+ */
+
+// Add chat to the question's chat sub collection
+export const addChatToQuestion = async (questionID, data) => {
+  console.log(questionID, data, data.id.toString());
+  const docRef = doc(
+    firestore,
+    collectionName,
+    questionID,
+    "chat",
+    data.id.toString()
+  );
+  return await setDoc(docRef, data);
 };

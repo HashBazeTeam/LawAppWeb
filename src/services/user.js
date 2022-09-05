@@ -27,6 +27,10 @@ export const getAdminByID = async (userID) => {
   return await UserModel.getUserByID(userID);
 }
 
+export const getAdminByPhoneNumber = async (phoneNumber) => {
+  return await UserModel.getUserByPhoneNumber(phoneNumber);
+}
+
 export const deleteAdmin = async (userID) => {
   return await UserModel.deleteUser(userID);
 }

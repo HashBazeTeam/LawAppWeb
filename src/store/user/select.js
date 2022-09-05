@@ -13,6 +13,11 @@ export const selectUserData = createDraftSafeSelector(
   (user) => user.userData
 );
 
+export const selectUserID = createDraftSafeSelector(
+  (state) => state.user,
+  (user) => user.userData.userID
+)
+
 export const selectRole = createDraftSafeSelector(
   (state) => state.user,
   (user) => user.userData.role

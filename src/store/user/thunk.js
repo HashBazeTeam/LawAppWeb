@@ -1,9 +1,30 @@
 import { setUserCredentials, setUserData, setUserToken } from "./index";
-import {userServices} from "../../services";
+import { userServices } from "../../services";
 
 const userThunk = {
   userLogin(user) {
-    return async (dispatch) => {
+    return async (dispatch, getState) => {
+      const {
+        user: { credentials, userData },
+      } = getState();
+      if (!userData.userID) {
+        try {
+          const adminUser = await userServices.getAdminByPhoneNumber(
+            user.phoneNumber
+          );
+          dispatch(
+            setUserData({
+              userID: adminUser.userID,
+              fullName: adminUser.fullName,
+              country: adminUser.country,
+              phoneNumber: adminUser.phoneNumber,
+              email: adminUser.email,
+            })
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      }
       dispatch(
         setUserCredentials({
           phoneNumber: user.phoneNumber,
