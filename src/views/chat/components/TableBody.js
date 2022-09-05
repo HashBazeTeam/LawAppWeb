@@ -37,8 +37,8 @@ const TableBody = ({ questions }) => {
                 variant="outline"
                 onClick={() =>
                   history.push({
-                    pathname: `/office/questions/chat`,
-                    state: { questionID: question.questionID },
+                    pathname: `/law-admin/question/chat`,
+                    state: { question: question },
                   })
                 }
               >

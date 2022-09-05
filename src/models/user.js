@@ -1,7 +1,7 @@
 /**
  * User model
  */
- import {
+import {
   firestore,
   collection,
   doc,
@@ -10,7 +10,7 @@
   where,
   getDocs,
   getDoc,
-  updateDoc
+  updateDoc,
 } from "src/services/firebase";
 
 const collectionName = "User";
@@ -23,7 +23,7 @@ export const addUser = async (user) => {
     userID: userRef.id,
     createdAt: new Date(),
     isDeleted: false,
-    role: "Admin"
+    role: "Admin",
   });
 };
 
@@ -37,7 +37,8 @@ export const updateUser = async (userID, user) => {
 export const getAllUsers = async () => {
   const q = query(
     collection(firestore, collectionName),
-    where("isDeleted", "!=", true), where("role", "==", "Admin")
+    where("isDeleted", "!=", true),
+    where("role", "==", "Admin")
   );
   const querySnapshot = await getDocs(q);
   let agents = [];
@@ -56,7 +57,28 @@ export const getUserByID = async (userID) => {
   } else {
     return null;
   }
-}
+};
+
+// Get single user account by phone number
+export const getUserByPhoneNumber = async (phoneNumber) => {
+  const q = query(
+    collection(firestore, collectionName),
+    where("phoneNumber", "==", phoneNumber)
+  );
+  const querySnapshot = await getDocs(q);
+  let user = [];
+  querySnapshot.forEach((doc) => {
+    user.push(doc.data());
+  });
+  if (user.length == 1) {
+    return user[0];
+  } else if (user.length > 1) {
+    console.log("More than one user with the same phone number");
+    return null;
+  } else {
+    return null;
+  }
+};
 
 // Delete user account by userID
 export const deleteUser = async (userID) => {
@@ -64,4 +86,4 @@ export const deleteUser = async (userID) => {
   return await updateDoc(userRef, {
     isDeleted: true,
   });
-}
+};

@@ -1,7 +1,6 @@
 /**
  * Question model
  */
-import { endBefore } from "firebase/firestore";
 import {
   firestore,
   collection,
@@ -15,6 +14,7 @@ import {
   startAfter,
   limit,
   orderBy,
+  endBefore
 } from "src/services/firebase";
 
 const collectionName = "Question";

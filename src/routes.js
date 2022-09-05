@@ -101,6 +101,7 @@ const routes = [
     name: "Questions",
     exact: true,
     isLoggedIn: false,
+    component: ChatPool,
     accountType: ["admin"],
   },
   {

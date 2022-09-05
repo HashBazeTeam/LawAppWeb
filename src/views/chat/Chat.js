@@ -5,11 +5,17 @@ import Joi from "joi";
 import { LinkIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { MessageList, Input, Button } from "react-chat-elements";
+import { MessageList, Input, Button, MessageBox } from "react-chat-elements";
 
 import { LoadingIndicator } from "src/components";
-import { thunks } from "src/store";
-import { auth } from "src/services/firebase";
+import { saveImg } from "src/utils/function";
+import {
+  collection,
+  query,
+  where,
+  onSnapshot,
+  firestore,
+} from "src/services/firebase";
 
 /**
  * Chat
@@ -18,27 +24,129 @@ export default function Chat(props) {
   const history = useHistory();
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const screenHeight = window.innerHeight - 128; // Due to purge issue tailwind css doesn't detect variable change
+  const question = props.location.state.question; // Get the question from the previous page
 
   // States
-  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    const q = query(
+      collection(firestore, "Question", question.questionID, "chat")
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      console.log(question);
+      const chats = [];
+      querySnapshot.forEach((doc) => {
+        const chat = doc.data();
+        const chatPosition =
+          chat.author.id == question.clientID ? "left" : "right";
+        
+        // Get the chat type
+        let chatType = "text";
+        switch (chat.type) {
+          case "image":
+            chatType = "photo";
+            break;
+          case "file":
+            chatType = "file";
+            break;
+          default:
+            chatType = "text";
+            break;
+        }
+
+        // Get the class name according to the side and data type
+        let classNames = "py-2 text-black text-lg";
+        if (chatPosition == "left") {
+          if (chat.type == "image") {
+            classNames += " mr-[60%]";
+          } else {
+            classNames += " mr-16";
+          }
+        } else {
+          if (chat.type == "image") {
+            classNames += " ml-[60%]";
+          } else {
+            classNames += " ml-16";
+          }
+        }
+
+        const chatModel = {
+          position: chatPosition,
+          type: chatType,
+          id: chat.id,
+          date: new Date(chat.createdAt),
+          className: classNames,
+          // className: chatPosition == "py-2 mr-16 ",
+          text: chat.text,
+          title: "Client",
+          data: {
+            uri: chat.uri,
+            className: "w-40",
+            // uri: "https://picsum.photos/200",
+            status: {
+              click: false,
+              loading: 0,
+            },
+          },
+          onClick: (file) => {
+            console.log(file);
+          },
+        };
+        chats.push(chatModel);
+      });
+      setMessages(chats);
+    });
+
+    return unsubscribe;
+  }, []);
 
   /**
    * Handlers
    */
   const handleChange = (e) => {
-    setMessage(e.target.value);
+    setFormData(e.target.value);
   };
 
   return (
     <>
-      <div className="mb-4">
-        <MessageList
+      <div
+        className={`mb-4 columns-1 flex flex-col justify-between 
+      h-screen bg-transparent overflow-y-scroll w-full`}
+      >
+        {/* <MessageList
           className="message-list m-1"
           lockable={true}
           toBottomHeight={"100%"}
-          dataSource={sampleData}
-        />
-        <div>
+          dataSource={messages}
+          onDownload={(item) => { console.log(item) }}
+          // onOpen={(item) => { console.log(item) }}
+        /> */}
+        <div className="w-full">
+          {messages.map((message, index) => (
+            <MessageBox
+              className={message.className}
+              key={message.id}
+              position={message.position}
+              type={message.type}
+              text={message.text}
+              data={{
+                uri: message.data.uri,
+                status: {
+                  click: false,
+                  loading: 0,
+                },
+                size: "small",
+              }}
+              onDownload={(item) => {
+                saveImg(message.data.uri);
+              }}
+            />
+          ))}
+        </div>
+        <div className="mb-0 mx-1 sticky bottom-0">
           <Input
             className="m-1 p-1"
             onChange={handleChange}
@@ -53,7 +161,7 @@ export default function Chat(props) {
                 disabled={false}
                 onClick={() => {}}
                 type="submit"
-                className={`group relative w-full flex justify-center py-1 px-4 
+                className={`group relative w-full flex justify-center py-1 px-4
                     border-transparent text-sm font-medium text-black 
                     `}
               >
@@ -112,5 +220,22 @@ const sampleData = [
   //   data: {
   //     uri: "https://picsum.photos/200/200",
   //   },
+
+  // },
+  // {
+  //   position: "left",
+  //   type: "text",
+  //   title: "Lawyer",
+  //   text: "Can I know more details about the case?",
+  //   date: new Date(),
+  //   className: "py-2 mr-12",
+  // },
+  // {
+  //   position: "left",
+  //   type: "text",
+  //   title: "Lawyer",
+  //   text: "Can I know more details about the case?",
+  //   date: new Date(),
+  //   className: "py-2 mr-12",
   // },
 ];

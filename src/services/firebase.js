@@ -61,7 +61,7 @@ import {
   Timestamp,
   limit,
   orderBy,
-  startAfter
+  startAfter,endBefore, onSnapshot
 } from "firebase/firestore";
 
 const firestore = getFirestore(firebaseApp);
@@ -80,7 +80,7 @@ export {
   Timestamp,
   limit,
   orderBy,
-  startAfter
+  startAfter,endBefore,onSnapshot
 };
 
 // Convert firestore Timestamp to date
