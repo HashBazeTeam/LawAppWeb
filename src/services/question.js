@@ -10,4 +10,8 @@
 export const addChatToQuestion = async (questionID, chat) => {
   return await QuestionModel.addChatToQuestion(questionID, chat);
 };
+
+export const addChatFileToQuestion = async (questionID, file, chat) => {
+  return await QuestionModel.addChatFileToQuestion(questionID, file, chat);
+}
  

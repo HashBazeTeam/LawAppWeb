@@ -61,7 +61,9 @@ import {
   Timestamp,
   limit,
   orderBy,
-  startAfter,endBefore, onSnapshot
+  startAfter,
+  endBefore,
+  onSnapshot,
 } from "firebase/firestore";
 
 const firestore = getFirestore(firebaseApp);
@@ -80,10 +82,21 @@ export {
   Timestamp,
   limit,
   orderBy,
-  startAfter,endBefore,onSnapshot
+  startAfter,
+  endBefore,
+  onSnapshot,
 };
 
 // Convert firestore Timestamp to date
 export function convertFirestoreTimeStampToDate(date) {
   return new Date(Timestamp.fromMillis(date.seconds * 1000).toDate());
 }
+
+/**
+ * Firebase storage
+ */
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+
+const storage = getStorage(firebaseApp);
+
+export { storage, ref, uploadBytes, getDownloadURL };

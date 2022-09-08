@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import Joi from "joi";
@@ -28,13 +28,16 @@ export default function Chat(props) {
   const { t } = useTranslation();
   const screenHeight = window.innerHeight - 128; // Due to purge issue tailwind css doesn't detect variable change
   const question = props.location.state.question; // Get the question from the previous page
+  const inputRef = useRef(null);
 
   // Selector
   const userID = useSelector(selectors.user.selectUserID);
-  
+
   // States
   const [messages, setMessages] = useState([]);
   const [formData, setFormData] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     const q = query(
@@ -110,14 +113,57 @@ export default function Chat(props) {
   /**
    * Handlers
    */
+  const handleAttachIconClick = () => {
+    inputRef.current.click();
+  };
+
   const handleChange = (e) => {
     setFormData(e.target.value);
+  };
+
+  const handleFileInputChange = async (e) => {
+    console.log("this runs");
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const msgTime = new Date().valueOf();
+    const TWENTY_MB = 1024 * 1024 * 20;
+
+    if (file.size > TWENTY_MB) {
+      toast.error("Max file size is 20MB");
+      return;
+    }
+
+    // Check file type
+    let fileType = "image";
+    if (file.type.startsWith("image")) {
+      fileType = "image";
+    } else {
+      fileType = "file";
+    }
+
+    const chat = {
+      author: { id: userID },
+      createdAt: msgTime,
+      id: msgTime,
+      type: fileType,
+    };
+
+    try {
+      await questionServices.addChatFileToQuestion(
+        question.questionID,
+        file,
+        chat
+      );
+    } catch (error) {
+      console.log(error);
+      toast.error("Error uploading file");
+    }
   };
 
   // Handle send btn pressed
   const handleSend = async (e) => {
     e.preventDefault();
-    if(formData == "" || !formData) return;
+    if (formData == "" || !formData) return;
     const msgTime = new Date().valueOf();
     const chat = {
       author: { id: userID },
@@ -177,7 +223,7 @@ export default function Chat(props) {
           <div className="col-span-7">
             <Input
               className="m-1 p-1"
-              value={formData}
+              value={file}
               onChange={handleChange}
               placeholder="Type here..."
               multiline={true}
@@ -193,12 +239,18 @@ export default function Chat(props) {
                 <button
                   id="recaptcha-container"
                   disabled={false}
-                  onClick={() => {}}
+                  onClick={handleAttachIconClick}
                   type="submit"
                   className={`group relative w-full flex justify-center py-1 px-4
                     border-transparent text-sm font-medium text-black 
                     `}
                 >
+                  <input
+                    style={{ display: "none" }}
+                    ref={inputRef}
+                    type="file"
+                    onChange={handleFileInputChange}
+                  />
                   <span className="absolute left-0 inset-y-0 flex items-center pl-3">
                     <LinkIcon className="h-5 w-5" aria-hidden="true" />
                   </span>

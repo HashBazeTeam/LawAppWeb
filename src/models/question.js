@@ -16,6 +16,10 @@ import {
   orderBy,
   endBefore,
   addDoc,
+  storage,
+  uploadBytes,
+  ref,
+  getDownloadURL,
 } from "src/services/firebase";
 
 const collectionName = "Question";
@@ -149,4 +153,24 @@ export const addChatToQuestion = async (questionID, data) => {
     data.id.toString()
   );
   return await setDoc(docRef, data);
+};
+
+// Add image and file to the question's chat sub collection
+export const addChatFileToQuestion = async (questionID, file, data) => {
+  // TODO: Change the file name to a unique name and location
+  const fileName = file.name+ "#LawApp" + new Date().getTime();
+  const storageRef = ref(storage, "chat-image", questionID, fileName );
+  await uploadBytes(storageRef, file);
+  console.log(questionID, file, data, fileName, await getDownloadURL(storageRef));
+  const uploadData = { ...data, uri: await getDownloadURL(storageRef) };
+
+  const docRef = doc(
+    firestore,
+    collectionName,
+    questionID,
+    "chat",
+    data.id.toString()
+  );
+
+  return await setDoc(docRef, uploadData);
 };
