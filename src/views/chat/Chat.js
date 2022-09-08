@@ -87,8 +87,8 @@ export default function Chat(props) {
           date: new Date(chat.createdAt),
           className: classNames,
           // className: chatPosition == "py-2 mr-16 ",
-          text: chat.text,
-          title: "Client",
+          text: chat.text ? chat.text : chat.name,
+          title: chatPosition == "left" ? "Client" : "Admin",
           data: {
             uri: chat.uri,
             className: "w-40",
@@ -122,7 +122,6 @@ export default function Chat(props) {
   };
 
   const handleFileInputChange = async (e) => {
-    console.log("this runs");
     const file = e.target.files?.[0];
     if (!file) return;
     const msgTime = new Date().valueOf();
@@ -146,6 +145,7 @@ export default function Chat(props) {
       createdAt: msgTime,
       id: msgTime,
       type: fileType,
+      name: file.name,
     };
 
     try {
@@ -180,7 +180,11 @@ export default function Chat(props) {
   };
 
   // Handle submit answer button
-  const handleSubmitAnswerBtnPressed = () => {};
+  const handleSubmitAnswerBtnPressed = () => { };
+  
+  const handleFileDownload = async (fileURI, fileName) => {
+    await saveImg(fileURI, fileName)
+  }
 
   return (
     <>
@@ -188,36 +192,14 @@ export default function Chat(props) {
         className={`mb-4 columns-1 flex flex-col justify-between 
       h-screen bg-transparent overflow-y-scroll w-full`}
       >
-        {/* <MessageList
+        <MessageList
           className="message-list m-1"
           lockable={true}
           toBottomHeight={"100%"}
           dataSource={messages}
-          onDownload={(item) => { console.log(item) }}
+          onDownload={(item) => handleFileDownload(item.data.uri, item.text)}
           // onOpen={(item) => { console.log(item) }}
-        /> */}
-        <div className="w-full">
-          {messages.map((message, index) => (
-            <MessageBox
-              className={message.className}
-              key={message.id}
-              position={message.position}
-              type={message.type}
-              text={message.text}
-              data={{
-                uri: message.data.uri,
-                status: {
-                  click: false,
-                  loading: 0,
-                },
-                size: "small",
-              }}
-              onDownload={(item) => {
-                saveImg(message.data.uri);
-              }}
-            />
-          ))}
-        </div>
+        />
 
         <div className="mb-0 mx-1 sticky bottom-0 grid grid-cols-8 align-middle justify-center">
           <div className="col-span-7">

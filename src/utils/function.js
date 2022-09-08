@@ -41,12 +41,20 @@ export function printFormData(formData, data) {
  * Save given image to the local
  * @param {*} urlArr : URL String Array
  */
-export function saveImg(urlArr) {
+export async function saveImg(urlArr, fileName) {
   (async () => {
     if (!Array.isArray(urlArr)) {
-      const response = await fetch(urlArr);
-      const blob = await response.blob();
-      saveAs(blob);
+      const xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      xhr.onload = (event) => {
+        const blob = xhr.response;
+        saveAs(blob, fileName);
+      };
+      xhr.open('GET', urlArr);
+      xhr.send();
+      // const response = await fetch(urlArr);
+      // const blob = await response.blob();
+      // saveAs(blob);
       return;
     }
     for (let i = 0; i < urlArr.length; i++) {
