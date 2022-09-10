@@ -6,6 +6,9 @@ import { LinkIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { MessageList, Input, Button, MessageBox } from "react-chat-elements";
+import CIcon from "@coreui/icons-react";
+import { CButton } from "@coreui/react";
+import { cilSearch } from "@coreui/icons";
 
 import { LoadingIndicator } from "src/components";
 import { saveImg } from "src/utils/function";
@@ -18,6 +21,7 @@ import {
 } from "src/services/firebase";
 import { selectors } from "src/store";
 import { questionServices } from "src/services";
+import { textSpanContainsTextSpan } from "typescript";
 
 /**
  * Chat
@@ -98,9 +102,6 @@ export default function Chat(props) {
               loading: 0,
             },
           },
-          onClick: (file) => {
-            console.log(file);
-          },
         };
         chats.push(chatModel);
       });
@@ -180,14 +181,57 @@ export default function Chat(props) {
   };
 
   // Handle submit answer button
-  const handleSubmitAnswerBtnPressed = () => { };
-  
+  const handleSubmitAnswerBtnPressed = async () => {
+    if (question.status == "Answered") return;
+
+    setLoading(true);
+    try {
+      await questionServices.updateQuestion(question.questionID, {
+        status: "Answered",
+      });
+      const msgTime = new Date().valueOf();
+      const chat = {
+        author: { id: userID },
+        createdAt: msgTime,
+        id: msgTime,
+        type: "text",
+        text: "Answered the question.",
+      };
+      await questionServices.addChatToQuestion(question.questionID, chat);
+    } catch (error) {
+      setLoading(false);
+      toast.error(t("common_error"));
+    }
+    setLoading(false);
+  };
+
   const handleFileDownload = async (fileURI, fileName) => {
-    await saveImg(fileURI, fileName)
-  }
+    await saveImg(fileURI, fileName);
+  };
 
   return (
     <>
+      <div className="col-span-1 bg-red py-2 flex justify-center align-middle">
+        <CButton
+          className=" text-md"
+          color="primary"
+          variant="outline"
+          onClick={() =>
+            history.push({
+              pathname: "/law-admin/question/pool",
+              state: {
+                client: {
+                  clientID: question.clientID,
+                  clientName: question.clientName,
+                },
+              },
+            })
+          }
+        >
+          <CIcon icon={cilSearch} />{" "}
+          <span className="text-sm">{t("show_previous_questions")}</span>
+        </CButton>
+      </div>
       <div
         className={`mb-4 columns-1 flex flex-col justify-between 
       h-screen bg-transparent overflow-y-scroll w-full`}

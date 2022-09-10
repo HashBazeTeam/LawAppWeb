@@ -16,8 +16,9 @@ const TableBody = React.lazy(() => import("./components/TableBody"));
  */
 export default function QuestionPool(props) {
   const { t } = useTranslation();
+  const client = props.location.state?.client; // Get the question from the previous page
 
-  const recordsPerPage = 50; // Records per page
+  const recordsPerPage = 20; // Records per page
   const [questionList, setQuestionList] = useState([]);
   const [maxPages, setMaxPages] = useState(0);
   const [pageNumber, setPageNumber] = useState(1);
@@ -42,25 +43,63 @@ export default function QuestionPool(props) {
     return () => (isSubscribed = false);
   }, []);
 
+  /*
+   * Fetch questions when client is changed
+   */
+  useEffect(() => {
+    let isSubscribed = true;
+    setLoading(true);
+    fetchData().catch((err) => {
+      console.log(err);
+      setLoading(false);
+    });
+    setLoading(false);
+    // Cancel any pending request
+    return () => (isSubscribed = false);
+  }, [client]);
+
   // Fetch data on page change
   // move :- next or previous
   // Firestore doesn't provide a way to get the previous page, so we have to use the lastVisibleDoc
   const fetchData = async (move) => {
     setLoading(true);
     try {
-      const { questions, totalCount, lastVisible } =
-        await questionServices.getAllQuestions(
-          filters.status,
-          recordsPerPage,
-          lastVisibleDoc,
-          move
-        );
-      setQuestionList(questions);
-      setFilteredData(questions);
-      setLastVisibleDoc(lastVisible);
-      setMaxPages(Math.ceil(totalCount / recordsPerPage));
+      let _questions;
+      let _totalCount;
+      let _lastVisible;
+
+      if (client && client.clientID != null) {
+        // Get questions by clientID
+        const { questions, totalCount, lastVisible } =
+          await questionServices.getClientQuestion(
+            client.clientID,
+            recordsPerPage,
+            lastVisibleDoc,
+            move
+          );
+        _questions = questions;
+        _totalCount = totalCount;
+        _lastVisible = lastVisible;
+      } else {
+        const { questions, totalCount, lastVisible } =
+          await questionServices.getAllQuestions(
+            filters.status,
+            recordsPerPage,
+            lastVisibleDoc,
+            move
+          );
+        _questions = questions;
+        _totalCount = totalCount;
+        _lastVisible = lastVisible;
+      }
+
+      setQuestionList(_questions);
+      setFilteredData(_questions);
+      setLastVisibleDoc(_lastVisible);
+      setMaxPages(Math.ceil(_totalCount / recordsPerPage));
       setLoading(false);
     } catch (error) {
+      console.log(error);
       toast.error(t("common_error"));
     }
     setLoading(false);
@@ -129,6 +168,7 @@ export default function QuestionPool(props) {
           handleClearFilter={handleClearFilter}
           handlePageChangePrevious={handlePageChangePrevious}
           handlePageChangeNext={handlePageChangeNext}
+          showFilter={client?.clientID != null ? false : true}
         >
           <TableBody questions={filteredData} />
         </Table>

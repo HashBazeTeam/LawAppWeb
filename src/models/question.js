@@ -127,6 +127,103 @@ export const getAllQuestions = async (
   return { questions, lastVisible: lastOne, totalCount };
 };
 
+// Get clients all questions
+export const getClientQuestions = async (
+  clientID,
+  limitCount,
+  lastVisible,
+  move
+) => {
+  let q;
+  if (clientID && clientID != "") {
+    if (lastVisible) {
+      if (move == "next") {
+        q = query(
+          collection(firestore, collectionName),
+          where("isDelete", "!=", true),
+          where("clientID", "==", clientID),
+          orderBy("isDelete", "desc"),
+          // orderBy("clientID", "asc"),
+          orderBy("postDateTime", "desc"),
+          startAfter(lastVisible),
+          limit(limitCount)
+        );
+      } else {
+        q = query(
+          collection(firestore, collectionName),
+          where("isDelete", "!=", true),
+          where("clientID", "==", clientID),
+          orderBy("isDelete", "desc"),
+          // orderBy("clientID", "asc"),
+          orderBy("postDateTime", "desc"),
+          endBefore(lastVisible),
+          limit(limitCount)
+        );
+      }
+    } else {
+      q = query(
+        collection(firestore, collectionName),
+        where("isDelete", "!=", true),
+        where("clientID", "==", clientID),
+        orderBy("isDelete", "desc"),
+        // orderBy("clientID", "asc"),
+        orderBy("postDateTime", "desc"),
+        limit(limitCount)
+      );
+    }
+  } else {
+    if (lastVisible) {
+      if (move == "next") {
+        q = query(
+          collection(firestore, collectionName),
+          where("isDelete", "!=", true),
+          orderBy("isDelete", "desc"),
+          orderBy("postDateTime", "desc"),
+          startAfter(lastVisible),
+          limit(limitCount)
+        );
+      } else {
+        q = query(
+          collection(firestore, collectionName),
+          where("isDelete", "!=", true),
+          orderBy("isDelete", "desc"),
+          orderBy("postDateTime", "desc"),
+          endBefore(lastVisible),
+          limit(limitCount)
+        );
+      }
+    } else {
+      q = query(
+        collection(firestore, collectionName),
+        where("isDelete", "!=", true),
+        orderBy("isDelete", "desc"),
+        orderBy("postDateTime", "desc"),
+        limit(limitCount)
+      );
+    }
+  }
+
+  const querySnapshot = await getDocs(q);
+  const lastOne = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+  let questions = [];
+  querySnapshot.forEach((doc) => {
+    questions.push(doc.data());
+  });
+
+  // Get question totalCount
+  let totalCount = 0;
+  const docRef = doc(firestore, "Stat", "Question");
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    totalCount = docSnap.data().totalCount;
+  } else {
+    totalCount = 0;
+  }
+
+  return { questions, lastVisible: lastOne, totalCount };
+};
+
 // Get single question account by userID
 export const getQuestionByID = async (userID) => {
   const docRef = doc(firestore, collectionName, userID);

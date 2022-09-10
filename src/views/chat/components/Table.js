@@ -26,9 +26,9 @@ const AccountTable = ({
   handleFilterSubmit,
   handleClearFilter,
   handlePageChangeNext,
-  handlePageChangePrevious
+  handlePageChangePrevious,
+  showFilter,
 }) => {
-
   // Return pagination items
   const PaginationPages = () => {
     const items = [];
@@ -39,7 +39,7 @@ const AccountTable = ({
           active={i === pageNumber}
           // onClick={() => {
           //   setPageNumber(i);
-            
+
           // }}
         >
           {i}
@@ -52,13 +52,15 @@ const AccountTable = ({
   return (
     <>
       <div className="shadow border-b border-gray-200 sm:rounded-lg bg-white p-4 mb-5">
-        <FilterTable
-          filters={filters}
-          filterErrors={filterErrors}
-          handleFilterChange={handleFilterChange}
-          handleFilterSubmit={handleFilterSubmit}
-          handleClearFilter={handleClearFilter}
-        />
+        {showFilter && (
+          <FilterTable
+            filters={filters}
+            filterErrors={filterErrors}
+            handleFilterChange={handleFilterChange}
+            handleFilterSubmit={handleFilterSubmit}
+            handleClearFilter={handleClearFilter}
+          />
+        )}
         <CTable>
           <CTableHead>
             <CTableRow>

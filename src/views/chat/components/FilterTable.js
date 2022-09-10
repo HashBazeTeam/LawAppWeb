@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import CIcon from "@coreui/icons-react";
 import { CButton } from "@coreui/react";
-import { thunks, selectors } from "src/store";
 
 import { cilFilter } from "@coreui/icons";
 

@@ -32,5 +32,6 @@ export default {
     "date": "Date",
     "country": "Country",
     "status": "Status",    
+    "show_previous_questions": "Show previous questions",
 }
 
