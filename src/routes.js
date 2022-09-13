@@ -28,6 +28,9 @@ const AdminAccountPage = React.lazy(() =>
 const ChatPool = React.lazy(() => import("./views/chat/QuestionPool"));
 const Chat = React.lazy(() => import("./views/chat/Chat"));
 
+// Analytics related pages
+const CustomerInsight = React.lazy(() => import("./views/analytics/CustomerInsight"));
+
 const routes = [
   {
     path: "/law-admin",
@@ -115,6 +118,22 @@ const routes = [
     path: "/law-admin/question/chat",
     name: "Question",
     component: Chat,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  // Analytics related pages
+  {
+    path: "/law-admin/analytics",
+    name: "Analytics",
+    exact: true,
+    isLoggedIn: false,
+    component: CustomerInsight,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/analytics/customer-insight",
+    name: "Customer Insight",
+    component: CustomerInsight,
     isLoggedIn: false,
     accountType: ["admin"],
   },

@@ -77,6 +77,19 @@ const _nav = [
     to: "/law-admin/question/pool",
     icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
   },
+  {
+    component: CNavGroup,
+    name: "Analytics",
+    to: "/law-admin/analytics",
+    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: "Customer Insight",
+        to: "/law-admin/analytics/customer-insight",
+      },
+    ],
+  },
 ];
 
 export default _nav;
