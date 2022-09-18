@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkLaw_web_app=self.webpackChunkLaw_web_app||[]).push([[915],{61915:function(e,a,s){s.r(a);s(72791);var n=s(78983),l=(s(93076),s(24846),s(80184));a.default=function(){return(0,l.jsx)(l.Fragment,{children:(0,l.jsx)(n.xH,{className:"py-16 h-full",children:(0,l.jsx)(n.sl,{})})})}}}]);
+//# sourceMappingURL=915.2d1be69c.chunk.js.map
