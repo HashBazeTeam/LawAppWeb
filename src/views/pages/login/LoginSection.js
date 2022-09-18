@@ -150,7 +150,7 @@ export default function LoginSection(props) {
         <div className="grid grid-cols-1 md:grid-cols-2 align-middle h-full w-full">
           <div className="hidden md:block align-middle m-10">
             <img
-              src="images/login.svg"
+              src={process.env.PUBLIC_URL+"/images/login.svg"}
               className=" object-cover w-full h-full "
             />
           </div>
