@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { t } from "i18next";
 import { CChart } from "@coreui/react-chartjs";
 import randomColor from "randomcolor";
+
 /**
  * Customer Insight Chart
  */

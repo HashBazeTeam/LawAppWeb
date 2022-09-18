@@ -139,7 +139,7 @@ export default function QuestionPool(props) {
   ];
 
   /**
-   * Pagination related methods
+   * Pagination related methods.
    */
   const handlePageChangePrevious = () => {
     pageNumber == 1 ? 1 : setPageNumber(pageNumber - 1);
