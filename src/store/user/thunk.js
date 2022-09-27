@@ -2,40 +2,44 @@ import { setUserCredentials, setUserData, setUserToken } from "./index";
 import { userServices } from "../../services";
 
 const userThunk = {
-  userLogin(user) {
+  userLogin(firebaseUser) {
     return async (dispatch, getState) => {
       const {
         user: { credentials, userData },
       } = getState();
-      if (!userData.userID) {
+      console.log(credentials, userData);
+
+      if (!userData?.userID || userData.userID == "") {
         try {
           const adminUser = await userServices.getAdminByPhoneNumber(
-            user.phoneNumber
+            firebaseUser.phoneNumber
           );
-          dispatch(
-            setUserData({
-              userID: adminUser.userID,
-              fullName: adminUser.fullName,
-              country: adminUser.country,
-              phoneNumber: adminUser.phoneNumber,
-              email: adminUser.email,
-            })
-          );
+          if (adminUser) {
+            dispatch(
+              setUserData({
+                userID: adminUser.userID,
+                fullName: adminUser.fullName,
+                country: adminUser.country,
+                phoneNumber: adminUser.phoneNumber,
+                email: adminUser.email,
+              })
+            );
+          }
         } catch (error) {
           console.log(error);
         }
       }
       dispatch(
         setUserCredentials({
-          phoneNumber: user.phoneNumber,
-          email: user.email,
-          uid: user.uid,
+          phoneNumber: firebaseUser.phoneNumber,
+          email: firebaseUser.email,
+          uid: firebaseUser.uid,
         })
       );
       dispatch(
         setUserToken({
-          accessToken: user.accessToken,
-          refreshToken: user.refreshToken,
+          accessToken: firebaseUser.accessToken,
+          refreshToken: firebaseUser.refreshToken,
         })
       );
     };

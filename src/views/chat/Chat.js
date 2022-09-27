@@ -132,7 +132,7 @@ export default function Chat(props) {
       toast.error("Max file size is 20MB");
       return;
     }
-
+    console.log("File data", file);
     // Check file type
     let fileType = "image";
     if (file.type.startsWith("image")) {
@@ -144,12 +144,22 @@ export default function Chat(props) {
     const chat = {
       author: { id: userID },
       createdAt: msgTime,
-      id: msgTime,
+      id: msgTime.toString(),
       type: fileType,
       name: file.name,
+      size: file.size,
+      height: 720,
+      width: 1140,
+      mimeType: file.type
     };
 
     try {
+      if (question.status == "Yet to be picked") {
+        await questionServices.updateQuestion(question.questionID, {
+          status: "Ongoing",
+        });
+      }
+
       await questionServices.addChatFileToQuestion(
         question.questionID,
         file,
@@ -169,11 +179,17 @@ export default function Chat(props) {
     const chat = {
       author: { id: userID },
       createdAt: msgTime,
-      id: msgTime,
+      id: msgTime.toString(),
       type: "text",
       text: formData,
     };
     try {
+      if (question.status == "Yet to be picked") {
+        await questionServices.updateQuestion(question.questionID, {
+          status: "Ongoing",
+        });
+      }
+
       await questionServices.addChatToQuestion(question.questionID, chat);
     } catch (error) {
       console.log(error);
@@ -193,7 +209,7 @@ export default function Chat(props) {
       const chat = {
         author: { id: userID },
         createdAt: msgTime,
-        id: msgTime,
+        id: msgTime.toString(),
         type: "text",
         text: "Answered the question.",
       };
@@ -297,4 +313,3 @@ export default function Chat(props) {
     </>
   );
 }
-
