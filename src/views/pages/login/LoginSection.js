@@ -18,6 +18,7 @@ import {
   appVerifier,
 } from "src/services/firebase";
 import { colors } from "src/configs/theme";
+import { userServices } from "src/services";
 
 /**
  *
@@ -71,16 +72,27 @@ export default function LoginSection(props) {
       return toast.error(t("login_invalid_phone_number"));
     } else {
       try {
-        const _appVerifier = appVerifier();
-        setAppVerifier(_appVerifier);
-        const confirmationResult = await signInWithPhoneNumber(
-          auth,
-          formData.phoneNumber,
-          _appVerifier
-        );
-        setConfirmationResult(confirmationResult);
-        setExpandForm(true);
-        setLoading(false);
+        // Check user role from cloud functions
+        const data = await userServices.onLoginFunction(formData.phoneNumber);
+        if (!data) {
+          setLoading(false);
+          toast.error("User is not registered. Please contact administrator.");
+          return;
+        };
+        const role = data.role;
+        if (role == "Admin" || role == "Super Admin") {
+          // Send OTP code
+          const _appVerifier = appVerifier();
+          setAppVerifier(_appVerifier);
+          const confirmationResult = await signInWithPhoneNumber(
+            auth,
+            formData.phoneNumber,
+            _appVerifier
+          );
+          setConfirmationResult(confirmationResult);
+          setExpandForm(true);
+          setLoading(false);
+        }
       } catch (error) {
         setLoading(false);
         console.log(error);
@@ -150,7 +162,7 @@ export default function LoginSection(props) {
         <div className="grid grid-cols-1 md:grid-cols-2 align-middle h-full w-full">
           <div className="hidden md:block align-middle m-10">
             <img
-              src={process.env.PUBLIC_URL+"/images/login.svg"}
+              src={process.env.PUBLIC_URL + "/images/login.svg"}
               className=" object-cover w-full h-full "
             />
           </div>

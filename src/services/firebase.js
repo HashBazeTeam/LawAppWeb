@@ -100,3 +100,11 @@ import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 const storage = getStorage(firebaseApp);
 
 export { storage, ref, uploadBytes, getDownloadURL };
+
+/**
+ * Firebase functions
+ */
+ import { getFunctions, httpsCallable } from "firebase/functions";
+const functions = getFunctions(firebaseApp);
+
+export { functions, httpsCallable };

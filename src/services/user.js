@@ -57,3 +57,9 @@ export const updateAgent = async (userID, agent) => {
 export const deleteAgent = async (userID) => {
   return await AgentModel.deleteAgent(userID);
 }
+
+// Login related functions
+export const onLoginFunction = async (phoneNumber) => {
+  return await UserModel.onLoginFunction(phoneNumber);
+}
+

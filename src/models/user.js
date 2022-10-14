@@ -11,6 +11,8 @@ import {
   getDocs,
   getDoc,
   updateDoc,
+  httpsCallable, 
+  functions
 } from "src/services/firebase";
 
 const collectionName = "User";
@@ -87,3 +89,14 @@ export const deleteUser = async (userID) => {
     isDeleted: true,
   });
 };
+
+// On login user firebase cloud function
+export const onLoginFunction = async (phoneNumber) => {
+  const onLoginFunc = httpsCallable(functions, 'httpUserOnLoginFunc');
+  const result = await onLoginFunc({ phoneNumber });
+  if (result) {
+    return result.data;
+  } else {
+    return null;
+  }
+}
