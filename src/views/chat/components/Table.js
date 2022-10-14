@@ -28,6 +28,7 @@ const AccountTable = ({
   handlePageChangeNext,
   handlePageChangePrevious,
   showFilter,
+  reloadData
 }) => {
   // Return pagination items
   const PaginationPages = () => {
@@ -59,6 +60,7 @@ const AccountTable = ({
             handleFilterChange={handleFilterChange}
             handleFilterSubmit={handleFilterSubmit}
             handleClearFilter={handleClearFilter}
+            reloadData={reloadData}
           />
         )}
         <CTable>

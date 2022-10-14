@@ -106,6 +106,9 @@ export default function Chat(props) {
         chats.push(chatModel);
       });
       setMessages(chats);
+      questionServices.updateQuestion(question.questionID, {
+        isReadAdmin: true, // When the admin come to the chat, seen status is changed.
+      }); 
     });
 
     return unsubscribe;
@@ -157,6 +160,7 @@ export default function Chat(props) {
       if (question.status == "Yet to be picked") {
         await questionServices.updateQuestion(question.questionID, {
           status: "Ongoing",
+          isReadClient: false, // When a new msg is sent change the read status of client message
         });
       }
 
@@ -187,6 +191,7 @@ export default function Chat(props) {
       if (question.status == "Yet to be picked") {
         await questionServices.updateQuestion(question.questionID, {
           status: "Ongoing",
+          isReadClient: false, // When a new msg is sent change the read status of client message
         });
       }
 

@@ -37,6 +37,10 @@ export const getAllQuestions = async (
   lastVisible,
   move
 ) => {
+  console.log("mopdel",status,"count",
+    limitCount,
+    lastVisible,
+    move);
   let q;
   if (status && status != "") {
     if (lastVisible) {
@@ -46,9 +50,20 @@ export const getAllQuestions = async (
           where("isDelete", "!=", true),
           where("status", "==", status),
           orderBy("isDelete", "desc"),
-          orderBy("status", "asc"),
+          // orderBy("status", "asc"),
           orderBy("postDateTime", "desc"),
           startAfter(lastVisible),
+          limit(limitCount)
+        );
+      } else if (move == "previous") {
+        q = query(
+          collection(firestore, collectionName),
+          where("isDelete", "!=", true),
+          where("status", "==", status),
+          orderBy("isDelete", "desc"),
+          orderBy("status", "asc"),
+          orderBy("postDateTime", "desc"),
+          endBefore(lastVisible),
           limit(limitCount)
         );
       } else {
@@ -59,7 +74,6 @@ export const getAllQuestions = async (
           orderBy("isDelete", "desc"),
           orderBy("status", "asc"),
           orderBy("postDateTime", "desc"),
-          endBefore(lastVisible),
           limit(limitCount)
         );
       }
@@ -85,13 +99,21 @@ export const getAllQuestions = async (
           startAfter(lastVisible),
           limit(limitCount)
         );
-      } else {
+      } else if (move == "previous") {
         q = query(
           collection(firestore, collectionName),
           where("isDelete", "!=", true),
           orderBy("isDelete", "desc"),
           orderBy("postDateTime", "desc"),
           endBefore(lastVisible),
+          limit(limitCount)
+        );
+      } else {
+        q = query(
+          collection(firestore, collectionName),
+          where("isDelete", "!=", true),
+          orderBy("isDelete", "desc"),
+          orderBy("postDateTime", "desc"),
           limit(limitCount)
         );
       }
@@ -255,10 +277,16 @@ export const addChatToQuestion = async (questionID, data) => {
 // Add image and file to the question's chat sub collection
 export const addChatFileToQuestion = async (questionID, file, data) => {
   // TODO: Change the file name to a unique name and location
-  const fileName = file.name+ "#LawApp" + new Date().getTime();
-  const storageRef = ref(storage, "chat-image", questionID, fileName );
+  const fileName = file.name + "#LawApp" + new Date().getTime();
+  const storageRef = ref(storage, "chat-image", questionID, fileName);
   await uploadBytes(storageRef, file);
-  console.log(questionID, file, data, fileName, await getDownloadURL(storageRef));
+  console.log(
+    questionID,
+    file,
+    data,
+    fileName,
+    await getDownloadURL(storageRef)
+  );
   const uploadData = { ...data, uri: await getDownloadURL(storageRef) };
 
   const docRef = doc(

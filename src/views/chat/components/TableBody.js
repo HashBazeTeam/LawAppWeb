@@ -32,6 +32,10 @@ const TableBody = ({ questions }) => {
               <CBadge color={"success"}>{question.status}</CBadge>
             </CTableDataCell>
             <CTableDataCell>
+              <CBadge color={"danger"}>{!question.isReadAdmin && "*"}</CBadge>
+            </CTableDataCell>
+
+            <CTableDataCell>
               <CButton
                 color="info"
                 variant="outline"

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CIcon from "@coreui/icons-react";
 import { CButton } from "@coreui/react";
 
-import { cilFilter } from "@coreui/icons";
+import { cilFilter, cilReload} from "@coreui/icons";
 
 import { CustomCFormSelectGroup } from "src/components/common/CustomCInputGroup";
 import { t } from "i18next";
@@ -14,14 +14,24 @@ const FilterTable = ({
   handleFilterSubmit,
   questions,
   handleClearFilter,
+  reloadData
 }) => {
   const [showFilterData, setShowFilterData] = useState(false);
   const [loading, setLoading] = useState(false);
 
   return (
     <>
-      <div className="mb-4 text-sm">
-        <div className="grid justify-end text-sm mb-3">
+      <div className="grid grid-cols-2 justify-between mb-4 text-sm">
+        <div className="grid justify-start text-sm mb-6">
+        <CButton
+            color="info"
+            variant="outline"
+            onClick={reloadData}
+          >
+            <CIcon icon={cilReload} />{" "}
+          </CButton>
+        </div>
+        <div className="grid justify-end text-sm mb-6">
           <CButton
             color="info"
             variant="outline"

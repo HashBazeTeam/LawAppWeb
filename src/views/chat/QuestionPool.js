@@ -81,6 +81,10 @@ export default function QuestionPool(props) {
         _totalCount = totalCount;
         _lastVisible = lastVisible;
       } else {
+        console.log(filters.status,
+          recordsPerPage,
+          lastVisibleDoc,
+          move);
         const { questions, totalCount, lastVisible } =
           await questionServices.getAllQuestions(
             filters.status,
@@ -103,6 +107,11 @@ export default function QuestionPool(props) {
       toast.error(t("common_error"));
     }
     setLoading(false);
+  };
+
+  // Reload data
+  const reloadData = async () => {
+    await fetchData();
   };
 
   /**
@@ -135,6 +144,7 @@ export default function QuestionPool(props) {
     t("date"),
     t("country"),
     t("status"),
+    "",
     "",
   ];
 
@@ -169,6 +179,7 @@ export default function QuestionPool(props) {
           handlePageChangePrevious={handlePageChangePrevious}
           handlePageChangeNext={handlePageChangeNext}
           showFilter={client?.clientID != null ? false : true}
+          reloadData={reloadData}
         >
           <TableBody questions={filteredData} />
         </Table>
