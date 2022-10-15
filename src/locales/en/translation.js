@@ -33,5 +33,7 @@ export default {
     "country": "Country",
     "status": "Status",    
     "show_previous_questions": "Show previous questions",
+    "from": "From",
+    "to": "To"
 }
 

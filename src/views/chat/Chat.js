@@ -6,10 +6,12 @@ import { LinkIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { MessageList, Input, Button, MessageBox } from "react-chat-elements";
+import { SystemMessage } from 'react-chat-elements'
 import CIcon from "@coreui/icons-react";
 import { CButton } from "@coreui/react";
 import { cilSearch } from "@coreui/icons";
 
+// Custom imports
 import { LoadingIndicator } from "src/components";
 import { saveImg } from "src/utils/function";
 import {
@@ -24,7 +26,7 @@ import { questionServices } from "src/services";
 import { textSpanContainsTextSpan } from "typescript";
 
 /**
- * Chat
+ * Single Chat User Interface
  */
 export default function Chat(props) {
   const history = useHistory();
@@ -257,6 +259,7 @@ export default function Chat(props) {
         className={`mb-4 columns-1 flex flex-col justify-between 
       h-screen bg-transparent overflow-y-scroll w-full`}
       >
+        <SystemMessage text={'Sample System message!'} />
         <MessageList
           className="message-list m-1"
           lockable={true}
