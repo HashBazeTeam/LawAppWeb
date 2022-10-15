@@ -34,6 +34,8 @@ export default {
     "status": "Status",    
     "show_previous_questions": "Show previous questions",
     "from": "From",
-    "to": "To"
+    "to": "To",
+    "generate": "Generate",
+    "no_questions_found_in_given_range": " No questions found in given range!"
 }
 

@@ -81,10 +81,6 @@ export default function QuestionPool(props) {
         _totalCount = totalCount;
         _lastVisible = lastVisible;
       } else {
-        console.log(filters.status,
-          recordsPerPage,
-          lastVisibleDoc,
-          move);
         const { questions, totalCount, lastVisible } =
           await questionServices.getAllQuestions(
             filters.status,

@@ -22,4 +22,8 @@ export const addChatFileToQuestion = async (questionID, file, chat) => {
 export const updateQuestion = async (questionID, data) => {
   return await QuestionModel.updateQuestion(questionID, data);
 }
+
+export const getQuestionInsight = async (status, fromDate, toDate) => {
+  return await QuestionModel.getQuestionInsight(status, fromDate, toDate);
+}
  

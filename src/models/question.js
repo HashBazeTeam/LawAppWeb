@@ -21,6 +21,7 @@ import {
   ref,
   getDownloadURL,
 } from "src/services/firebase";
+import _ from 'lodash';
 
 const collectionName = "Question";
 
@@ -37,10 +38,7 @@ export const getAllQuestions = async (
   lastVisible,
   move
 ) => {
-  console.log("mopdel",status,"count",
-    limitCount,
-    lastVisible,
-    move);
+  console.log("mopdel", status, "count", limitCount, lastVisible, move);
   let q;
   if (status && status != "") {
     if (lastVisible) {
@@ -255,6 +253,47 @@ export const getQuestionByID = async (userID) => {
   } else {
     return null;
   }
+};
+
+// Get question insight
+export const getQuestionInsight = async (
+  status,
+  fromDate,
+  toDate,
+) => {
+  let q;
+  if (status) {
+    q = query(
+      collection(firestore, collectionName),
+      where("isDelete", "==", false),
+      where("status", "==", status),
+      where('postDateTime', '>=', fromDate),
+      where('postDateTime', '<=',toDate),
+      orderBy("postDateTime", "desc"),
+    );
+  } else {
+    console.log(status, new Date(fromDate), toDate);
+    q = query(
+      collection(firestore, collectionName),
+      where("isDelete", "==", false),
+      where('postDateTime', '>=',fromDate),
+      where('postDateTime', '<=',toDate),
+      orderBy("postDateTime", "desc"),
+    );
+  }
+
+  const querySnapshot = await getDocs(q);
+  let countryQuestions = {};
+  querySnapshot.forEach((doc) => {
+    const question = doc.data();
+    if (countryQuestions[question.country]) {
+      countryQuestions[question.country] += 1
+    } else {
+      countryQuestions[question.country] = 1
+    }
+  });
+  console.log(countryQuestions);
+  return { countryQuestions};
 };
 
 /**
