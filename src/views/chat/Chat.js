@@ -6,7 +6,7 @@ import { LinkIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
 import { MessageList, Input, Button, MessageBox } from "react-chat-elements";
-import { SystemMessage } from 'react-chat-elements'
+import { SystemMessage } from "react-chat-elements";
 import CIcon from "@coreui/icons-react";
 import { CButton } from "@coreui/react";
 import { cilSearch } from "@coreui/icons";
@@ -110,7 +110,7 @@ export default function Chat(props) {
       setMessages(chats);
       questionServices.updateQuestion(question.questionID, {
         isReadAdmin: true, // When the admin come to the chat, seen status is changed.
-      }); 
+      });
     });
 
     return unsubscribe;
@@ -155,13 +155,17 @@ export default function Chat(props) {
       size: file.size,
       height: 720,
       width: 1140,
-      mimeType: file.type
+      mimeType: file.type,
     };
 
     try {
       if (question.status == "Yet to be picked") {
         await questionServices.updateQuestion(question.questionID, {
           status: "Ongoing",
+          isReadClient: false, // When a new msg is sent change the read status of client message
+        });
+      } else {
+        await questionServices.updateQuestion(question.questionID, {
           isReadClient: false, // When a new msg is sent change the read status of client message
         });
       }
@@ -195,6 +199,10 @@ export default function Chat(props) {
           status: "Ongoing",
           isReadClient: false, // When a new msg is sent change the read status of client message
         });
+      } else {
+        await questionServices.updateQuestion(question.questionID, {
+          isReadClient: false, // When a new msg is sent change the read status of client message
+        });
       }
 
       await questionServices.addChatToQuestion(question.questionID, chat);
@@ -220,6 +228,10 @@ export default function Chat(props) {
         type: "text",
         text: "Answered the question.",
       };
+      await questionServices.updateQuestion(question.questionID, {
+        isReadStatus: false,
+        isReadClient: false, // When a new msg is sent change the read status of client message
+      });
       await questionServices.addChatToQuestion(question.questionID, chat);
     } catch (error) {
       setLoading(false);
@@ -259,7 +271,7 @@ export default function Chat(props) {
         className={`mb-4 columns-1 flex flex-col justify-between 
       h-screen bg-transparent overflow-y-scroll w-full`}
       >
-        <SystemMessage text={'Sample System message!'} />
+        <SystemMessage text={"Sample System message!"} />
         <MessageList
           className="message-list m-1"
           lockable={true}
