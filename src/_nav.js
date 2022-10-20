@@ -22,6 +22,7 @@ import {
   cilSearch,
   cilUserX,
   cilUser,
+  cilSettings,
 } from "@coreui/icons";
 import { CNavGroup, CNavItem, CNavTitle } from "@coreui/react";
 
@@ -78,6 +79,10 @@ const _nav = [
     icon: <CIcon icon={cilChatBubble} customClassName="nav-icon" />,
   },
   {
+    component: CNavTitle,
+    name: "Analytics",
+  },
+  {
     component: CNavGroup,
     name: "Analytics",
     to: "/law-admin/analytics",
@@ -87,6 +92,23 @@ const _nav = [
         component: CNavItem,
         name: "Customer Insight",
         to: "/law-admin/analytics/customer-insight",
+      },
+    ],
+  },
+  {
+    component: CNavTitle,
+    name: "Configuration",
+  },
+  {
+    component: CNavGroup,
+    name: "Configuration",
+    to: "/law-admin/config",
+    icon: <CIcon icon={cilSettings} customClassName="nav-icon" />,
+    items: [
+      {
+        component: CNavItem,
+        name: "Basic Configuration",
+        to: "/law-admin/config/basic",
       },
     ],
   },

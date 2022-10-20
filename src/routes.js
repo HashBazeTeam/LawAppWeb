@@ -31,6 +31,9 @@ const Chat = React.lazy(() => import("./views/chat/Chat"));
 // Analytics related pages
 const CustomerInsight = React.lazy(() => import("./views/analytics/CustomerInsight"));
 
+// Configuration related pages
+const BasicConfigPage = React.lazy(() => import('./views/configuration/basic'));
+
 const routes = [
   {
     path: "/law-admin",
@@ -134,6 +137,20 @@ const routes = [
     path: "/law-admin/analytics/customer-insight",
     name: "Customer Insight",
     component: CustomerInsight,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/config",
+    name: "Configuration",
+    component: BasicConfigPage,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/config/basic",
+    name: "Basic Configuration",
+    component: BasicConfigPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },

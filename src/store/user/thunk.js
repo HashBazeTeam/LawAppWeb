@@ -7,7 +7,6 @@ const userThunk = {
       const {
         user: { credentials, userData },
       } = getState();
-      console.log(credentials, userData);
 
       if (!userData?.userID || userData.userID == "") {
         try {

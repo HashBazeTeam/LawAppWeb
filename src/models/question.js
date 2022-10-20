@@ -38,7 +38,6 @@ export const getAllQuestions = async (
   lastVisible,
   move
 ) => {
-  console.log("mopdel", status, "count", limitCount, lastVisible, move);
   let q;
   if (status && status != "") {
     if (lastVisible) {
@@ -272,7 +271,6 @@ export const getQuestionInsight = async (
       orderBy("postDateTime", "desc"),
     );
   } else {
-    console.log(status, new Date(fromDate), toDate);
     q = query(
       collection(firestore, collectionName),
       where("isDelete", "==", false),
@@ -292,7 +290,6 @@ export const getQuestionInsight = async (
       countryQuestions[question.country] = 1
     }
   });
-  console.log(countryQuestions);
   return { countryQuestions};
 };
 
@@ -302,7 +299,6 @@ export const getQuestionInsight = async (
 
 // Add chat to the question's chat sub collection
 export const addChatToQuestion = async (questionID, data) => {
-  console.log(questionID, data, data.id.toString());
   const docRef = doc(
     firestore,
     collectionName,
@@ -319,13 +315,6 @@ export const addChatFileToQuestion = async (questionID, file, data) => {
   const fileName = file.name + "#LawApp" + new Date().getTime();
   const storageRef = ref(storage, "chat-image", questionID, fileName);
   await uploadBytes(storageRef, file);
-  console.log(
-    questionID,
-    file,
-    data,
-    fileName,
-    await getDownloadURL(storageRef)
-  );
   const uploadData = { ...data, uri: await getDownloadURL(storageRef) };
 
   const docRef = doc(
