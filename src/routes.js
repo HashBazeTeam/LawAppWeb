@@ -2,6 +2,9 @@ import React from "react";
 
 const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
 
+// Profile page
+const ProfilePage = React.lazy(() => import("./views/profile/ProfilePage"));
+
 // Agent Accounts related pages
 const AgentAddPage = React.lazy(() =>
   import("./views/accounts/agent/AccountAddPage")
@@ -151,6 +154,20 @@ const routes = [
     path: "/law-admin/config/basic",
     name: "Basic Configuration",
     component: BasicConfigPage,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/profile",
+    name: "Profile",
+    component: ProfilePage,
+    isLoggedIn: false,
+    accountType: ["admin"],
+  },
+  {
+    path: "/law-admin/change-password",
+    name: "Change Password",
+    component: ProfilePage,
     isLoggedIn: false,
     accountType: ["admin"],
   },

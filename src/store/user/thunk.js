@@ -1,5 +1,6 @@
 import { setUserCredentials, setUserData, setUserToken } from "./index";
 import { userServices } from "../../services";
+import { convertTZ } from "src/utils";
 
 const userThunk = {
   userLogin(firebaseUser) {
@@ -21,6 +22,7 @@ const userThunk = {
                 country: adminUser.country,
                 phoneNumber: adminUser.phoneNumber,
                 email: adminUser.email,
+                dob: convertTZ(adminUser.dob),
               })
             );
           }

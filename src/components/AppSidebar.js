@@ -53,9 +53,9 @@ const AppSidebar = () => {
       position="fixed"
       unfoldable={unfoldable}
       visible={sidebarShow}
-      onVisibleChange={(visible) => {
-        dispatch(thunks.ui.setSidebarShow(visible));
-      }}
+      // onVisibleChange={(visible) => {
+      //   dispatch(thunks.ui.setSidebarShow(visible));
+      // }}
     >
       <CSidebarBrand className="d-none d-md-flex" to="/">
       { !unfoldable ? (<img className="h-8 w-auto sm:h-10" src={logoPhoto} />) : ""}
