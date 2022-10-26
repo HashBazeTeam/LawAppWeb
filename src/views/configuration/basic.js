@@ -6,7 +6,7 @@ import Joi from "joi";
 import { CButton, CFormSwitch } from "@coreui/react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
-import { isPossiblePhoneNumber } from "react-phone-number-input";
+import { messaging, onMessage, getToken } from "src/services/firebase";
 
 import { configServices } from "src/services";
 
@@ -38,8 +38,8 @@ const BasicConfigPage = () => {
     const fetchAgent = async () => {
       try {
         setLoading(true);
-          const configs = await configServices.getAllConfigs();
-          if (configs && isSubscribed && Object.keys(configs).length > 0) {
+        const configs = await configServices.getAllConfigs();
+        if (configs && isSubscribed && Object.keys(configs).length > 0) {
           setFormData(configs);
           setInitialValues(configs);
         } else {
@@ -104,6 +104,40 @@ const BasicConfigPage = () => {
     }
   };
 
+  const receiveMessage = (e) => {
+    if (Notification.requestPermission == "granted") {
+      onMessageListener();
+    } else {
+      Notification.requestPermission()
+        .then(async () => {
+          onMessageListener();
+        })
+        .catch((err) => console.log("Notification request error: ", err));
+    }
+
+    // Foreground message listener
+    const onMessageListener = () => {
+      // Message listener
+      getToken(messaging, { vapidKey: process.env.REACT_APP_FCM_VAPID_KEY })
+        .then((currentToken) => {
+          if (currentToken) {
+            // Send the token to your server and update the UI if necessary
+            // ...
+          } else {
+            // Show permission request UI
+            console.log(
+              "No registration token available. Request permission to generate one."
+            );
+            // ...
+          }
+        })
+        .catch((err) => {
+          console.log("An error occurred while retrieving token. ", err);
+          // ...
+        });
+    };
+  };
+
   return (
     <>
       <div className="shadow sm:rounded-lg bg-white p-4 mt-2 mb-5 row g-3">
@@ -128,9 +162,15 @@ const BasicConfigPage = () => {
             uppercase: true,
             required: false,
             readOnly: !updateMode,
-              mdSize: 6,
+            mdSize: 6,
             type: "number",
           })}
+          <CFormSwitch
+            //   size="xl"
+            label="Enable Notification"
+            id="formSwitchCheckDefault"
+            onChange={() => receiveMessage()}
+          />
         </div>
         <div className="flex justify-end" hidden={!updateMode}>
           <div className="justify-end">

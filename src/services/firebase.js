@@ -104,7 +104,17 @@ export { storage, ref, uploadBytes, getDownloadURL };
 /**
  * Firebase functions
  */
- import { getFunctions, httpsCallable } from "firebase/functions";
+import { getFunctions, httpsCallable } from "firebase/functions";
 const functions = getFunctions(firebaseApp);
 
 export { functions, httpsCallable };
+
+/**
+ * FCM Messaging
+ */
+import { getMessaging, getToken, onMessage, requestPermissio} from "firebase/messaging";
+
+const messaging = getMessaging(firebaseApp);
+
+
+export { messaging, onMessage, getToken };

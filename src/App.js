@@ -19,7 +19,7 @@ const loading = (
 );
 
 // Components
-import { ProtectedRoute } from "./components";
+import { ProtectedRoute, Modal } from "./components";
 
 // Containers
 const DefaultLayout = React.lazy(() => import("./layout/DefaultLayout"));
@@ -33,6 +33,8 @@ const LoginPage = React.lazy(() => import("./views/pages/login/LoginPage"));
 
 function App() {
   const dispatch = useDispatch();
+
+  // Check if user is logged in
   useEffect(() => {
     let isSubscribed = true;
     auth.onAuthStateChanged((user) => {
@@ -42,6 +44,8 @@ function App() {
     });
     return () => (isSubscribed = false);
   }, []);
+
+  
 
   return (
     <BrowserRouter>
