@@ -161,24 +161,26 @@ export default function QuestionPool(props) {
       {loading ? (
         <div className="flex justify-center"> {LoadingIndicator("lg")} </div>
       ) : (
-        <Table
-          accounts={filteredData}
-          maxPages={maxPages}
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          tableHeaderCells={tableHeaderCells}
-          filters={filters}
-          filterErrors={filterErrors}
-          handleFilterChange={handleFilterChange}
-          handleFilterSubmit={handleFilterSubmit}
-          handleClearFilter={handleClearFilter}
-          handlePageChangePrevious={handlePageChangePrevious}
-          handlePageChangeNext={handlePageChangeNext}
-          showFilter={client?.clientID != null ? false : true}
-          reloadData={reloadData}
-        >
-          <TableBody questions={filteredData} />
-        </Table>
+        <div className="mt-8">
+          <Table
+            accounts={filteredData}
+            maxPages={maxPages}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            tableHeaderCells={tableHeaderCells}
+            filters={filters}
+            filterErrors={filterErrors}
+            handleFilterChange={handleFilterChange}
+            handleFilterSubmit={handleFilterSubmit}
+            handleClearFilter={handleClearFilter}
+            handlePageChangePrevious={handlePageChangePrevious}
+            handlePageChangeNext={handlePageChangeNext}
+            showFilter={client?.clientID != null ? false : true}
+            reloadData={reloadData}
+          >
+            <TableBody questions={filteredData} />
+          </Table>
+        </div>
       )}
     </>
   );

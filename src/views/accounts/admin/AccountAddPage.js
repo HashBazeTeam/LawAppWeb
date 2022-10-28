@@ -91,7 +91,7 @@ const AdminAddPage = () => {
   };
   return (
     <>
-      <div className="shadow sm:rounded-lg bg-white p-4 mb-5 row g-3">
+      <div className="shadow sm:rounded-lg bg-white p-4 mb-5 row g-3 mt-8">
         <div className="row g-3">
           <CustomCFormInputGroup
             label={t("full_name")}

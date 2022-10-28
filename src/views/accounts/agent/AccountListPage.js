@@ -69,6 +69,7 @@ const AgentListPage = () => {
       {loading ? (
         <div className="flex justify-center"> {LoadingIndicator("lg")} </div>
       ) : (
+          <div className="mt-8">
         <AccountTable
           accounts={filteredData}
           maxPages={maxPages}
@@ -86,7 +87,8 @@ const AgentListPage = () => {
             accounts={filteredData}
             accountType={accountsType}
           />
-        </AccountTable>
+            </AccountTable>
+            </div>
       )}
     </>
   );

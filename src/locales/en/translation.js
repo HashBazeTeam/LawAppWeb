@@ -36,6 +36,8 @@ export default {
     "from": "From",
     "to": "To",
     "generate": "Generate",
-    "no_questions_found_in_given_range": " No questions found in given range!"
+    "no_questions_found_in_given_range": " No questions found in given range!",
+    'finish': "Finish",
+    'submit_answer': "Submit Answer"
 }
 

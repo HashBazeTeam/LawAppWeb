@@ -214,39 +214,52 @@ export default function Chat(props) {
   // Handle submit answer button
   const handleSubmitAnswerBtnPressed = async () => {
     if (question.status == "Answered") return;
-
     setLoading(true);
-    try {
-      await questionServices.updateQuestion(question.questionID, {
-        status: "Answered",
-      });
-      const msgTime = new Date().valueOf();
-      const chat = {
-        author: { id: userID },
-        createdAt: msgTime,
-        id: msgTime.toString(),
-        type: "text",
-        text: "Answered the question.",
-      };
-      await questionServices.updateQuestion(question.questionID, {
-        isReadStatus: false,
-        isReadClient: false, // When a new msg is sent change the read status of client message
-      });
-      await questionServices.addChatToQuestion(question.questionID, chat);
-    } catch (error) {
+
+    // If the status in assistance change the status.
+    if (question.status == "Assistance") {
+      try {
+        await questionServices.updateQuestion(question.questionID, {
+          status: "Ended",
+        });
+      } catch (error) {
+        setLoading(false);
+        toast.error(t("common_error"));
+      }
+    } else {
+      try {
+        await questionServices.updateQuestion(question.questionID, {
+          status: "Answered",
+        });
+        const msgTime = new Date().valueOf();
+        const chat = {
+          author: { id: userID },
+          createdAt: msgTime,
+          id: msgTime.toString(),
+          type: "text",
+          text: "Answered the question.",
+        };
+        await questionServices.updateQuestion(question.questionID, {
+          isReadStatus: false,
+          isReadClient: false, // When a new msg is sent change the read status of client message
+        });
+        await questionServices.addChatToQuestion(question.questionID, chat);
+      } catch (error) {
+        setLoading(false);
+        toast.error(t("common_error"));
+      }
       setLoading(false);
-      toast.error(t("common_error"));
     }
-    setLoading(false);
   };
 
+  // Handle file/image download
   const handleFileDownload = async (fileURI, fileName) => {
     await saveImg(fileURI, fileName);
   };
 
   return (
     <>
-      <div className="col-span-1 bg-red py-2 flex justify-center align-middle">
+      <div className="col-span-1 py-2 flex justify-center align-middle bg-slate-50">
         <CButton
           className=" text-md"
           color="primary"
@@ -269,9 +282,9 @@ export default function Chat(props) {
       </div>
       <div
         className={`mb-4 columns-1 flex flex-col justify-between 
-      h-screen bg-transparent overflow-y-scroll w-full`}
+      h-screen bg-slate-50 overflow-y-scroll w-full`}
       >
-        <SystemMessage text={"Sample System message!"} />
+        {/* <SystemMessage text={"Sample System message!"} /> */}
         <MessageList
           className="message-list m-1"
           lockable={true}
@@ -320,11 +333,15 @@ export default function Chat(props) {
               }
             />
           </div>
-          <div className="col-span-1 bg-red py-2 flex justify-center align-middle">
+          <div className="col-span-1 py-2 flex justify-center align-middle">
             <Button
               color="white"
               backgroundColor="green"
-              text="Submit Answer"
+              text={
+                question.status == "Assistance"
+                  ? t("finish")
+                  : t("submit_answer")
+              }
               onClick={handleSubmitAnswerBtnPressed}
             />
           </div>

@@ -71,24 +71,26 @@ const AgentListPage = () => {
       {loading ? (
         <div className="flex justify-center"> {LoadingIndicator("lg")} </div>
       ) : (
-        <AccountTable
-          accounts={filteredData}
-          maxPages={maxPages}
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          tableHeaderCells={tableHeaderCells}
-          filters={filters}
-          filterErrors={filterErrors}
-          handleFilterChange={() => {}}
-          handleFilterSubmit={() => {}}
-          handleClearFilter={() => {}}
-          accountsType={accountsType}
-        >
-          <AccountTableBody
+        <div className="mt-8 px-0">
+          <AccountTable
             accounts={filteredData}
-            accountType={accountsType}
-          />
-        </AccountTable>
+            maxPages={maxPages}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            tableHeaderCells={tableHeaderCells}
+            filters={filters}
+            filterErrors={filterErrors}
+            handleFilterChange={() => {}}
+            handleFilterSubmit={() => {}}
+            handleClearFilter={() => {}}
+            accountsType={accountsType}
+          >
+            <AccountTableBody
+              accounts={filteredData}
+              accountType={accountsType}
+            />
+          </AccountTable>
+        </div>
       )}
     </>
   );
