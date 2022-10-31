@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const loading = (
-  <div className="pt-3 text-center">
+  <div className="pt-3 text-center bg-slate-50">
     <div className="sk-spinner sk-spinner-pulse"></div>
   </div>
 );

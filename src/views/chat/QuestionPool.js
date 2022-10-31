@@ -159,7 +159,7 @@ export default function QuestionPool(props) {
   return (
     <>
       {loading ? (
-        <div className="flex justify-center"> {LoadingIndicator("lg")} </div>
+        <div className="flex justify-center bg-slate-50"> {LoadingIndicator("lg")} </div>
       ) : (
         <div className="mt-8">
           <Table

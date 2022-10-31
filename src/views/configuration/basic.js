@@ -104,39 +104,40 @@ const BasicConfigPage = () => {
     }
   };
 
-  const receiveMessage = (e) => {
-    if (Notification.requestPermission == "granted") {
-      onMessageListener();
-    } else {
-      Notification.requestPermission()
-        .then(async () => {
-          onMessageListener();
-        })
-        .catch((err) => console.log("Notification request error: ", err));
-    }
+  // Receive message from firebase; firebase error
+  // const receiveMessage = (e) => {
+  //   if (Notification.requestPermission == "granted") {
+  //     onMessageListener();
+  //   } else {
+  //     Notification.requestPermission()
+  //       .then(async () => {
+  //         onMessageListener();
+  //       })
+  //       .catch((err) => console.log("Notification request error: ", err));
+  //   }
 
-    // Foreground message listener
-    const onMessageListener = () => {
-      // Message listener
-      getToken(messaging, { vapidKey: process.env.REACT_APP_FCM_VAPID_KEY })
-        .then((currentToken) => {
-          if (currentToken) {
-            // Send the token to your server and update the UI if necessary
-            // ...
-          } else {
-            // Show permission request UI
-            console.log(
-              "No registration token available. Request permission to generate one."
-            );
-            // ...
-          }
-        })
-        .catch((err) => {
-          console.log("An error occurred while retrieving token. ", err);
-          // ...
-        });
-    };
-  };
+  //   // Foreground message listener
+  //   const onMessageListener = () => {
+  //     // Message listener
+  //     getToken(messaging, { vapidKey: process.env.REACT_APP_FCM_VAPID_KEY })
+  //       .then((currentToken) => {
+  //         if (currentToken) {
+  //           // Send the token to your server and update the UI if necessary
+  //           // ...
+  //         } else {
+  //           // Show permission request UI
+  //           console.log(
+  //             "No registration token available. Request permission to generate one."
+  //           );
+  //           // ...
+  //         }
+  //       })
+  //       .catch((err) => {
+  //         console.log("An error occurred while retrieving token. ", err);
+  //         // ...
+  //       });
+  //   };
+  // };
 
   return (
     <>
@@ -165,12 +166,12 @@ const BasicConfigPage = () => {
             mdSize: 6,
             type: "number",
           })}
-          <CFormSwitch
+          {/* <CFormSwitch
             //   size="xl"
             label="Enable Notification"
             id="formSwitchCheckDefault"
             onChange={() => receiveMessage()}
-          />
+          /> */}
         </div>
         <div className="flex justify-end" hidden={!updateMode}>
           <div className="justify-end">
