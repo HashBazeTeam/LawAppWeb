@@ -122,6 +122,11 @@ const ProfilePage = () => {
     }
   };
 
+  // Handle update phone number button click.
+  const handleUpdatePhoneNumber = async () => {
+
+  }
+
   return (
     <>
       <div className="shadow sm:rounded-lg bg-white p-4 mt-2 mb-5 row g-3">
@@ -226,6 +231,14 @@ const ProfilePage = () => {
               onClick={handleSubmit}
             >
               {t("update")}
+            </CButton>
+            <CButton
+              color="primary"
+              variant="outline"
+              className="mr-2"
+              onClick={handleUpdatePhoneNumber}
+            >
+              {t("update_phone_number")}
             </CButton>
           </div>
         </div>

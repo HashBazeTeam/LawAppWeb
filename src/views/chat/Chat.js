@@ -137,7 +137,6 @@ export default function Chat(props) {
       toast.error("Max file size is 20MB");
       return;
     }
-    console.log("File data", file);
     // Check file type
     let fileType = "image";
     if (file.type.startsWith("image")) {
@@ -163,10 +162,12 @@ export default function Chat(props) {
         await questionServices.updateQuestion(question.questionID, {
           status: "Ongoing",
           isReadClient: false, // When a new msg is sent change the read status of client message
+          adminID: userID,
         });
       } else {
         await questionServices.updateQuestion(question.questionID, {
           isReadClient: false, // When a new msg is sent change the read status of client message
+          adminID: userID,
         });
       }
 
@@ -198,10 +199,12 @@ export default function Chat(props) {
         await questionServices.updateQuestion(question.questionID, {
           status: "Ongoing",
           isReadClient: false, // When a new msg is sent change the read status of client message
+          adminID: userID,
         });
       } else {
         await questionServices.updateQuestion(question.questionID, {
           isReadClient: false, // When a new msg is sent change the read status of client message
+          adminID: userID,
         });
       }
 
@@ -294,8 +297,8 @@ export default function Chat(props) {
           // onOpen={(item) => { console.log(item) }}
         />
 
-        <div className="mb-0 mx-1 sticky bottom-0 grid grid-cols-8 align-middle justify-center">
-          <div className="col-span-7">
+        <div className="mb-0 mx-1 sticky bottom-0 grid grid-cols-8 align-middle justify-center ">
+          <div className="col-span-7 shadow border-b border-gray-200">
             <Input
               className="m-1 p-1"
               value={file}
@@ -304,6 +307,7 @@ export default function Chat(props) {
               multiline={true}
               rightButtons={
                 <Button
+                  className="mx-2 px-4"
                   color="white"
                   backgroundColor="black"
                   text="Send"
@@ -335,6 +339,7 @@ export default function Chat(props) {
           </div>
           <div className="col-span-1 py-2 flex justify-center align-middle">
             <Button
+              className="px-4"
               color="white"
               backgroundColor="green"
               text={

@@ -5,6 +5,16 @@ import { UserModel, AgentModel } from "../models";
 import { auth } from "./firebase";
 
 /**
+ * 
+ * User related services
+ */
+export const updateAuthPhoneNumber = async (phoneNumber) => {
+  const user = auth.currentUser;
+  return await user.updatePhoneNumber(phoneNumber);
+};
+
+
+/**
  * Admin user collection related services
  */
 export const addAdmin = async (user) => {
