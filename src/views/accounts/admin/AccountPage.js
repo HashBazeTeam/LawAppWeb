@@ -106,7 +106,6 @@ const AgentAccountPage = () => {
       abortEarly: false,
     });
     let phoneError = false;
-    console.log(formData.phoneNumber != "");
     if (
       formData.phoneNumber != "" &&
       !isPossiblePhoneNumber(formData.phoneNumber)
@@ -117,7 +116,8 @@ const AgentAccountPage = () => {
     }
     if (!error && !phoneError) {
       try {
-        await userServices.updateAdmin(userID, updatedData);
+        const { dob, ...rest } = updatedData;
+        await userServices.updateAdmin(userID, {...rest, dob: new Date(updatedData.dob)});
         setInitialAccount(updatedData);
         setFormData(updatedData);
         toast.success(t("common_success"));

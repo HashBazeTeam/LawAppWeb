@@ -10,7 +10,10 @@ import { auth } from "./firebase";
  */
 export const updateAuthPhoneNumber = async (phoneNumber) => {
   const user = auth.currentUser;
-  return await user.updatePhoneNumber(phoneNumber);
+  console.log(user);
+  if (user) {
+    return await user.updatePhoneNumber(phoneNumber);
+  }
 };
 
 

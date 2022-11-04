@@ -39,6 +39,7 @@ export default {
     "no_questions_found_in_given_range": " No questions found in given range!",
     'finish': "Finish",
     'submit_answer': "Submit Answer",
-    'update_phone_number': 'Update phone number'
+    'update_phone_number': 'Update phone number',
+    'update_profile': "Update profile",
 }
 

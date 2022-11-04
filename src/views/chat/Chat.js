@@ -294,7 +294,6 @@ export default function Chat(props) {
           toBottomHeight={"100%"}
           dataSource={messages}
           onDownload={(item) => handleFileDownload(item.data.uri, item.text)}
-          // onOpen={(item) => { console.log(item) }}
         />
 
         <div className="mb-0 mx-1 sticky bottom-0 grid grid-cols-8 align-middle justify-center ">

@@ -13,6 +13,11 @@ import { userServices } from "src/services";
 import { countryArray } from "src/utils";
 import { convertTZ } from "src/utils";
 import { selectors } from "src/store";
+import {
+  auth,
+  signInWithPhoneNumber,
+  appVerifier,
+} from "src/services/firebase";
 
 import { Modal } from "src/components";
 import {
@@ -36,10 +41,10 @@ const ProfilePage = () => {
   const [formErrors, setFormErrors] = useState({});
   const [updateMode, setUpdateMode] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [_appVerifier, setAppVerifier] = useState({});
 
   // Modal related states
   const [modalVisibility, setModalVisibility] = useState(false);
-  console.log(userData);
 
   useEffect(() => {
     setFormData(userData);
@@ -91,7 +96,6 @@ const ProfilePage = () => {
       abortEarly: false,
     });
     let phoneError = false;
-    console.log(formData.phoneNumber != "");
     if (
       formData.phoneNumber != "" &&
       !isPossiblePhoneNumber(formData.phoneNumber)
@@ -124,8 +128,40 @@ const ProfilePage = () => {
 
   // Handle update phone number button click.
   const handleUpdatePhoneNumber = async () => {
+    if (!updateMode) {
+      return;
+    }
+    setLoading(true);
+    try {
+      
+      const _appVerifier = appVerifier();
+      setAppVerifier(_appVerifier);
+      const confirmationResult = await signInWithPhoneNumber(
+        auth,
+        formData.phoneNumber,
+        _appVerifier
+      );
+      console.log(confirmationResult);
+      
+      const credential = await confirmationResult.confirm(formData.otp);
+      const user = auth.currentUser;
+      if (user) {
+        return await user.updatePhoneNumber(credential);
+      }
 
-  }
+
+      setInitialAccount({
+        ...initialAccount,
+        phoneNumber: formData.phoneNumber,
+      });
+      toast.success(t("common_success"));
+    } catch (error) {
+      console.log(error);
+      toast.error(`${t("common_error")}`);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -175,27 +211,6 @@ const ProfilePage = () => {
             mdSize: 6,
             type: "date",
           })}
-          {updateMode ? (
-            <CustomCFormPhoneNumberInputGroup
-              label={t("phone_number")}
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handlePhoneChange}
-              error={formErrors.phoneNumber}
-              uppercase={true}
-              mdSize={6}
-            />
-          ) : (
-            <CustomCFormInputGroup
-              label={t("phone_number")}
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              uppercase={true}
-              required={false}
-              readOnly={!updateMode}
-              mdSize={6}
-            />
-          )}
 
           {updateMode
             ? CustomCFormSelectGroup({
@@ -230,8 +245,35 @@ const ProfilePage = () => {
               className="mr-2"
               onClick={handleSubmit}
             >
-              {t("update")}
+              {t("update_profile")}
             </CButton>
+          </div>
+        </div>
+        <div className="row g-3">
+          {updateMode ? (
+            <CustomCFormPhoneNumberInputGroup
+              label={t("phone_number")}
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handlePhoneChange}
+              error={formErrors.phoneNumber}
+              uppercase={true}
+              mdSize={6}
+            />
+          ) : (
+            <CustomCFormInputGroup
+              label={t("phone_number")}
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              uppercase={true}
+              required={false}
+              readOnly={!updateMode}
+              mdSize={6}
+            />
+          )}
+        </div>
+        <div className="flex justify-end" hidden={!updateMode}>
+          <div className="justify-end">
             <CButton
               color="primary"
               variant="outline"
