@@ -10,6 +10,7 @@ import { SystemMessage } from "react-chat-elements";
 import CIcon from "@coreui/icons-react";
 import { CButton } from "@coreui/react";
 import { cilSearch } from "@coreui/icons";
+import { QuestionStatus } from "src/models/types";
 
 // Custom imports
 import { LoadingIndicator } from "src/components";
@@ -115,6 +116,9 @@ export default function Chat(props) {
 
     return unsubscribe;
   }, []);
+
+  // Show submit answer button when the status in not answered
+  const showSubmitButton = question.status == QuestionStatus.yetToBePicked || question.status ==  QuestionStatus.ongoing;
 
   /**
    * Handlers
@@ -336,7 +340,7 @@ export default function Chat(props) {
               }
             />
           </div>
-          <div className="col-span-1 py-2 flex justify-center align-middle">
+          { showSubmitButton && <div className="col-span-1 py-2 flex justify-center align-middle">
             <Button
               className="px-4"
               color="white"
@@ -348,7 +352,7 @@ export default function Chat(props) {
               }
               onClick={handleSubmitAnswerBtnPressed}
             />
-          </div>
+          </div>}
         </div>
       </div>
     </>
