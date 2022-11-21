@@ -36,6 +36,8 @@ export default function Chat(props) {
   const screenHeight = window.innerHeight - 128; // Due to purge issue tailwind css doesn't detect variable changes.
   const question = props.location.state.question; // Get the question from the previous page.
   const inputRef = useRef(null);
+  const scrollViewRef = useRef();
+  const textRef = useRef();
 
   // Selector
   const userID = useSelector(selectors.user.selectUserID);
@@ -46,6 +48,7 @@ export default function Chat(props) {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
 
+  // Get messages from the firestore
   useEffect(() => {
     const q = query(
       collection(firestore, "Question", question.questionID, "chat")
@@ -117,8 +120,17 @@ export default function Chat(props) {
     return unsubscribe;
   }, []);
 
+  // Scroll to the bottom of the chat
+  useEffect(() => {
+    // scrollViewRef.current.scrollTop = scrollViewRef.current.scrollHeight;
+    // scrollViewRef.scrollIntoView({ behavior: "smooth" });
+    scrollToBottom();
+  }, [messages]);
+
   // Show submit answer button when the status in not answered
-  const showSubmitButton = question.status == QuestionStatus.yetToBePicked || question.status ==  QuestionStatus.ongoing;
+  const showSubmitButton =
+    question.status == QuestionStatus.yetToBePicked ||
+    question.status == QuestionStatus.ongoing;
 
   /**
    * Handlers
@@ -198,6 +210,7 @@ export default function Chat(props) {
       type: "text",
       text: formData,
     };
+
     try {
       if (question.status == "Yet to be picked") {
         await questionServices.updateQuestion(question.questionID, {
@@ -213,9 +226,11 @@ export default function Chat(props) {
       }
 
       await questionServices.addChatToQuestion(question.questionID, chat);
+      textRef.current.value = ""
     } catch (error) {
       console.log(error);
     }
+    scrollToBottom();
   };
 
   // Handle submit answer button
@@ -264,6 +279,16 @@ export default function Chat(props) {
     await saveImg(fileURI, fileName);
   };
 
+  const scrollToBottom = () => {
+    scrollViewRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleClear = (e) => {
+    console.log(e);
+    e.target.value = "";
+    return;
+  }
+
   return (
     <>
       <div className="col-span-1 py-2 flex justify-center align-middle bg-slate-50">
@@ -300,11 +325,15 @@ export default function Chat(props) {
           onDownload={(item) => handleFileDownload(item.data.uri, item.text)}
         />
 
-        <div className="mb-0 mx-1 sticky bottom-0 grid grid-cols-8 align-middle justify-center ">
-          <div className="col-span-7 shadow border-b border-gray-200">
+        <div ref={scrollViewRef}></div>
+
+        <div className="mb-0  mx-1 sticky bottom-0 grid grid-cols-8 align-middle justify-center ">
+          <div className="col-span-7 ml-4 shadow border-b border-gray-200">
             <Input
+              referance={textRef}
               className="m-1 p-1"
-              value={file}
+              defaultValue={formData}
+              // clear={(e) => handleClear(e)}
               onChange={handleChange}
               placeholder="Type here..."
               multiline={true}
@@ -340,19 +369,21 @@ export default function Chat(props) {
               }
             />
           </div>
-          { showSubmitButton && <div className="col-span-1 py-2 flex justify-center align-middle">
-            <Button
-              className="px-4"
-              color="white"
-              backgroundColor="green"
-              text={
-                question.status == "Assistance"
-                  ? t("finish")
-                  : t("submit_answer")
-              }
-              onClick={handleSubmitAnswerBtnPressed}
-            />
-          </div>}
+          {showSubmitButton && (
+            <div className="col-span-1 py-2 flex justify-center align-middle">
+              <Button
+                className="px-4"
+                color="white"
+                backgroundColor="green"
+                text={
+                  question.status == "Assistance"
+                    ? t("finish")
+                    : t("submit_answer")
+                }
+                onClick={handleSubmitAnswerBtnPressed}
+              />
+            </div>
+          )}
         </div>
       </div>
     </>
