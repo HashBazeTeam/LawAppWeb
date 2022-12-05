@@ -26,4 +26,8 @@ export const updateQuestion = async (questionID, data) => {
 export const getQuestionInsight = async (status, fromDate, toDate) => {
   return await QuestionModel.getQuestionInsight(status, fromDate, toDate);
 }
+
+export const sendChatNotification = async (fcmTokens, questionID) => {
+  return await QuestionModel.sendChatNotification(fcmTokens, questionID);
+}
  

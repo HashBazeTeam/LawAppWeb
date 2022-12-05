@@ -23,7 +23,7 @@ import {
   firestore,
 } from "src/services/firebase";
 import { selectors } from "src/store";
-import { questionServices } from "src/services";
+import { questionServices, userServices } from "src/services";
 import { textSpanContainsTextSpan } from "typescript";
 
 /**
@@ -47,6 +47,7 @@ export default function Chat(props) {
   const [formData, setFormData] = useState("");
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
+  const [fcmTokens, setFCMTokens] = useState([]);
 
   // Get messages from the firestore
   useEffect(() => {
@@ -120,10 +121,23 @@ export default function Chat(props) {
     return unsubscribe;
   }, []);
 
+  // Get client details from the firestore
+  useEffect(() => {
+    const fetchData = async () => {
+      const client = await userServices.getUserByID(question.clientID);
+      console.log(client);
+      const tokens = Object.values(client.fcmToken).filter(
+        (token) => token != null && token != undefined && token != ""
+      );
+      setFCMTokens(tokens);
+    };
+    fetchData().catch((err) => {
+      console.log(err);
+    });
+  }, []);
+
   // Scroll to the bottom of the chat
   useEffect(() => {
-    // scrollViewRef.current.scrollTop = scrollViewRef.current.scrollHeight;
-    // scrollViewRef.scrollIntoView({ behavior: "smooth" });
     scrollToBottom();
   }, [messages]);
 
@@ -192,6 +206,7 @@ export default function Chat(props) {
         file,
         chat
       );
+      await questionServices.sendChatNotification(fcmTokens, question.questionID);
     } catch (error) {
       console.log(error);
       toast.error("Error uploading file");
@@ -226,7 +241,9 @@ export default function Chat(props) {
       }
 
       await questionServices.addChatToQuestion(question.questionID, chat);
-      textRef.current.value = ""
+      textRef.current.value = "";
+
+      await questionServices.sendChatNotification(fcmTokens, question.questionID);
     } catch (error) {
       console.log(error);
     }
@@ -287,7 +304,7 @@ export default function Chat(props) {
     console.log(e);
     e.target.value = "";
     return;
-  }
+  };
 
   return (
     <>

@@ -42,7 +42,7 @@ const AgentAccountPage = () => {
     const fetchAgent = async () => {
       try {
         setLoading(true);
-        const admin = await userServices.getAdminByID(userID);
+        const admin = await userServices.getUserByID(userID);
         if (admin && isSubscribed) {
           setFormData(admin);
           setInitialAccount(admin);

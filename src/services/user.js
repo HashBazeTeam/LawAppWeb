@@ -36,7 +36,7 @@ export const getAllAdmins = async () => {
   return await UserModel.getAllUsers();
 }
 
-export const getAdminByID = async (userID) => {
+export const getUserByID = async (userID) => {
   return await UserModel.getUserByID(userID);
 }
 

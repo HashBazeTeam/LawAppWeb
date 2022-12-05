@@ -20,8 +20,10 @@ import {
   uploadBytes,
   ref,
   getDownloadURL,
+  httpsCallable,
+  functions,
 } from "src/services/firebase";
-import _ from 'lodash';
+import _ from "lodash";
 
 const collectionName = "Question";
 
@@ -255,28 +257,24 @@ export const getQuestionByID = async (userID) => {
 };
 
 // Get question insight
-export const getQuestionInsight = async (
-  status,
-  fromDate,
-  toDate,
-) => {
+export const getQuestionInsight = async (status, fromDate, toDate) => {
   let q;
   if (status) {
     q = query(
       collection(firestore, collectionName),
       where("isDelete", "==", false),
       where("status", "==", status),
-      where('postDateTime', '>=', fromDate),
-      where('postDateTime', '<=',toDate),
-      orderBy("postDateTime", "desc"),
+      where("postDateTime", ">=", fromDate),
+      where("postDateTime", "<=", toDate),
+      orderBy("postDateTime", "desc")
     );
   } else {
     q = query(
       collection(firestore, collectionName),
       where("isDelete", "==", false),
-      where('postDateTime', '>=',fromDate),
-      where('postDateTime', '<=',toDate),
-      orderBy("postDateTime", "desc"),
+      where("postDateTime", ">=", fromDate),
+      where("postDateTime", "<=", toDate),
+      orderBy("postDateTime", "desc")
     );
   }
 
@@ -285,12 +283,12 @@ export const getQuestionInsight = async (
   querySnapshot.forEach((doc) => {
     const question = doc.data();
     if (countryQuestions[question.country]) {
-      countryQuestions[question.country] += 1
+      countryQuestions[question.country] += 1;
     } else {
-      countryQuestions[question.country] = 1
+      countryQuestions[question.country] = 1;
     }
   });
-  return { countryQuestions};
+  return { countryQuestions };
 };
 
 /**
@@ -326,4 +324,17 @@ export const addChatFileToQuestion = async (questionID, file, data) => {
   );
 
   return await setDoc(docRef, uploadData);
+};
+
+// Send notification when a new chat is added
+export const sendChatNotification = async (fcmTokens, questionID) => {
+  console.log(fcmTokens, questionID);
+  try {
+    const onNewChatFunc = httpsCallable(functions, "httpChatOnNewChatFunc");
+    const res = await onNewChatFunc({ fcmTokens, questionID });
+    console.log("Notification sent");
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
 };
