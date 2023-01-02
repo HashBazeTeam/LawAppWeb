@@ -332,7 +332,6 @@ export const sendChatNotification = async (fcmTokens, questionID) => {
   try {
     const onNewChatFunc = httpsCallable(functions, "httpChatOnNewChatFunc");
     const res = await onNewChatFunc({ fcmTokens, questionID });
-    console.log("Notification sent");
     return res;
   } catch (error) {
     console.log(error);
