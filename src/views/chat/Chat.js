@@ -13,7 +13,7 @@ import { cilSearch } from "@coreui/icons";
 import { QuestionStatus } from "src/models/types";
 
 // Custom imports
-import { LoadingIndicator } from "src/components";
+import { LoadingIndicator, Modal } from "src/components";
 import { saveImg } from "src/utils/function";
 import {
   collection,
@@ -48,6 +48,8 @@ export default function Chat(props) {
   const [loading, setLoading] = useState(false);
   const [file, setFile] = useState(null);
   const [fcmTokens, setFCMTokens] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [showSubmitButton, setShowSubmitButton] = useState(false);
 
   // Get messages from the firestore
   useEffect(() => {
@@ -141,10 +143,16 @@ export default function Chat(props) {
     scrollToBottom();
   }, [messages]);
 
-  // Show submit answer button when the status in not answered
-  const showSubmitButton =
-    question.status == QuestionStatus.yetToBePicked ||
-    question.status == QuestionStatus.ongoing;
+  useEffect(() => {
+    if (
+      question.status == QuestionStatus.yetToBePicked ||
+      question.status == QuestionStatus.ongoing
+    ) {
+      setShowSubmitButton(true);
+    } else {
+      setShowSubmitButton(false);
+    }
+  }, [question.status]);
 
   /**
    * Handlers
@@ -206,7 +214,10 @@ export default function Chat(props) {
         file,
         chat
       );
-      await questionServices.sendChatNotification(fcmTokens, question.questionID);
+      await questionServices.sendChatNotification(
+        fcmTokens,
+        question.questionID
+      );
     } catch (error) {
       console.log(error);
       toast.error("Error uploading file");
@@ -243,7 +254,10 @@ export default function Chat(props) {
       await questionServices.addChatToQuestion(question.questionID, chat);
       textRef.current.value = "";
 
-      await questionServices.sendChatNotification(fcmTokens, question.questionID);
+      await questionServices.sendChatNotification(
+        fcmTokens,
+        question.questionID
+      );
     } catch (error) {
       console.log(error);
     }
@@ -251,10 +265,10 @@ export default function Chat(props) {
   };
 
   // Handle submit answer button
-  const handleSubmitAnswerBtnPressed = async () => {
-    if (question.status == "Answered") return;
+  const handleSubmitAnswerBtnPressed = async (e) => {
+    // if (question.status == "Answered") return;
     setLoading(true);
-
+    e.preventDefault();
     // If the status in assistance change the status.
     if (question.status == "Assistance") {
       try {
@@ -267,6 +281,8 @@ export default function Chat(props) {
       }
     } else {
       try {
+        setModalVisible(false);
+        await handleSend(e);
         await questionServices.updateQuestion(question.questionID, {
           status: "Answered",
         });
@@ -287,8 +303,15 @@ export default function Chat(props) {
         setLoading(false);
         toast.error(t("common_error"));
       }
+      setModalVisible(false);
       setLoading(false);
     }
+  };
+
+  // When the question is answered and user want to answer again, enable the submit answer button
+  const handleAnswerAgainBtnPressed = async (e) => {
+    await handleSubmitAnswerBtnPressed(e);
+    setModalVisible(false);
   };
 
   // Handle file/image download
@@ -309,6 +332,14 @@ export default function Chat(props) {
   return (
     <>
       <div className="col-span-1 py-2 flex justify-center align-middle bg-slate-50">
+        <Modal
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          successCallback={(e) => handleAnswerAgainBtnPressed(e)}
+          successLabel={t("resubmit")}
+          title={t("resubmit_answer")}
+          body={t("are_you_sure_you_want_to_resubmit")}
+        />
         <CButton
           className=" text-md"
           color="primary"
@@ -386,21 +417,28 @@ export default function Chat(props) {
               }
             />
           </div>
-          {showSubmitButton && (
-            <div className="col-span-1 py-2 flex justify-center align-middle">
-              <Button
-                className="px-4"
-                color="white"
-                backgroundColor="green"
-                text={
-                  question.status == "Assistance"
-                    ? t("finish")
-                    : t("submit_answer")
+
+          <div className="col-span-1 py-2 flex justify-center align-middle">
+            <Button
+              className="px-4"
+              color="white"
+              backgroundColor={showSubmitButton ? "green" : "grey"}
+              text={
+                question.status == "Assistance"
+                  ? t("finish")
+                  : t("submit_answer")
+              }
+              onClick={(e) => {
+                console.log(showSubmitButton);
+                // If the button is disabled show the modal.
+                if (!showSubmitButton) {
+                  setModalVisible(true);
+                } else {
+                  handleSubmitAnswerBtnPressed(e);
                 }
-                onClick={handleSubmitAnswerBtnPressed}
-              />
-            </div>
-          )}
+              }}
+            />
+          </div>
         </div>
       </div>
     </>
