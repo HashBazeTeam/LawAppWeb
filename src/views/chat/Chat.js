@@ -21,6 +21,7 @@ import {
   where,
   onSnapshot,
   firestore,
+  doc
 } from "src/services/firebase";
 import { selectors } from "src/store";
 import { questionServices, userServices } from "src/services";
@@ -115,9 +116,30 @@ export default function Chat(props) {
         chats.push(chatModel);
       });
       setMessages(chats);
+      if (chats.length > 0) {
+        scrollToBottom();
+      }
+
       questionServices.updateQuestion(question.questionID, {
         isReadAdmin: true, // When the admin come to the chat, seen status is changed.
       });
+    });
+
+    return unsubscribe;
+  }, []);
+
+  // Listen to question status
+  useEffect(() => {
+    const q = query(
+      doc(firestore, "Question", question.questionID)
+    );
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      // Make the submit answer button disabled if the question is answered
+      if (querySnapshot.data().status == QuestionStatus.answered) {
+        setShowSubmitButton(false);
+      } else {
+        setShowSubmitButton(true);
+      }
     });
 
     return unsubscribe;
@@ -139,20 +161,11 @@ export default function Chat(props) {
   }, []);
 
   // Scroll to the bottom of the chat
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  // useEffect(() => {
+  //   scrollToBottom();
+  // }, [messages]);
 
-  useEffect(() => {
-    if (
-      question.status == QuestionStatus.yetToBePicked ||
-      question.status == QuestionStatus.ongoing
-    ) {
-      setShowSubmitButton(true);
-    } else {
-      setShowSubmitButton(false);
-    }
-  }, [question.status]);
+  
 
   /**
    * Handlers
@@ -376,7 +389,7 @@ export default function Chat(props) {
         <div ref={scrollViewRef}></div>
 
         <div className="mb-0  mx-1 sticky bottom-0 grid grid-cols-8 align-middle justify-center ">
-          <div className="col-span-7 ml-4 shadow border-b border-gray-200">
+          <div className="col-span-8 ml-4 shadow border-b border-gray-200">
             <Input
               referance={textRef}
               className="m-1 p-1"
@@ -385,14 +398,41 @@ export default function Chat(props) {
               onChange={handleChange}
               placeholder="Type here..."
               multiline={true}
+              
               rightButtons={
-                <Button
+                <div>
+                  <Button
                   className="mx-2 px-4"
                   color="white"
                   backgroundColor="black"
                   text="Send"
                   onClick={handleSend}
-                />
+                  />
+                  <Button
+                    disabled={!showSubmitButton || formData == "" || !formData}
+              className="px-4"
+              color="white"
+              backgroundColor={showSubmitButton ? "green" : "grey"}
+              text={
+                question.status == "Assistance"
+                  ? t("finish")
+                  : t("submit_answer")
+              }
+              onClick={(e) => {
+                if (formData == "" || !formData) return;
+                // If the button is disabled show the modal.
+                if (!showSubmitButton) {
+                  setModalVisible(true);
+                } else {
+                  setShowSubmitButton(false);
+                  handleSubmitAnswerBtnPressed(e);
+                }
+              }}
+            />
+
+                  </div>
+                
+                
               }
               leftButtons={
                 <button
@@ -418,7 +458,7 @@ export default function Chat(props) {
             />
           </div>
 
-          <div className="col-span-1 py-2 flex justify-center align-middle">
+          {/* <div className="col-span-1 py-2 flex justify-center align-middle">
             <Button
               className="px-4"
               color="white"
@@ -434,11 +474,12 @@ export default function Chat(props) {
                 if (!showSubmitButton) {
                   setModalVisible(true);
                 } else {
+                  setShowSubmitButton(false);
                   handleSubmitAnswerBtnPressed(e);
                 }
               }}
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </>

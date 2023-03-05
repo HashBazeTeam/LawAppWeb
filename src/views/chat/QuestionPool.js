@@ -38,7 +38,6 @@ export default function QuestionPool(props) {
       console.log(err);
       setLoading(false);
     });
-    setLoading(false);
     // Cancel any pending request
     return () => (isSubscribed = false);
   }, []);
@@ -101,6 +100,7 @@ export default function QuestionPool(props) {
     } catch (error) {
       console.log(error);
       toast.error(t("common_error"));
+      setLoading(false);
     }
     setLoading(false);
   };
