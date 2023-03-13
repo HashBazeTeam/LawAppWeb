@@ -27,3 +27,8 @@ export const selectUserId = createDraftSafeSelector(
   (state) => state.user,
   (user) => user.userData.userID
 );
+
+export const selectConfigs = createDraftSafeSelector(
+  (state) => state.user,
+  (user) => user.configs
+);

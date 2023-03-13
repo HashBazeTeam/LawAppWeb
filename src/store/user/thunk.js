@@ -1,5 +1,5 @@
-import { setUserCredentials, setUserData, setUserToken } from "./index";
-import { userServices } from "../../services";
+import { setUserCredentials, setUserData, setUserToken, setConfigs } from "./index";
+import { userServices, configServices } from "../../services";
 import { convertTZ } from "src/utils";
 
 const userThunk = {
@@ -59,6 +59,17 @@ const userThunk = {
       }
     };
   },
+
+  getConfigs() {
+    return async (dispatch) => {
+      try {
+        const configs = await configServices.getAllConfigs();
+        dispatch(setConfigs(configs));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  }
 };
 
 export default userThunk;

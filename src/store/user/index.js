@@ -18,7 +18,11 @@ const initialState = {
   token: {
     accessToken: "",
     refreshToken: "",
-  }
+  },
+  configs: {
+    expiryTime: 24,
+    reminderTime: 30,
+  },
 };
 
 /**
@@ -37,9 +41,12 @@ const userSlice = createSlice({
     setUserToken: (state, action) => {
       state.token = action.payload;
     },
+    setConfigs: (state, action) => {
+      state.configs = action.payload;
+    },
   },
 });
 
-export const { setUserData, setUserCredentials, setUserToken } = userSlice.actions;
+export const { setUserData, setUserCredentials, setUserToken, setConfigs } =
+  userSlice.actions;
 export default userSlice.reducer;
-

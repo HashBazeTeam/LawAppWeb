@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { LockClosedIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
@@ -7,7 +8,9 @@ import { LoadingIndicator } from "src/components";
 import { deleteEmptyKeys } from "src/utils/function";
 import { questionServices } from "src/services";
 import { QuestionStatus } from "src/models/types";
-import {convertFirestoreTimeStampToDate} from "src/services/firebase";
+import { convertFirestoreTimeStampToDate } from "src/services/firebase";
+import { useDispatch } from "react-redux";
+import { thunks, selectors } from "src/store";
 
 const Table = React.lazy(() => import("./components/Table"));
 const TableBody = React.lazy(() => import("./components/TableBody"));
@@ -18,7 +21,9 @@ const TableBody = React.lazy(() => import("./components/TableBody"));
  */
 export default function QuestionPool(props) {
   const { t } = useTranslation();
+  const dispatch = useDispatch();
   const client = props.location.state?.client; // Get the question from the previous page
+  const configs = useSelector(selectors.user.selectConfigs);
 
   const recordsPerPage = 20; // Records per page
   const [questionList, setQuestionList] = useState([]);
@@ -59,6 +64,20 @@ export default function QuestionPool(props) {
     return () => (isSubscribed = false);
   }, [client]);
 
+  // Fetch all the configs and set the redux state
+  useEffect(() => {
+    let isSubscribed = true;
+    const fetchConfigs = async () => {
+      await dispatch(thunks.user.getConfigs());
+    };
+    fetchConfigs().catch((err) => {
+      console.log(err);
+    });
+    return () => {
+      isSubscribed = false;
+    };
+  }, []);
+
   // Fetch data on page change
   // move :- next or previous
   // Firestore doesn't provide a way to get the previous page, so we have to use the lastVisibleDoc
@@ -93,18 +112,19 @@ export default function QuestionPool(props) {
         _totalCount = totalCount;
         _lastVisible = lastVisible;
       }
-
       // Check if the question is in answered status and if the answerDateTime is more than 24 hours then change the
       // Status in to time up
       const _questionsT = _questions.map(async (question) => {
-        console.log(question.status, question.answerDateTime);
         if (question.status == QuestionStatus.answered) {
-          const answerDateTime = convertFirestoreTimeStampToDate(question.answerDateTime);
+          const answerDateTime = convertFirestoreTimeStampToDate(
+            question.answerDateTime
+          );
           const currentDate = new Date();
           const diffTime = currentDate - answerDateTime;
           const diffHours = diffTime / (1000 * 3600);
-          console.log(answerDateTime, currentDate, "diffHours", diffHours)
-          if (diffHours > 24) {
+            
+          const compareTime = configs?.expiryTime || 24;
+          if (diffHours > compareTime) {
             question.status = QuestionStatus.timeUP;
             await questionServices.updateQuestion(question.questionID, {
               status: QuestionStatus.timeUP,
