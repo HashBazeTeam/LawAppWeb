@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/LawAppWeb/static/css/main.596da104.css",
-    "main.js": "/LawAppWeb/static/js/main.f535c437.js",
+    "main.js": "/LawAppWeb/static/js/main.3cb9d57b.js",
     "static/js/281.c23022ec.chunk.js": "/LawAppWeb/static/js/281.c23022ec.chunk.js",
     "static/js/82.4a5e27eb.chunk.js": "/LawAppWeb/static/js/82.4a5e27eb.chunk.js",
     "static/js/388.dc207745.chunk.js": "/LawAppWeb/static/js/388.dc207745.chunk.js",
@@ -13,8 +13,8 @@
     "static/js/48.5b300525.chunk.js": "/LawAppWeb/static/js/48.5b300525.chunk.js",
     "static/js/505.b956182a.chunk.js": "/LawAppWeb/static/js/505.b956182a.chunk.js",
     "static/js/190.351dcf6f.chunk.js": "/LawAppWeb/static/js/190.351dcf6f.chunk.js",
-    "static/js/561.57d9e8cb.chunk.js": "/LawAppWeb/static/js/561.57d9e8cb.chunk.js",
-    "static/js/54.7b8b0f8f.chunk.js": "/LawAppWeb/static/js/54.7b8b0f8f.chunk.js",
+    "static/js/561.cd2d72b5.chunk.js": "/LawAppWeb/static/js/561.cd2d72b5.chunk.js",
+    "static/js/788.bb15c71a.chunk.js": "/LawAppWeb/static/js/788.bb15c71a.chunk.js",
     "static/js/650.b2ea0739.chunk.js": "/LawAppWeb/static/js/650.b2ea0739.chunk.js",
     "static/js/555.deb3f374.chunk.js": "/LawAppWeb/static/js/555.deb3f374.chunk.js",
     "static/js/620.d66ee597.chunk.js": "/LawAppWeb/static/js/620.d66ee597.chunk.js",
@@ -34,7 +34,7 @@
     "static/media/logo.png": "/LawAppWeb/static/media/logo.b6029e27b305c8652af6.png",
     "index.html": "/LawAppWeb/index.html",
     "main.596da104.css.map": "/LawAppWeb/static/css/main.596da104.css.map",
-    "main.f535c437.js.map": "/LawAppWeb/static/js/main.f535c437.js.map",
+    "main.3cb9d57b.js.map": "/LawAppWeb/static/js/main.3cb9d57b.js.map",
     "281.c23022ec.chunk.js.map": "/LawAppWeb/static/js/281.c23022ec.chunk.js.map",
     "82.4a5e27eb.chunk.js.map": "/LawAppWeb/static/js/82.4a5e27eb.chunk.js.map",
     "388.dc207745.chunk.js.map": "/LawAppWeb/static/js/388.dc207745.chunk.js.map",
@@ -46,8 +46,8 @@
     "48.5b300525.chunk.js.map": "/LawAppWeb/static/js/48.5b300525.chunk.js.map",
     "505.b956182a.chunk.js.map": "/LawAppWeb/static/js/505.b956182a.chunk.js.map",
     "190.351dcf6f.chunk.js.map": "/LawAppWeb/static/js/190.351dcf6f.chunk.js.map",
-    "561.57d9e8cb.chunk.js.map": "/LawAppWeb/static/js/561.57d9e8cb.chunk.js.map",
-    "54.7b8b0f8f.chunk.js.map": "/LawAppWeb/static/js/54.7b8b0f8f.chunk.js.map",
+    "561.cd2d72b5.chunk.js.map": "/LawAppWeb/static/js/561.cd2d72b5.chunk.js.map",
+    "788.bb15c71a.chunk.js.map": "/LawAppWeb/static/js/788.bb15c71a.chunk.js.map",
     "650.b2ea0739.chunk.js.map": "/LawAppWeb/static/js/650.b2ea0739.chunk.js.map",
     "555.deb3f374.chunk.js.map": "/LawAppWeb/static/js/555.deb3f374.chunk.js.map",
     "620.d66ee597.chunk.js.map": "/LawAppWeb/static/js/620.d66ee597.chunk.js.map",
@@ -66,6 +66,6 @@
   },
   "entrypoints": [
     "static/css/main.596da104.css",
-    "static/js/main.f535c437.js"
+    "static/js/main.3cb9d57b.js"
   ]
 }
