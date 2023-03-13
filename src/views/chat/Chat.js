@@ -21,7 +21,7 @@ import {
   where,
   onSnapshot,
   firestore,
-  doc
+  doc,
 } from "src/services/firebase";
 import { selectors } from "src/store";
 import { questionServices, userServices } from "src/services";
@@ -130,13 +130,22 @@ export default function Chat(props) {
 
   // Listen to question status
   useEffect(() => {
-    const q = query(
-      doc(firestore, "Question", question.questionID)
-    );
+    const q = query(doc(firestore, "Question", question.questionID));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
       // Make the submit answer button disabled if the question is answered
       if (querySnapshot.data().status == QuestionStatus.answered) {
         setShowSubmitButton(false);
+        
+        // Check if the answerDateTime is more than 24 hours ago and if it is, then change the status to time up
+        const answerDateTime = querySnapshot.data().answerDateTime;
+        const now = new Date();
+        const diff = now.getTime() - answerDateTime.toDate().getTime();
+        const diffHours = diff / (1000 * 3600);
+        if (diffHours > 24) {
+          questionServices.updateQuestion(question.questionID, {
+            status: QuestionStatus.timeUP,
+          });
+        }
       } else {
         setShowSubmitButton(true);
       }
@@ -164,8 +173,6 @@ export default function Chat(props) {
   // useEffect(() => {
   //   scrollToBottom();
   // }, [messages]);
-
-  
 
   /**
    * Handlers
@@ -214,11 +221,13 @@ export default function Chat(props) {
           status: "Ongoing",
           isReadClient: false, // When a new msg is sent change the read status of client message
           adminID: userID,
+          updateAt: new Date(),
         });
       } else {
         await questionServices.updateQuestion(question.questionID, {
           isReadClient: false, // When a new msg is sent change the read status of client message
           adminID: userID,
+          updateAt: new Date(),
         });
       }
 
@@ -256,11 +265,13 @@ export default function Chat(props) {
           status: "Ongoing",
           isReadClient: false, // When a new msg is sent change the read status of client message
           adminID: userID,
+          updateAt: new Date(),
         });
       } else {
         await questionServices.updateQuestion(question.questionID, {
           isReadClient: false, // When a new msg is sent change the read status of client message
           adminID: userID,
+          updateAt: new Date(),
         });
       }
 
@@ -287,6 +298,7 @@ export default function Chat(props) {
       try {
         await questionServices.updateQuestion(question.questionID, {
           status: "Ended",
+          updateAt: new Date(),
         });
       } catch (error) {
         setLoading(false);
@@ -298,6 +310,8 @@ export default function Chat(props) {
         await handleSend(e);
         await questionServices.updateQuestion(question.questionID, {
           status: "Answered",
+          answerDateTime: new Date(),
+          updateAt: new Date(),
         });
         const msgTime = new Date().valueOf();
         const chat = {
@@ -398,41 +412,37 @@ export default function Chat(props) {
               onChange={handleChange}
               placeholder="Type here..."
               multiline={true}
-              
               rightButtons={
                 <div>
                   <Button
-                  className="mx-2 px-4"
-                  color="white"
-                  backgroundColor="black"
-                  text="Send"
-                  onClick={handleSend}
+                    className="mx-2 px-4"
+                    color="white"
+                    backgroundColor="black"
+                    text="Send"
+                    onClick={handleSend}
                   />
                   <Button
                     disabled={!showSubmitButton || formData == "" || !formData}
-              className="px-4"
-              color="white"
-              backgroundColor={showSubmitButton ? "green" : "grey"}
-              text={
-                question.status == "Assistance"
-                  ? t("finish")
-                  : t("submit_answer")
-              }
-              onClick={(e) => {
-                if (formData == "" || !formData) return;
-                // If the button is disabled show the modal.
-                if (!showSubmitButton) {
-                  setModalVisible(true);
-                } else {
-                  setShowSubmitButton(false);
-                  handleSubmitAnswerBtnPressed(e);
-                }
-              }}
-            />
-
-                  </div>
-                
-                
+                    className="px-4"
+                    color="white"
+                    backgroundColor={showSubmitButton ? "green" : "grey"}
+                    text={
+                      question.status == "Assistance"
+                        ? t("finish")
+                        : t("submit_answer")
+                    }
+                    onClick={(e) => {
+                      if (formData == "" || !formData) return;
+                      // If the button is disabled show the modal.
+                      if (!showSubmitButton) {
+                        setModalVisible(true);
+                      } else {
+                        setShowSubmitButton(false);
+                        handleSubmitAnswerBtnPressed(e);
+                      }
+                    }}
+                  />
+                </div>
               }
               leftButtons={
                 <button
