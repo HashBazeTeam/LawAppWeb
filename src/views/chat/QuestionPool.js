@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { LoadingIndicator } from "src/components";
 import { deleteEmptyKeys } from "src/utils/function";
 import { questionServices } from "src/services";
+import { QuestionStatus } from "src/models/types";
+import {convertFirestoreTimeStampToDate} from "src/services/firebase";
 
 const Table = React.lazy(() => import("./components/Table"));
 const TableBody = React.lazy(() => import("./components/TableBody"));
@@ -92,7 +94,27 @@ export default function QuestionPool(props) {
         _lastVisible = lastVisible;
       }
 
-      setQuestionList(_questions);
+      // Check if the question is in answered status and if the answerDateTime is more than 24 hours then change the
+      // Status in to time up
+      const _questionsT = _questions.map(async (question) => {
+        console.log(question.status, question.answerDateTime);
+        if (question.status == QuestionStatus.answered) {
+          const answerDateTime = convertFirestoreTimeStampToDate(question.answerDateTime);
+          const currentDate = new Date();
+          const diffTime = currentDate - answerDateTime;
+          const diffHours = diffTime / (1000 * 3600);
+          console.log(answerDateTime, currentDate, "diffHours", diffHours)
+          if (diffHours > 24) {
+            question.status = QuestionStatus.timeUP;
+            await questionServices.updateQuestion(question.questionID, {
+              status: QuestionStatus.timeUP,
+            });
+          }
+        }
+        return question;
+      });
+
+      setQuestionList(_questionsT);
       setFilteredData(_questions);
       setLastVisibleDoc(_lastVisible);
       setMaxPages(Math.ceil(_totalCount / recordsPerPage));
@@ -159,7 +181,10 @@ export default function QuestionPool(props) {
   return (
     <>
       {loading ? (
-        <div className="flex justify-center bg-slate-50"> {LoadingIndicator("lg")} </div>
+        <div className="flex justify-center bg-slate-50">
+          {" "}
+          {LoadingIndicator("lg")}{" "}
+        </div>
       ) : (
         <div className="mt-8">
           <Table

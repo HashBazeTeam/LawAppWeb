@@ -135,17 +135,6 @@ export default function Chat(props) {
       // Make the submit answer button disabled if the question is answered
       if (querySnapshot.data().status == QuestionStatus.answered) {
         setShowSubmitButton(false);
-        
-        // Check if the answerDateTime is more than 24 hours ago and if it is, then change the status to time up
-        const answerDateTime = querySnapshot.data().answerDateTime;
-        const now = new Date();
-        const diff = now.getTime() - answerDateTime.toDate().getTime();
-        const diffHours = diff / (1000 * 3600);
-        if (diffHours > 24) {
-          questionServices.updateQuestion(question.questionID, {
-            status: QuestionStatus.timeUP,
-          });
-        }
       } else {
         setShowSubmitButton(true);
       }
