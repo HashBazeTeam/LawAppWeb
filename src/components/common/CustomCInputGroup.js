@@ -103,7 +103,7 @@ export function CustomCFormPhoneNumberInputGroup({
             backgroundColor: "#fff",
           }}
         />
-        <CFormFeedback invalid={error ? true : false}>{error}</CFormFeedback>
+        <p  className="text-red-400 text-sm">{error}</p>
       </CCol>
     </>
   );

@@ -72,6 +72,12 @@ const AdminAddPage = () => {
     }
     if (!error && !phoneError) {
       try {
+        const user = await userServices.getAdminByPhoneNumber(formData.phoneNumber);
+        if (user) {
+          setLoading(false);
+          setFormErrors({ ...formErrors, phoneNumber: "Phone number already exists" });
+          return;
+        }
         await userServices.addAdmin(value);
         toast.success(t("common_success"));
         setFormData(initialValue);
