@@ -51,6 +51,7 @@ export default function Chat(props) {
   const [fcmTokens, setFCMTokens] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [showSubmitButton, setShowSubmitButton] = useState(false);
+  const [questionStatus, setQuestionStatus] = useState(question.status);
 
   // Get messages from the firestore
   useEffect(() => {
@@ -132,8 +133,9 @@ export default function Chat(props) {
   useEffect(() => {
     const q = query(doc(firestore, "Question", question.questionID));
     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      setQuestionStatus(querySnapshot.data().status);
       // Make the submit answer button disabled if the question is answered
-      if (querySnapshot.data().status == QuestionStatus.answered) {
+      if (querySnapshot.data().status == QuestionStatus.ended) {
         setShowSubmitButton(false);
       } else {
         setShowSubmitButton(true);
@@ -147,7 +149,6 @@ export default function Chat(props) {
   useEffect(() => {
     const fetchData = async () => {
       const client = await userServices.getUserByID(question.clientID);
-      console.log(client);
       const tokens = Object.values(client.fcmToken).filter(
         (token) => token != null && token != undefined && token != ""
       );
@@ -157,11 +158,6 @@ export default function Chat(props) {
       console.log(err);
     });
   }, []);
-
-  // Scroll to the bottom of the chat
-  // useEffect(() => {
-  //   scrollToBottom();
-  // }, [messages]);
 
   /**
    * Handlers
@@ -281,51 +277,64 @@ export default function Chat(props) {
 
   // Handle submit answer button
   const handleSubmitAnswerBtnPressed = async (e) => {
-    // if (question.status == "Answered") return;
     setLoading(true);
     e.preventDefault();
-    // If the status in assistance change the status.
-    if (question.status == "Assistance") {
-      try {
+
+    let newStatus = QuestionStatus.ongoing;
+    let answerDateTime;
+    let successMessage;
+
+    switch (questionStatus) {
+      case QuestionStatus.yetToBePicked:
+        newStatus = QuestionStatus.ongoing;
+        successMessage = t("question_has_been_picked");
+        break;
+      case QuestionStatus.ongoing:
+        newStatus = QuestionStatus.answered;
+        answerDateTime = new Date();
+        successMessage = t("question_has_been_answered");
+        break;
+      case QuestionStatus.answered:
+        newStatus = QuestionStatus.answered;
+        answerDateTime = new Date();
+        successMessage = t("question_has_been_answered");
+        break;
+      case QuestionStatus.timeUP:
+        newStatus = QuestionStatus.ended;
+        successMessage = t("question_has_been_ended");
+        break;
+      case QuestionStatus.assistance:
+        newStatus = QuestionStatus.ended;
+        successMessage = t("question_has_been_ended");
+        break;
+      default:
+        successMessage = t("question_has_been_updated");
+        break;
+    }
+
+    try {
+      if (answerDateTime) {
         await questionServices.updateQuestion(question.questionID, {
-          status: "Ended",
-          updateAt: new Date(),
-        });
-      } catch (error) {
-        setLoading(false);
-        toast.error(t("common_error"));
-      }
-    } else {
-      try {
-        setModalVisible(false);
-        await handleSend(e);
-        await questionServices.updateQuestion(question.questionID, {
-          status: "Answered",
+          status: newStatus,
           answerDateTime: new Date(),
           updateAt: new Date(),
         });
-        const msgTime = new Date().valueOf();
-        const chat = {
-          author: { id: userID },
-          createdAt: msgTime,
-          id: msgTime.toString(),
-          type: "text",
-          text: "Answered the question.",
-        };
+      } else {
         await questionServices.updateQuestion(question.questionID, {
-          isReadStatus: false,
-          isReadClient: false, // When a new msg is sent change the read status of client message
+          status: newStatus,
+          updateAt: new Date(),
         });
-        await questionServices.addChatToQuestion(question.questionID, chat);
-        // Clear form data after the message is sent
-        setFormData("");
-      } catch (error) {
-        setLoading(false);
-        toast.error(t("common_error"));
       }
-      setModalVisible(false);
+
+      setQuestionStatus(newStatus);
+      toast.success(t(successMessage));
+    } catch (error) {
       setLoading(false);
+      toast.error(t("common_error"));
     }
+
+    setModalVisible(false);
+    setLoading(false);
   };
 
   // When the question is answered and user want to answer again, enable the submit answer button
@@ -343,23 +352,99 @@ export default function Chat(props) {
     scrollViewRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleClear = (e) => {
-    console.log(e);
-    e.target.value = "";
-    return;
+  // Submit button text
+  const submitBtnText = () => {
+    switch (questionStatus) {
+      case QuestionStatus.yetToBePicked:
+        return t("select_question");
+        break;
+      case QuestionStatus.assistance:
+        return t("finish");
+        break;
+      case QuestionStatus.ended:
+        return t("ended");
+        break;
+      case QuestionStatus.answered:
+        return t("resubmit_answer");
+        break;
+      case QuestionStatus.timeUP:
+        return t("finish");
+      default:
+        return t("submit_answer");
+        break;
+    }
+  };
+
+  // Submit button color
+  const submitBtnColor = () => {
+    switch (questionStatus) {
+      case QuestionStatus.ended:
+        return "grey";
+        break;
+      default:
+        return "Green";
+        break;
+    }
+  };
+
+  // Is modal requires
+  const isModalRequired = () => {
+    console.log("Modal", questionStatus);
+    switch (questionStatus) {
+      case QuestionStatus.answered:
+        return true;
+      case QuestionStatus.timeUP:
+        return true;
+      case QuestionStatus.assistance:
+        return true;
+      default:
+        return false;
+    }
+  };
+
+  const generateModalTexts = () => {
+    switch (questionStatus) {
+      case QuestionStatus.answered:
+        return {
+          title: t("resubmit_answer"),
+          body: t("are_you_sure_you_want_to_resubmit"),
+          successLabel: t("resubmit"),
+        };
+      case QuestionStatus.timeUP:
+        return {
+          title: t("end_the_chat"),
+          body: t("are_you_sure_you_want_to_end"),
+          successLabel: t("finish"),
+        };
+      case QuestionStatus.assistance:
+        return {
+          title: t("end_the_chat"),
+          body: t("are_you_sure_you_want_to_end"),
+          successLabel: t("finish"),
+        };
+      default:
+        return {
+          title: t("end_the_chat"),
+          body: t("are_you_sure_you_want_to_end"),
+          successLabel: t("finish"),
+        };
+    }
   };
 
   return (
     <>
       <div className="col-span-1 py-2 flex justify-center align-middle bg-slate-50">
-        <Modal
-          modalVisible={modalVisible}
-          setModalVisible={setModalVisible}
-          successCallback={(e) => handleAnswerAgainBtnPressed(e)}
-          successLabel={t("resubmit")}
-          title={t("resubmit_answer")}
-          body={t("are_you_sure_you_want_to_resubmit")}
-        />
+        <div className="mx-2 px-2">
+          <Modal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            successCallback={(e) => handleAnswerAgainBtnPressed(e)}
+            successLabel={generateModalTexts().successLabel}
+            title={generateModalTexts().title}
+            body={generateModalTexts().body}
+          />
+        </div>
+
         <CButton
           className=" text-md"
           color="primary"
@@ -410,25 +495,23 @@ export default function Chat(props) {
                   <Button
                     className="mx-2 px-4"
                     color="white"
-                    backgroundColor="black"
                     text="Send"
                     onClick={handleSend}
                     disabled={formData == "" || !formData}
+                    backgroundColor={
+                      formData == "" || !formData ? "grey" : "black"
+                    }
                   />
                   <Button
-                    disabled={!showSubmitButton || formData == "" || !formData}
+                    disabled={!showSubmitButton}
                     className="px-4"
                     color="white"
-                    backgroundColor={showSubmitButton ? "green" : "grey"}
-                    text={
-                      question.status == "Assistance"
-                        ? t("finish")
-                        : t("submit_answer")
-                    }
+                    backgroundColor={submitBtnColor()}
+                    text={submitBtnText()}
                     onClick={(e) => {
-                      if (formData == "" || !formData) return;
-                      // If the button is disabled show the modal.
-                      if (!showSubmitButton) {
+                      console.log(questionStatus, isModalRequired());
+
+                      if (isModalRequired()) {
                         setModalVisible(true);
                       } else {
                         setShowSubmitButton(false);
