@@ -271,6 +271,8 @@ export default function Chat(props) {
         fcmTokens,
         question.questionID
       );
+      // Clear form data after the message is sent
+      setFormData("");
     } catch (error) {
       console.log(error);
     }
@@ -315,6 +317,8 @@ export default function Chat(props) {
           isReadClient: false, // When a new msg is sent change the read status of client message
         });
         await questionServices.addChatToQuestion(question.questionID, chat);
+        // Clear form data after the message is sent
+        setFormData("");
       } catch (error) {
         setLoading(false);
         toast.error(t("common_error"));
@@ -409,6 +413,7 @@ export default function Chat(props) {
                     backgroundColor="black"
                     text="Send"
                     onClick={handleSend}
+                    disabled={formData == "" || !formData}
                   />
                   <Button
                     disabled={!showSubmitButton || formData == "" || !formData}
