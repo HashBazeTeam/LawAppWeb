@@ -461,29 +461,6 @@ export default function Chat(props) {
               }
             />
           </div>
-
-          {/* <div className="col-span-1 py-2 flex justify-center align-middle">
-            <Button
-              className="px-4"
-              color="white"
-              backgroundColor={showSubmitButton ? "green" : "grey"}
-              text={
-                question.status == "Assistance"
-                  ? t("finish")
-                  : t("submit_answer")
-              }
-              onClick={(e) => {
-                console.log(showSubmitButton);
-                // If the button is disabled show the modal.
-                if (!showSubmitButton) {
-                  setModalVisible(true);
-                } else {
-                  setShowSubmitButton(false);
-                  handleSubmitAnswerBtnPressed(e);
-                }
-              }}
-            />
-          </div> */}
         </div>
       </div>
     </>
