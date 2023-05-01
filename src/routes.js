@@ -1,4 +1,5 @@
 import React from "react";
+import i18next from "./i18n";
 
 const Dashboard = React.lazy(() => import("./views/dashboard/Dashboard"));
 
@@ -41,13 +42,13 @@ const routes = [
   {
     path: "/law-admin",
     exact: true,
-    name: "Admin Panel",
+    name: i18next.t("admin_panel"),
     component: Dashboard,
   },
   // Admin related pages
   {
     path: "/law-admin/admin",
-    name: "Admin",
+    name: i18next.t("admin"),
     exact: true,
     isLoggedIn: false,
     accountType: ["admin"],
@@ -55,21 +56,21 @@ const routes = [
   },
   {
     path: "/law-admin/admin/add",
-    name: "Add Admin",
+    name: i18next.t("add_admin"),
     component: AdminAddPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/admin/all",
-    name: "Admin List",
+    name: i18next.t("admin_list"),
     component: AdminListPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/admin/account",
-    name: "Admin Account",
+    name: i18next.t("admin_account"),
     component: AdminAccountPage,
     isLoggedIn: false,
     accountType: ["admin"],
@@ -77,7 +78,7 @@ const routes = [
   // Agent related pages
   {
     path: "/law-admin/agent",
-    name: "Agent",
+    name: i18next.t("agent"),
     exact: true,
     isLoggedIn: false,
     accountType: ["admin"],
@@ -85,21 +86,21 @@ const routes = [
   },
   {
     path: "/law-admin/agent/add",
-    name: "Add Agent",
+    name: i18next.t("add_agent"),
     component: AgentAddPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/agent/all",
-    name: "Agent List",
+    name: i18next.t("agent_list"),
     component: AgentListPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/agent/account",
-    name: "Agent Account",
+    name: i18next.t("agent_account"),
     component: AgentAccountPage,
     isLoggedIn: false,
     accountType: ["admin"],
@@ -107,7 +108,7 @@ const routes = [
   // Question related pages
   {
     path: "/law-admin/question",
-    name: "Questions",
+    name: i18next.t("questions"),
     exact: true,
     isLoggedIn: false,
     component: ChatPool,
@@ -115,14 +116,14 @@ const routes = [
   },
   {
     path: "/law-admin/question/pool",
-    name: "Question Pool",
+    name: i18next.t("question_pool"),
     component: ChatPool,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/question/chat",
-    name: "Question",
+    name: i18next.t("question"),
     component: Chat,
     isLoggedIn: false,
     accountType: ["admin"],
@@ -130,7 +131,7 @@ const routes = [
   // Analytics related pages
   {
     path: "/law-admin/analytics",
-    name: "Analytics",
+    name: i18next.t("analytics"),
     exact: true,
     isLoggedIn: false,
     component: CustomerInsight,
@@ -138,35 +139,35 @@ const routes = [
   },
   {
     path: "/law-admin/analytics/customer-insight",
-    name: "Customer Insight",
+    name: i18next.t("customer_insight"),
     component: CustomerInsight,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/config",
-    name: "Configuration",
+    name: i18next.t("configuration"),
     component: BasicConfigPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/config/basic",
-    name: "Basic Configuration",
+    name: i18next.t("basic_configuration"),
     component: BasicConfigPage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/profile",
-    name: "Profile",
+    name: i18next.t("profile"),
     component: ProfilePage,
     isLoggedIn: false,
     accountType: ["admin"],
   },
   {
     path: "/law-admin/change-password",
-    name: "Change Password",
+    name: i18next.t("change_password"),
     component: ProfilePage,
     isLoggedIn: false,
     accountType: ["admin"],

@@ -88,7 +88,7 @@ const CustomerInsight = (props) => {
       <div className="container bg-white p-6">
         <div className="w-1/2 object-contain">
           <CAlert color="primary">
-            {t("Select date range and press generate.")}
+            {t("select_date_range_and_press_generate")}
           </CAlert>
         </div>
         <div className="row g-4 text-sm mb-4">

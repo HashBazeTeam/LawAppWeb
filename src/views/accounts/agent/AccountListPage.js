@@ -4,6 +4,7 @@ import store, { accessToken } from "src/store";
 import { toast } from "react-toastify";
 import { deleteEmptyKeys } from "src/utils/function";
 import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import { userServices } from "src/services";
 
@@ -18,6 +19,7 @@ const AccountTableBody = React.lazy(() => import("../UserAccountTableBody"));
 const AgentListPage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const [agentAccounts, setAgentAccounts] = useState([]);
@@ -57,38 +59,40 @@ const AgentListPage = () => {
   const [pageNumber, setPageNumber] = useState(1);
 
   const tableHeaderCells = [
-    "Full Name",
-    "Country",
-    "Email",
-    "Phone Number",
-    "",
+    t("full_name"),
+    t("country"),
+    t("email"),
+    t("phone_number"),
   ];
 
   return (
     <>
       {loading ? (
-        <div className="flex justify-center bg-slate-50"> {LoadingIndicator("lg")} </div>
+        <div className="flex justify-center bg-slate-50">
+          {" "}
+          {LoadingIndicator("lg")}{" "}
+        </div>
       ) : (
-          <div className="mt-8">
-        <AccountTable
-          accounts={filteredData}
-          maxPages={maxPages}
-          pageNumber={pageNumber}
-          setPageNumber={setPageNumber}
-          tableHeaderCells={tableHeaderCells}
-          filters={filters}
-          filterErrors={filterErrors}
-          handleFilterChange={() => {}}
-          handleFilterSubmit={() => {}}
-          handleClearFilter={() => {}}
-          accountsType={accountsType}
-        >
-          <AccountTableBody
+        <div className="mt-8">
+          <AccountTable
             accounts={filteredData}
-            accountType={accountsType}
-          />
-            </AccountTable>
-            </div>
+            maxPages={maxPages}
+            pageNumber={pageNumber}
+            setPageNumber={setPageNumber}
+            tableHeaderCells={tableHeaderCells}
+            filters={filters}
+            filterErrors={filterErrors}
+            handleFilterChange={() => {}}
+            handleFilterSubmit={() => {}}
+            handleClearFilter={() => {}}
+            accountsType={accountsType}
+          >
+            <AccountTableBody
+              accounts={filteredData}
+              accountType={accountsType}
+            />
+          </AccountTable>
+        </div>
       )}
     </>
   );

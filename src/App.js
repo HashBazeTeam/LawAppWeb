@@ -9,6 +9,7 @@ import { auth } from "./services/firebase";
 import { thunks } from "./store";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
+import i18next from "./i18n";
 
 // Toaster
 import { ToastContainer, toast } from "react-toastify";
@@ -35,15 +36,16 @@ const LoginPage = React.lazy(() => import("./views/pages/login/LoginPage"));
 
 function App() {
   const dispatch = useDispatch();
-  const { i18n } = useTranslation();
+  const {t} = useTranslation();
 
   // Language change
   useEffect(() => {
-    const savedLocale = Cookies.get('LawWebcurrentLocale');
+    const savedLocale = Cookies.get("LawWebcurrentLocale");
     if (savedLocale) {
-      i18n.changeLanguage(savedLocale);
+      i18next.changeLanguage(savedLocale);
+      // window.location.reload();
     }
-  }, [i18n]);
+  },[]);
 
   // Check if user is logged in
   useEffect(() => {
@@ -55,8 +57,6 @@ function App() {
     });
     return () => (isSubscribed = false);
   }, []);
-
-  
 
   return (
     <BrowserRouter>
@@ -76,19 +76,19 @@ function App() {
           <Route
             exact
             path="/login"
-            name="Login Page"
+            name = {t("login_page")}
             render={(props) => <LoginPage {...props} />}
           />
           <Route
             exact
             path="/404"
-            name="Page 404"
+            name= {t("page_not_found")}
             render={(props) => <Page404Error {...props} />}
           />
           <ProtectedRoute
             isLoggedIn={false}
             path="/law-admin"
-            name="Admin Dashboard"
+            name={t("admin_dashboard")}
             render={(props) => <DefaultLayout {...props} />}
           />
           <Redirect

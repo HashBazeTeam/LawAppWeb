@@ -7,6 +7,7 @@ import { CButton, CFormSwitch } from "@coreui/react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import Cookies from "js-cookie";
+import i18next from "src/i18n";
 
 import { configServices } from "src/services";
 
@@ -20,7 +21,7 @@ import {
 const BasicConfigPage = () => {
   const { t } = useTranslation();
   const { i18n } = useTranslation();
-  const currentLanguage = i18n.language;
+  const currentLanguage = i18next.language;
 
   console.log("currentLanguage", currentLanguage);
   const [language, setLanguage] = useState(currentLanguage || "en");
@@ -110,10 +111,11 @@ const BasicConfigPage = () => {
       setLoading(true);
       try {
         setLanguage(newLanguage);
-        // Save current locale to cookie
+        i18next.changeLanguage(newLanguage);
         Cookies.set("LawWebcurrentLocale", newLanguage);
         setLoading(false);
         toast.success(t("common_success"));
+        window.location.reload();
       } catch (error) {
         console.log(error);
       } finally {
@@ -131,8 +133,6 @@ const BasicConfigPage = () => {
   // Handle language change
   const handleLanguageChange = (e) => {
     const { value } = e.target;
-    i18n.changeLanguage(value);
-    console.log("Changed language to: ", value);
     setNewLanguage(value);
   };
 
@@ -156,7 +156,7 @@ const BasicConfigPage = () => {
           <div>
             <div className="row g-3">
               {CustomCFormInputGroup({
-                label: t("Reminder Time"),
+                label: t("reminder_time"),
                 name: "reminderTime",
                 value: formData.reminderTime,
                 onChange: handleChange,

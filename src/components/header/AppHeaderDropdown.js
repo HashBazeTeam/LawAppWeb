@@ -40,7 +40,7 @@ const AppHeaderDropdown = () => {
         //!TODO : Profile and Logout Settings
         <CDropdownItem href="/law-admin/profile">
           <CIcon icon={cilUser} className="me-2" />
-          Profile
+          {t("profile")}
         </CDropdownItem>
         <CDropdownDivider />
         <CDropdownItem onClick={async () => submitLogOut()}>
