@@ -7,6 +7,8 @@ import "react-phone-number-input/style.css";
 import "react-chat-elements/dist/main.css";
 import { auth } from "./services/firebase";
 import { thunks } from "./store";
+import { useTranslation } from "react-i18next";
+import Cookies from "js-cookie";
 
 // Toaster
 import { ToastContainer, toast } from "react-toastify";
@@ -33,6 +35,15 @@ const LoginPage = React.lazy(() => import("./views/pages/login/LoginPage"));
 
 function App() {
   const dispatch = useDispatch();
+  const { i18n } = useTranslation();
+
+  // Language change
+  useEffect(() => {
+    const savedLocale = Cookies.get('LawWebcurrentLocale');
+    if (savedLocale) {
+      i18n.changeLanguage(savedLocale);
+    }
+  }, [i18n]);
 
   // Check if user is logged in
   useEffect(() => {

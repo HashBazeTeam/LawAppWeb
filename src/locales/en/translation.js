@@ -68,4 +68,5 @@ export default {
   question_has_been_updated: "Question has been updated",
   are_you_sure_you_want_to_end: "Are you sure you want to end?",
   end_the_chat: "End the chat",
+  language: "Language",
 };

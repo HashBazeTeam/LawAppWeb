@@ -6,11 +6,11 @@ import Joi from "joi";
 import { CButton, CFormSwitch } from "@coreui/react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
-import { messaging, onMessage, getToken } from "src/services/firebase";
+import Cookies from "js-cookie";
 
 import { configServices } from "src/services";
 
-import { Modal } from "src/components";
+import { LoadingIndicator, Modal } from "src/components";
 import {
   CustomCFormInputGroup,
   CustomCFormSelectGroup,
@@ -18,19 +18,18 @@ import {
 } from "src/components/common/CustomCInputGroup";
 
 const BasicConfigPage = () => {
-  const dispatch = useDispatch();
-  const history = useHistory();
   const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const currentLanguage = i18n.language;
 
+  console.log("currentLanguage", currentLanguage);
+  const [language, setLanguage] = useState(currentLanguage || "en");
+  const [newLanguage, setNewLanguage] = useState(currentLanguage || "en");
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState(initialState);
   const [initialValues, setInitialValues] = useState(initialState);
   const [formErrors, setFormErrors] = useState({});
   const [updateMode, setUpdateMode] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
-
-  // Modal related states
-  const [modalVisibility, setModalVisibility] = useState(false);
 
   // Fetch admin data
   useEffect(() => {
@@ -77,67 +76,65 @@ const BasicConfigPage = () => {
     if (!updateMode) {
       return;
     }
-    const updatedData = _.pick(formData, ["reminderTime"]);
-    setLoading(true);
-    const { error, value } = schema.validate(updatedData, {
-      abortEarly: false,
-    });
-    if (!error) {
+    // Check if reminder time is equal in initial value and form data
+    if (formData.reminderTime != initialValues.reminderTime) {
+      const updatedData = _.pick(formData, ["reminderTime"]);
+      setLoading(true);
+      const { error, value } = schema.validate(updatedData, {
+        abortEarly: false,
+      });
+      if (!error) {
+        try {
+          await configServices.updateConfig(updatedData);
+          setInitialValues(updatedData);
+          setFormData(updatedData);
+          toast.success(t("common_success"));
+        } catch (error) {
+          console.log(error);
+          toast.error(`${t("common_error")}`);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        const errors = {};
+        for (let item of error.details) {
+          errors[item.path[0]] = item.message;
+        }
+        setFormErrors({ ...formErrors, ...errors });
+        setLoading(false);
+      }
+    }
+
+    // Check if language is equal in initial value and form data
+    if (language != newLanguage) {
+      setLoading(true);
       try {
-        await configServices.updateConfig(updatedData);
-        setInitialValues(updatedData);
-        setFormData(updatedData);
+        setLanguage(newLanguage);
+        // Save current locale to cookie
+        Cookies.set("LawWebcurrentLocale", newLanguage);
+        setLoading(false);
         toast.success(t("common_success"));
       } catch (error) {
         console.log(error);
-        toast.error(`${t("common_error")}`);
       } finally {
         setLoading(false);
       }
-    } else {
-      const errors = {};
-      for (let item of error.details) {
-        errors[item.path[0]] = item.message;
-      }
-      setFormErrors({ ...formErrors, ...errors });
-      setLoading(false);
     }
   };
 
-  // Receive message from firebase; firebase error
-  // const receiveMessage = (e) => {
-  //   if (Notification.requestPermission == "granted") {
-  //     onMessageListener();
-  //   } else {
-  //     Notification.requestPermission()
-  //       .then(async () => {
-  //         onMessageListener();
-  //       })
-  //       .catch((err) => console.log("Notification request error: ", err));
-  //   }
+  // Language options
+  const languageOptions = [
+    { value: "si", label: "Sinhala" },
+    { value: "en", label: "English" },
+  ];
 
-  //   // Foreground message listener
-  //   const onMessageListener = () => {
-  //     // Message listener
-  //     getToken(messaging, { vapidKey: process.env.REACT_APP_FCM_VAPID_KEY })
-  //       .then((currentToken) => {
-  //         if (currentToken) {
-  //           // Send the token to your server and update the UI if necessary
-  //           // ...
-  //         } else {
-  //           // Show permission request UI
-  //           console.log(
-  //             "No registration token available. Request permission to generate one."
-  //           );
-  //           // ...
-  //         }
-  //       })
-  //       .catch((err) => {
-  //         console.log("An error occurred while retrieving token. ", err);
-  //         // ...
-  //       });
-  //   };
-  // };
+  // Handle language change
+  const handleLanguageChange = (e) => {
+    const { value } = e.target;
+    i18n.changeLanguage(value);
+    console.log("Changed language to: ", value);
+    setNewLanguage(value);
+  };
 
   return (
     <>
@@ -153,26 +150,40 @@ const BasicConfigPage = () => {
             }}
           />
         </div>
-        <div className="row g-3">
-          {CustomCFormInputGroup({
-            label: t("Reminder Time"),
-            name: "reminderTime",
-            value: formData.reminderTime,
-            onChange: handleChange,
-            error: formErrors.reminderTime,
-            uppercase: true,
-            required: false,
-            readOnly: !updateMode,
-            mdSize: 6,
-            type: "number",
-          })}
-          {/* <CFormSwitch
-            //   size="xl"
-            label="Enable Notification"
-            id="formSwitchCheckDefault"
-            onChange={() => receiveMessage()}
-          /> */}
-        </div>
+        {loading ? (
+          LoadingIndicator("xl")
+        ) : (
+          <div>
+            <div className="row g-3">
+              {CustomCFormInputGroup({
+                label: t("Reminder Time"),
+                name: "reminderTime",
+                value: formData.reminderTime,
+                onChange: handleChange,
+                error: formErrors.reminderTime,
+                uppercase: true,
+                required: false,
+                readOnly: !updateMode,
+                mdSize: 4,
+                type: "number",
+              })}
+            </div>
+            <div className="row g-3">
+              <CustomCFormSelectGroup
+                label={t("language")}
+                name="language"
+                value={newLanguage}
+                onChange={handleLanguageChange}
+                uppercase={true}
+                mdSize={4}
+                options={languageOptions}
+                readOnly={!updateMode}
+                required={false}
+              />
+            </div>
+          </div>
+        )}
+
         <div className="flex justify-end" hidden={!updateMode}>
           <div className="justify-end">
             <CButton
@@ -180,6 +191,7 @@ const BasicConfigPage = () => {
               variant="outline"
               className="mr-2"
               onClick={handleSubmit}
+              disabled={loading}
             >
               {t("update")}
             </CButton>
