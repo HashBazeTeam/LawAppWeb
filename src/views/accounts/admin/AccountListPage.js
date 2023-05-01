@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import store, { accessToken } from "src/store";
 import { toast } from "react-toastify";
-import { deleteEmptyKeys } from "src/utils/function";
-import { useDispatch } from "react-redux";
 import { useTranslation } from "react-i18next";
 
 import { userServices } from "src/services";
@@ -17,8 +13,6 @@ const AccountTableBody = React.lazy(() => import("../UserAccountTableBody"));
  * Agent List page
  */
 const AgentListPage = () => {
-  const history = useHistory();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);

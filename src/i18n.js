@@ -15,7 +15,7 @@ const fallbackLng = ["en"];
 const availableLanguages = ["en", "si"];
 
 i18next
-//   .use(Backend)
+  .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
@@ -25,9 +25,9 @@ i18next
     interpolation: {
       escapeValue: false, // no need for react. it escapes by default
     },
-    // backend: {
-    //   loadPath: "/locales/{{lng}}/{{ns}}.json",
-    // },
+    backend: {
+      loadPath: "/locales/{{lng}}/{{ns}}.json",
+    },
     resources: {
       en: {
         translation: translation_en,

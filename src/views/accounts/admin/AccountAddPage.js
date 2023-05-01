@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 import Joi from "joi";
 import { useTranslation } from "react-i18next";

@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
-import { t } from "i18next";
+import React, { useState } from "react";
 import { CChart } from "@coreui/react-chartjs";
 import { CButton, CCol, CAlert } from "@coreui/react";
 import CIcon from "@coreui/icons-react";

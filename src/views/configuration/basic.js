@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import Joi from "joi";
 import { CButton, CFormSwitch } from "@coreui/react";
@@ -11,16 +9,14 @@ import i18next from "src/i18n";
 
 import { configServices } from "src/services";
 
-import { LoadingIndicator, Modal } from "src/components";
+import { LoadingIndicator } from "src/components";
 import {
   CustomCFormInputGroup,
   CustomCFormSelectGroup,
-  CustomCFormPhoneNumberInputGroup,
 } from "src/components/common/CustomCInputGroup";
 
 const BasicConfigPage = () => {
   const { t } = useTranslation();
-  const { i18n } = useTranslation();
   const currentLanguage = i18next.language;
 
   console.log("currentLanguage", currentLanguage);

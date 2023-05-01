@@ -8,7 +8,6 @@ import _ from "lodash";
 import { useTranslation } from "react-i18next";
 import { isPossiblePhoneNumber } from "react-phone-number-input";
 
-import { convertFirestoreDateToDate } from "src/services/firebase";
 import { userServices } from "src/services";
 import { countryArray } from "src/utils";
 import { convertTZ } from "src/utils";
@@ -21,7 +20,6 @@ import {
 } from "src/components/common/CustomCInputGroup";
 
 const AgentAccountPage = () => {
-  const dispatch = useDispatch();
   const history = useHistory();
   const userID = useLocation().state.userID;
   const { t } = useTranslation();
@@ -259,6 +257,7 @@ const AgentAccountPage = () => {
         <div className="flex justify-end" hidden={!updateMode}>
           <div className="justify-end">
             <CButton
+              disabled={loading}
               color="primary"
               variant="outline"
               className="mr-2"
@@ -269,6 +268,7 @@ const AgentAccountPage = () => {
           </div>
           <div className="justify-end">
             <CButton
+              disabled={loading}
               color="danger"
               variant="outline"
               className="mr-2"

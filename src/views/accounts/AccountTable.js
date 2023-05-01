@@ -1,4 +1,4 @@
-import React, { lazy, useState } from "react";
+import React from "react";
 
 import {
   CTable,
@@ -20,12 +20,6 @@ const AccountTable = ({
   setPageNumber,
   children,
   tableHeaderCells,
-  filters,
-  filterErrors,
-  handleFilterChange,
-  handleFilterSubmit,
-  handleClearFilter,
-  accountsType,
 }) => {
   // Functions
   const handlePageChangePrevious = () => {
