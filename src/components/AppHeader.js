@@ -13,6 +13,7 @@ import {
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import { cilBell, cilEnvelopeOpen, cilList, cilMenu } from '@coreui/icons'
+import { useTranslation } from 'react-i18next'
 
 import { AppBreadcrumb } from './index'
 import { AppHeaderDropdown } from './header/index'
@@ -23,6 +24,7 @@ import { selectors, thunks } from "src/store";
 
 const AppHeader = () => {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const unfoldable = useSelector(selectors.ui.selectUnfoldable);
   const sidebarShow = useSelector(selectors.ui.selectSidebarShow);
@@ -46,7 +48,7 @@ const AppHeader = () => {
         <CHeaderNav className="d-none d-md-flex me-auto">
           <CNavItem>
             <CNavLink to="/law-admin" component={NavLink} activeClassName="active">
-              Dashboard
+              {t("dashboard")}
             </CNavLink>
           </CNavItem>
         </CHeaderNav>

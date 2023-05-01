@@ -310,6 +310,7 @@ export function CustomCFormSelectGroup({
   options,
   value,
   defaultValue,
+  readOnly
 }) {
   return (
     <>
@@ -326,6 +327,7 @@ export function CustomCFormSelectGroup({
           aria-label="Default select example"
           invalid={error ? true : false}
           value={value}
+          disabled={readOnly}
         >
           <option>Open this select menu</option>
           {options.map((option, index) => (

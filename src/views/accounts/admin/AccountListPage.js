@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useHistory, useLocation } from "react-router-dom";
-import store, { accessToken } from "src/store";
 import { toast } from "react-toastify";
-import { deleteEmptyKeys } from "src/utils/function";
-import { useDispatch } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import { userServices } from "src/services";
 
@@ -16,8 +13,7 @@ const AccountTableBody = React.lazy(() => import("../UserAccountTableBody"));
  * Agent List page
  */
 const AgentListPage = () => {
-  const history = useHistory();
-  const dispatch = useDispatch();
+  const { t } = useTranslation();
 
   const [loading, setLoading] = useState(false);
   const [agentAccounts, setAgentAccounts] = useState([]);
@@ -59,12 +55,11 @@ const AgentListPage = () => {
   const [pageNumber, setPageNumber] = useState(1);
 
   const tableHeaderCells = [
-    "Full Name",
-    "Country",
-    "Email",
-    "Phone Number",
-    "",
-  ];
+    t("full_name"),
+    t("country"),
+    t("email"),
+    t("phone_number"),
+  ]
 
   return (
     <>

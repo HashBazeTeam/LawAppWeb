@@ -1,6 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { matchPath } from "react-router";
+import i18next from "src/i18n";
 
 import routes from "../routes";
 
@@ -40,7 +41,7 @@ const AppBreadcrumb = () => {
 
   return (
     <CBreadcrumb className="m-0 ms-2">
-      <CBreadcrumbItem href="/law-admin">Home</CBreadcrumbItem>
+      <CBreadcrumbItem href="/law-admin">{i18next.t("admin_panel")}</CBreadcrumbItem>
       {breadcrumbs.map((breadcrumb, index) => {
         return (
           <CBreadcrumbItem

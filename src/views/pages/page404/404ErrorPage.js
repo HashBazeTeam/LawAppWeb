@@ -1,10 +1,13 @@
 import React from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 import { selectors } from "src/store";
+
 // ../../../assets/images/404.svg
 const Page404Error = () => {
+  const { t } = useTranslation();
   const history = useHistory();
   const userId = useSelector(selectors.user.selectUserId);
   return (
@@ -31,7 +34,7 @@ const Page404Error = () => {
               }
               className="bg-transparent hover:bg-blue-500 text-purple-400 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
             >
-              Home
+              {t("home")}
             </button>
           </div>
         </div>

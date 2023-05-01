@@ -1,19 +1,17 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
-import Joi from "joi";
 import { LinkIcon } from "@heroicons/react/solid";
 import { toast } from "react-toastify";
 import { useTranslation } from "react-i18next";
-import { MessageList, Input, Button, MessageBox } from "react-chat-elements";
-import { SystemMessage } from "react-chat-elements";
+import { MessageList, Input, Button } from "react-chat-elements";
 import CIcon from "@coreui/icons-react";
 import { CButton } from "@coreui/react";
 import { cilSearch } from "@coreui/icons";
 import { QuestionStatus } from "src/models/types";
 
 // Custom imports
-import { LoadingIndicator, Modal } from "src/components";
+import { Modal } from "src/components";
 import { saveImg } from "src/utils/function";
 import {
   collection,
@@ -25,16 +23,13 @@ import {
 } from "src/services/firebase";
 import { selectors } from "src/store";
 import { questionServices, userServices } from "src/services";
-import { textSpanContainsTextSpan } from "typescript";
 
 /**
  * Single Chat User Interface
  */
 export default function Chat(props) {
   const history = useHistory();
-  const dispatch = useDispatch();
   const { t } = useTranslation();
-  const screenHeight = window.innerHeight - 128; // Due to purge issue tailwind css doesn't detect variable changes.
   const question = props.location.state.question; // Get the question from the previous page.
   const inputRef = useRef(null);
   const scrollViewRef = useRef();
