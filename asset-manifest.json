@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/LawAppWeb/static/css/main.86d801c0.css",
-    "main.js": "/LawAppWeb/static/js/main.f211eaa5.js",
+    "main.js": "/LawAppWeb/static/js/main.8b28a319.js",
     "static/js/281.c23022ec.chunk.js": "/LawAppWeb/static/js/281.c23022ec.chunk.js",
     "static/js/82.d845d524.chunk.js": "/LawAppWeb/static/js/82.d845d524.chunk.js",
     "static/js/388.dc207745.chunk.js": "/LawAppWeb/static/js/388.dc207745.chunk.js",
@@ -13,7 +13,7 @@
     "static/js/48.7c0b912c.chunk.js": "/LawAppWeb/static/js/48.7c0b912c.chunk.js",
     "static/js/505.b2662807.chunk.js": "/LawAppWeb/static/js/505.b2662807.chunk.js",
     "static/js/190.5e1c7534.chunk.js": "/LawAppWeb/static/js/190.5e1c7534.chunk.js",
-    "static/js/561.cd2d72b5.chunk.js": "/LawAppWeb/static/js/561.cd2d72b5.chunk.js",
+    "static/js/561.90c5d80a.chunk.js": "/LawAppWeb/static/js/561.90c5d80a.chunk.js",
     "static/js/935.99d5ec2f.chunk.js": "/LawAppWeb/static/js/935.99d5ec2f.chunk.js",
     "static/js/650.d0913461.chunk.js": "/LawAppWeb/static/js/650.d0913461.chunk.js",
     "static/js/555.5086fe30.chunk.js": "/LawAppWeb/static/js/555.5086fe30.chunk.js",
@@ -22,9 +22,9 @@
     "static/js/346.6a8bd308.chunk.js": "/LawAppWeb/static/js/346.6a8bd308.chunk.js",
     "static/js/593.21e10eb1.chunk.js": "/LawAppWeb/static/js/593.21e10eb1.chunk.js",
     "static/js/856.b4aa4b55.chunk.js": "/LawAppWeb/static/js/856.b4aa4b55.chunk.js",
-    "static/js/784.7e07ecdb.chunk.js": "/LawAppWeb/static/js/784.7e07ecdb.chunk.js",
-    "static/js/47.30525681.chunk.js": "/LawAppWeb/static/js/47.30525681.chunk.js",
-    "static/js/680.43f4e6b4.chunk.js": "/LawAppWeb/static/js/680.43f4e6b4.chunk.js",
+    "static/js/784.12726ca9.chunk.js": "/LawAppWeb/static/js/784.12726ca9.chunk.js",
+    "static/js/47.b8cdd628.chunk.js": "/LawAppWeb/static/js/47.b8cdd628.chunk.js",
+    "static/js/680.920acb09.chunk.js": "/LawAppWeb/static/js/680.920acb09.chunk.js",
     "static/js/444.791ec0ec.chunk.js": "/LawAppWeb/static/js/444.791ec0ec.chunk.js",
     "static/js/506.13a1771e.chunk.js": "/LawAppWeb/static/js/506.13a1771e.chunk.js",
     "static/js/625.c8284397.chunk.js": "/LawAppWeb/static/js/625.c8284397.chunk.js",
@@ -35,7 +35,7 @@
     "index.html": "/LawAppWeb/index.html",
     "static/media/getFetch.cjs": "/LawAppWeb/static/media/getFetch.40f37ddea2378391108f.cjs",
     "main.86d801c0.css.map": "/LawAppWeb/static/css/main.86d801c0.css.map",
-    "main.f211eaa5.js.map": "/LawAppWeb/static/js/main.f211eaa5.js.map",
+    "main.8b28a319.js.map": "/LawAppWeb/static/js/main.8b28a319.js.map",
     "281.c23022ec.chunk.js.map": "/LawAppWeb/static/js/281.c23022ec.chunk.js.map",
     "82.d845d524.chunk.js.map": "/LawAppWeb/static/js/82.d845d524.chunk.js.map",
     "388.dc207745.chunk.js.map": "/LawAppWeb/static/js/388.dc207745.chunk.js.map",
@@ -47,7 +47,7 @@
     "48.7c0b912c.chunk.js.map": "/LawAppWeb/static/js/48.7c0b912c.chunk.js.map",
     "505.b2662807.chunk.js.map": "/LawAppWeb/static/js/505.b2662807.chunk.js.map",
     "190.5e1c7534.chunk.js.map": "/LawAppWeb/static/js/190.5e1c7534.chunk.js.map",
-    "561.cd2d72b5.chunk.js.map": "/LawAppWeb/static/js/561.cd2d72b5.chunk.js.map",
+    "561.90c5d80a.chunk.js.map": "/LawAppWeb/static/js/561.90c5d80a.chunk.js.map",
     "935.99d5ec2f.chunk.js.map": "/LawAppWeb/static/js/935.99d5ec2f.chunk.js.map",
     "650.d0913461.chunk.js.map": "/LawAppWeb/static/js/650.d0913461.chunk.js.map",
     "555.5086fe30.chunk.js.map": "/LawAppWeb/static/js/555.5086fe30.chunk.js.map",
@@ -56,9 +56,9 @@
     "346.6a8bd308.chunk.js.map": "/LawAppWeb/static/js/346.6a8bd308.chunk.js.map",
     "593.21e10eb1.chunk.js.map": "/LawAppWeb/static/js/593.21e10eb1.chunk.js.map",
     "856.b4aa4b55.chunk.js.map": "/LawAppWeb/static/js/856.b4aa4b55.chunk.js.map",
-    "784.7e07ecdb.chunk.js.map": "/LawAppWeb/static/js/784.7e07ecdb.chunk.js.map",
-    "47.30525681.chunk.js.map": "/LawAppWeb/static/js/47.30525681.chunk.js.map",
-    "680.43f4e6b4.chunk.js.map": "/LawAppWeb/static/js/680.43f4e6b4.chunk.js.map",
+    "784.12726ca9.chunk.js.map": "/LawAppWeb/static/js/784.12726ca9.chunk.js.map",
+    "47.b8cdd628.chunk.js.map": "/LawAppWeb/static/js/47.b8cdd628.chunk.js.map",
+    "680.920acb09.chunk.js.map": "/LawAppWeb/static/js/680.920acb09.chunk.js.map",
     "444.791ec0ec.chunk.js.map": "/LawAppWeb/static/js/444.791ec0ec.chunk.js.map",
     "506.13a1771e.chunk.js.map": "/LawAppWeb/static/js/506.13a1771e.chunk.js.map",
     "625.c8284397.chunk.js.map": "/LawAppWeb/static/js/625.c8284397.chunk.js.map",
@@ -67,6 +67,6 @@
   },
   "entrypoints": [
     "static/css/main.86d801c0.css",
-    "static/js/main.f211eaa5.js"
+    "static/js/main.8b28a319.js"
   ]
 }
