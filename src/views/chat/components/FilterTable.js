@@ -14,11 +14,11 @@ const FilterTable = ({
   handleFilterSubmit,
   questions,
   handleClearFilter,
-  reloadData
+  reloadData, 
+  filterOptions
 }) => {
   const [showFilterData, setShowFilterData] = useState(false);
   const [loading, setLoading] = useState(false);
-
   return (
     <>
       <div className="grid grid-cols-2 justify-between mb-4 text-sm">
@@ -62,6 +62,19 @@ const FilterTable = ({
               { value: "Ended", label: "Ended" },
               { value: "Time up", label: "Time up" },
             ]}
+          />
+          <CustomCFormSelectGroup
+            inputClassName="text-sm"
+            hidden={!questions}
+            label="Country"
+            name="country"
+            value={filters.country}
+            onChange={handleFilterChange}
+            error={filterErrors.country}
+            uppercase={true}
+            required={false}
+            mdSize={4}
+            options={filterOptions?.filterCountries}
           />
         </div>
         <div className="flex flex-row justify-end">

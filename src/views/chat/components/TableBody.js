@@ -19,7 +19,6 @@ const TableBody = ({ questions }) => {
   const history = useHistory();
 
   // TODO: Implement a method to give different colors to different status
-
   return (
     <>
       <CTableBody>
@@ -27,6 +26,7 @@ const TableBody = ({ questions }) => {
           <CTableRow key={index}>
             <CTableDataCell>{question.topic}</CTableDataCell>
             <CTableDataCell>{convertTZ(question.postDateTime)}</CTableDataCell>
+            <CTableDataCell>{question.clientName}</CTableDataCell>
             <CTableDataCell>{question.country}</CTableDataCell>
             <CTableDataCell>
               <CBadge color={"success"}>{question.status}</CBadge>

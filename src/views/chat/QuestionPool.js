@@ -34,6 +34,8 @@ export default function QuestionPool(props) {
   const [filteredData, setFilteredData] = useState([]);
   const [filters, setFilters] = useState(filterInitialState);
   const [filterErrors, setFilterErrors] = useState({});
+  const [filterCountries, setFilterCountries] = useState([]);
+  const [updated, setUpdated] = useState(false);
 
   /*
    * Fetch questions
@@ -112,9 +114,28 @@ export default function QuestionPool(props) {
         _totalCount = totalCount;
         _lastVisible = lastVisible;
       }
-      // Check if the question is in answered status and if the answerDateTime is more than 24 hours then change the
-      // Status in to time up
-      const _questionsT = _questions.map(async (question) => {
+
+      setQuestionList(_questions);
+      setFilteredData(_questions);
+      setLastVisibleDoc(_lastVisible);
+      setMaxPages(Math.ceil(_totalCount / recordsPerPage));
+      setLoading(false);
+      setUpdated(!updated);
+    } catch (error) {
+      console.log(error);
+      toast.error(t("common_error"));
+      setLoading(false);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    const setTimeOut = async () => {
+      let _questionList = [...questionList];
+      const countrySet = new Set();
+      for (let question of _questionList) {
+        countrySet.add(question.country);
+
         if (question.status == QuestionStatus.answered) {
           const answerDateTime = convertFirestoreTimeStampToDate(
             question.answerDateTime
@@ -122,7 +143,7 @@ export default function QuestionPool(props) {
           const currentDate = new Date();
           const diffTime = currentDate - answerDateTime;
           const diffHours = diffTime / (1000 * 3600);
-            
+
           const compareTime = configs?.expiryTime || 24;
           if (diffHours > compareTime) {
             question.status = QuestionStatus.timeUP;
@@ -131,21 +152,19 @@ export default function QuestionPool(props) {
             });
           }
         }
-        return question;
-      });
+      }
 
-      setQuestionList(_questionsT);
-      setFilteredData(_questions);
-      setLastVisibleDoc(_lastVisible);
-      setMaxPages(Math.ceil(_totalCount / recordsPerPage));
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      toast.error(t("common_error"));
-      setLoading(false);
-    }
-    setLoading(false);
-  };
+      // Set value label pair for country
+      const countryList = Array.from(countrySet);
+      const countryValueLabelPair = countryList.map((country) => {
+        return { value: country, label: country };
+      });
+      setFilterCountries(countryValueLabelPair);
+      setQuestionList(_questionList);
+    };
+
+    setTimeOut();
+  }, [updated]);
 
   // Reload data
   const reloadData = async () => {
@@ -163,6 +182,10 @@ export default function QuestionPool(props) {
   const handleFilterSubmit = (e) => {
     e.preventDefault();
     const filterItems = deleteEmptyKeys(filters);
+    if (Object.keys(filterItems).length == 0) {
+      setFilteredData(questionList);
+      return;
+    }
     const filteredAccounts = questionList.filter((account) => {
       for (let key in filterItems) {
         if (filterItems[key] != account[key]) return false;
@@ -180,6 +203,7 @@ export default function QuestionPool(props) {
   const tableHeaderCells = [
     t("topic"),
     t("date"),
+    t("client_name"),
     t("country"),
     t("status"),
     "",
@@ -215,6 +239,7 @@ export default function QuestionPool(props) {
             tableHeaderCells={tableHeaderCells}
             filters={filters}
             filterErrors={filterErrors}
+            filterOptions={{ filterCountries }}
             handleFilterChange={handleFilterChange}
             handleFilterSubmit={handleFilterSubmit}
             handleClearFilter={handleClearFilter}
@@ -233,4 +258,5 @@ export default function QuestionPool(props) {
 
 const filterInitialState = {
   status: "",
+  country: "",
 };

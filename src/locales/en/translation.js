@@ -82,4 +82,5 @@ export default {
   agent: "Agent",
   admin: "Admin",
   page_not_found: "Page not found",
+  client_name: "Client name",
 };

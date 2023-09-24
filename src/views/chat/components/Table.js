@@ -28,7 +28,8 @@ const AccountTable = ({
   handlePageChangeNext,
   handlePageChangePrevious,
   showFilter,
-  reloadData
+  reloadData, 
+  filterOptions
 }) => {
   // Return pagination items
   const PaginationPages = () => {
@@ -57,6 +58,7 @@ const AccountTable = ({
           <FilterTable
             filters={filters}
             filterErrors={filterErrors}
+            filterOptions={filterOptions}
             handleFilterChange={handleFilterChange}
             handleFilterSubmit={handleFilterSubmit}
             handleClearFilter={handleClearFilter}
