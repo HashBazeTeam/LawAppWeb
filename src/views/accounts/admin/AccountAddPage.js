@@ -30,6 +30,14 @@ const AdminAddPage = () => {
     setCountryOptions(countryArray);
   }, []);
 
+  // const designationOptions = [
+  //   { value: "admin", label: t("Admin") },
+  //   { value: "lawyer", label: t("Lawyer") },
+  //   { value: "supervisor", label: t("Supervisor") },
+    
+  // ];
+  
+
   // Joi schema
   const schema = Joi.object({
     fullName: Joi.string().required().label("Full name"),
@@ -40,6 +48,7 @@ const AdminAddPage = () => {
       .required()
       .label("Email"),
     phoneNumber: Joi.string().required().label("Phone Number"),
+    // designation: Joi.string().required().label("Designation"),
   });
 
   /*
@@ -124,6 +133,17 @@ const AdminAddPage = () => {
             mdSize={6}
             options={countryOptions}
           />
+          {/* <CustomCFormSelectGroup
+  label={t("designation")}
+  name="designation"
+  value={formData.designation}
+  onChange={handleChange}
+  error={formErrors.designation}
+  uppercase={true}
+  mdSize={6}
+  options={designationOptions} 
+/> */}
+
           <CustomCFormPhoneNumberInputGroup
             label={t("phone_number")}
             name="phoneNumber"
@@ -169,4 +189,5 @@ const initialValue = {
   phoneNumber: "",
   country: "",
   dob: "",
+  // designation: "",
 };

@@ -56,7 +56,7 @@ const NavigationBar = (props) => {
                       {item.name}
                     </Link>
                   ))}
-                  <Link
+                  {/* <Link
                     to="/login"
                     className={`font-medium ${
                       activeNav == "Log in"
@@ -65,7 +65,7 @@ const NavigationBar = (props) => {
                     }  hover:text-gray-900`}
                   >
                     {t("sign_in")}
-                  </Link>
+                  </Link> */}
                 </div>
               </nav>
             </div>
@@ -117,7 +117,7 @@ const NavigationBar = (props) => {
                       </Link>
                     ))}
                   </div>
-                  <Link
+                  {/* <Link
                     to="/login"
                     className={`block w-full px-5 py-3 text-center font-medium ${
                       activeNav == "Log in"
@@ -126,7 +126,7 @@ const NavigationBar = (props) => {
                     } bg-gray-50 hover:bg-gray-100`}
                   >
                     {t("sign_in")}
-                  </Link>
+                  </Link> */}
                 </div>
               </Popover.Panel>
             </Transition>

@@ -4,6 +4,7 @@
 import { UserModel, AgentModel } from "../models";
 import { auth } from "./firebase";
 
+// console.log("Firebase Auth Object:", auth);
 /**
  * 
  * User related services

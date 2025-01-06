@@ -99,6 +99,10 @@ const AgentAccountPage = () => {
       "phoneNumber",
       "dob",
     ]);
+    if (updatedData.dob) {
+      updatedData.dob = convertTZ(updatedData.dob);
+    }
+
     setLoading(true);
     const { error, value } = schema.validate(updatedData, {
       abortEarly: false,

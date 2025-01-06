@@ -57,7 +57,7 @@ const FilterTable = ({
             options={[
               { value: "Yet to be picked", label: "Yet to be picked" },
               { value: "Ongoing", label: "Ongoing" },
-              { value: "Assigned", label: "Assigned" },
+              { value: "Answered", label: "Answered" },
               { value: "Assistance", label: "Assistance" },
               { value: "Ended", label: "Ended" },
               { value: "Time up", label: "Time up" },
